@@ -16,7 +16,7 @@ import java.sql.SQLException;
 /**
  * Created by theapache64 on 14/5/17.
  */
-@WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/get_json/*"})
+@WebServlet(urlPatterns = {"/get_json/*"})
 public class GetJSONServlet extends AdvancedBaseServlet {
 
     @Override

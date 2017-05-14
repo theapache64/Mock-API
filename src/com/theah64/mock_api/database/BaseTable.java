@@ -3,6 +3,7 @@ package com.theah64.mock_api.database;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import com.theah64.mock_api.database.Connection;
+import com.theah64.mock_api.exceptions.RequestException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -330,10 +331,7 @@ public class BaseTable<T> {
         return resultValue;
     }
 
-
-    /*
-    * NOT USED - EVERYTHING IS BASED ON is_active flag
-    public boolean delete(final String column1, final String value1, final String column2, final String value2) {
+    public void delete(final String column1, final String value1, final String column2, final String value2) throws RequestException {
         boolean isDeleted = false;
         final String query = String.format("DELETE FROM %s WHERE %s = ? AND %s = ?;", tableName, column1, column2);
         final java.sql.Connection con = Connection.getConnection();
@@ -345,9 +343,19 @@ public class BaseTable<T> {
             ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return isDeleted;
-    }*/
+
+        if (!isDeleted) {
+            throw new RequestException("Failed to delete");
+        }
+    }
+
 
 }
 

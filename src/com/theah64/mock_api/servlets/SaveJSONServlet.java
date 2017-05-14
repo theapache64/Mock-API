@@ -29,6 +29,8 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
+
+
         final String route = getStringParameter(JSONS.COLUMN_ROUTE);
         final String projectId = getHeaderSecurity().getProjectId();
 
@@ -38,7 +40,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         if (!isRouteExist) {
             //Route doesn't exist
             final String jsonId = JSONS.getInstance().addv3(new JSON(null, projectId, route, response));
-            getWriter().write(new APIResponse("Route established", JSONS.COLUMN_ID, jsonId).getResponse());
+            getWriter().write(new APIResponse("Route established ", JSONS.COLUMN_ID, jsonId).getResponse());
         } else {
             //Update the existing route
             JSONS.getInstance().update(JSONS.COLUMN_PROJECT_ID, projectId, JSONS.COLUMN_ROUTE, route, JSONS.COLUMN_RESPONSE, new JSONObject(response).toString());

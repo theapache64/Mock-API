@@ -27,8 +27,11 @@
                 var selIndex = $(this).prop('selectedIndex');
                 if (selIndex != 0) {
                     var selOption = $(this).find(":selected");
-                    $("input#route").val(selOption.text());
+                    $("input#route").val($.trim(selOption.text()));
                     $("textarea#response").val(JSON.stringify(selOption.data("response")));
+                    $("button#bDelete").show();
+                } else {
+                    $("button#bDelete").hide();
                 }
             });
 
@@ -36,6 +39,7 @@
                 $("input#route").val("");
                 $("textarea#response").val("");
                 $("select#routes").val($("select#routes option:first").val());
+                $("button#bDelete").hide();
             });
 
             $("button#bSubmit").on('click', function () {
@@ -44,15 +48,92 @@
                 resultDiv.hide();
                 var route = $("input#route").val();
                 var response = $("textarea#response").val();
+
+                //Processing the add/update request
                 $.ajax({
                     type: "POST",
                     beforeSend: function (request) {
+                        startLoading(true);
                         request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
                     },
                     url: "v1/save_json",
                     data: {route: route, response: response},
                     success: function (data) {
+                        stopLoading(true);
+                        console.log(data);
 
+                        if (!data.error) {
+                            $(resultDiv).removeClass('alert-danger').addClass('alert-success');
+                            var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
+                            $(resultDiv).html("<strong>Success! </strong> " + data.message + ": " + link);
+                            $(resultDiv).show();
+
+                            //Adding added route to select list
+                            $("select#routes").append("<option data-response='" + response + "' value=" + data.data.id + ">" + route + " </option>");
+
+                        } else {
+                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                            $(resultDiv).html("<strong>Error! </strong> " + data.message);
+                            $(resultDiv).show();
+                        }
+                    },
+                    error: function () {
+                        stopLoading(true);
+                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                        $(resultDiv).show();
+                    }
+                });
+            });
+
+            function startLoading(isSubmit) {
+                $("button#bDelete").prop('disabled', true);
+                $("button#bSubmit").prop('disabled', true);
+                $("button#bClear").prop('disabled', true);
+                $("select#routes").prop('disabled', true);
+                $("input#route").prop('disabled', true);
+                $("textarea#response").prop('disabled', true);
+
+                if (isSubmit) {
+                    $("button#bSubmit").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> SAVE');
+                } else {
+                    $("button#bDelete").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> DELETE');
+                }
+            }
+
+            function stopLoading(isSubmit) {
+                $("button#bDelete").prop('disabled', false);
+                $("button#bSubmit").prop('disabled', false);
+                $("button#bClear").prop('disabled', false);
+                $("select#routes").prop('disabled', false);
+                $("input#route").prop('disabled', false);
+                $("textarea#response").prop('disabled', false);
+
+                if (isSubmit) {
+                    $("button#bSubmit").html('<span class="glyphicon glyphicon-save"></span> SAVE');
+                } else {
+                    $("button#bDelete").html('<span class="glyphicon glyphicon-trash"></span> DELETE');
+                }
+            }
+
+            $("button#bDelete").on('click', function () {
+
+                if (!confirm('Do you really want to delete this route?')) {
+                    return;
+                }
+
+                var selOption = $("select#routes").find(":selected");
+
+                $.ajax({
+                    type: "POST",
+                    beforeSend: function (request) {
+                        startLoading(false);
+                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
+                    },
+                    url: "v1/delete_json",
+                    data: {id: selOption.val()},
+                    success: function (data) {
+                        stopLoading(false);
                         console.log(data);
 
                         if (!data.error) {
@@ -61,7 +142,8 @@
                             $(resultDiv).show();
 
                             //Adding added route to select list
-                            $("select#routes").append("<option data-response='" + response + "' value=" + data.data.id + ">"+ route +" </option>");
+                            $("select#routes option[value='" + selOption.val() + "']").remove();
+                            $("button#bClear").click();
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
                             $(resultDiv).html("<strong>Error! </strong> " + data.message);
@@ -69,12 +151,15 @@
                         }
                     },
                     error: function () {
+                        stopLoading(false);
                         $(resultDiv).addClass('alert-danger').removeClass('alert-success');
                         $(resultDiv).html("<strong>Error! </strong> Please check your connection");
                         $(resultDiv).show();
                     }
                 });
-            })
+
+            });
+
 
         });
     </script>
@@ -100,7 +185,7 @@
             <%
                 List<JSON> jsonList = null;
                 try {
-                    jsonList = JSONS.getInstance().getAll();
+                    jsonList = JSONS.getInstance().getAll(project.getId());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -111,7 +196,8 @@
                     if (jsonList != null) {
                         for (final JSON json : jsonList) {
                 %>
-                <option data-response='<%=json.getResponse()%>' value="<%=json.getId()%>"><%=json.getRoute()%></option>
+                <option data-response='<%=json.getResponse()%>' value="<%=json.getId()%>"><%=json.getRoute()%>
+                </option>
                 <%
                         }
                     }
@@ -131,8 +217,13 @@
 
 
             <div class="pull-right">
-                <button id="bClear" class="btn btn-default">CLEAR</button>
-                <button id="bSubmit" class="btn btn-primary">SAVE</button>
+                <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
+                        class="glyphicon glyphicon-trash"></span> DELETE
+                </button>
+                <button id="bClear" class="btn btn-info  btn-sm"><span class="glyphicon glyphicon-flash"></span> CLEAR
+                </button>
+                <button id="bSubmit" class="btn btn-primary  btn-sm"><span class="glyphicon glyphicon-save"></span> SAVE
+                </button>
             </div>
         </div>
     </div>

@@ -60,15 +60,16 @@ public class JSONS extends BaseTable<JSON> {
         return id;
     }
 
-    @Override
-    public List<JSON> getAll() throws SQLException {
+    public List<JSON> getAll(final String projectId) throws SQLException {
         List<JSON> jsonList = null;
-        final String query = "SELECT id,response, route FROM jsons WHERE is_active = 1";
+        final String query = "SELECT id,response, route FROM jsons WHERE project_id = ? AND is_active = 1";
         String error = null;
         final java.sql.Connection con = Connection.getConnection();
         try {
-            final Statement stmt = con.createStatement();
-            final ResultSet rs = stmt.executeQuery(query);
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, projectId);
+            final ResultSet rs = ps.executeQuery();
+
             if (rs.first()) {
                 jsonList = new ArrayList<>();
                 do {
@@ -79,7 +80,7 @@ public class JSONS extends BaseTable<JSON> {
                 } while (rs.next());
             }
             rs.close();
-            stmt.close();
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -134,4 +135,5 @@ public class JSONS extends BaseTable<JSON> {
         }
         return response;
     }
+
 }

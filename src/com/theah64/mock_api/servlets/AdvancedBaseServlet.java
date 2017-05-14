@@ -1,5 +1,6 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.Request;
@@ -77,7 +78,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
             doAdvancedPost();
 
-        } catch (JSONException | SQLException | HeaderSecurity.AuthorizationException | Request.RequestException e) {
+        } catch (JSONException | RequestException | SQLException | HeaderSecurity.AuthorizationException | Request.RequestException e) {
             e.printStackTrace();
             out.write(new APIResponse(e.getMessage()).toString());
         }
@@ -91,7 +92,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
     protected abstract String[] getRequiredParameters();
 
-    protected abstract void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException;
+    protected abstract void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException;
 
     public HeaderSecurity getHeaderSecurity() {
         if (!isSecureServlet()) {
