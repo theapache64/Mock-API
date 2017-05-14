@@ -1,10 +1,9 @@
-<%@ page import="com.theah64.mock_api.utils.Form" %>
-<%@ page import="com.theah64.mock_api.models.Project" %>
-<%@ page import="com.theah64.mock_api.utils.DarKnight" %>
-<%@ page import="java.util.prefs.Preferences" %>
-<%@ page import="java.sql.SQLException" %>
 <%@ page import="com.theah64.mock_api.database.Projects" %>
 <%@ page import="com.theah64.mock_api.exceptions.RequestException" %>
+<%@ page import="com.theah64.mock_api.models.Project" %>
+<%@ page import="com.theah64.mock_api.utils.DarKnight" %>
+<%@ page import="com.theah64.mock_api.utils.Form" %>
+<%@ page import="java.sql.SQLException" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -14,7 +13,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    if (session.getAttribute(Projects.COLUMN_ID) != null) {
+    if (session.getAttribute(Project.KEY) != null) {
         response.sendRedirect("index.jsp");
         return;
     }
@@ -71,23 +70,29 @@
                                 final String passHash = DarKnight.getEncrypted(request.getParameter("password"));
                                 final Projects projectsTable = Projects.getInstance();
 
-                                String projectId = projectsTable.get(Projects.COLUMN_NAME, name, Projects.COLUMN_PASS_HASH, passHash, Projects.COLUMN_ID);
+                                Project project = projectsTable.get(Projects.COLUMN_NAME, name, Projects.COLUMN_PASS_HASH, passHash);
 
-                                if (projectId != null) {
+                                if (project != null) {
 
                                     //Project exists
-                                    session.setAttribute(Projects.COLUMN_ID, projectId);
+                                    session.setAttribute(Project.KEY, project);
                                     response.sendRedirect("index.jsp");
 
                                 } else {
 
                                     //Project doesn't exist
-                                    final Project project = new Project(null, name, passHash);
+                                    project = new Project(null, name, passHash);
+
                                     try {
-                                        projectId = projectsTable.addv3(project);
+
+                                        final String projectId = projectsTable.addv3(project);
+
                                         //Project exists
                                         if (projectId != null) {
-                                            session.setAttribute(Projects.COLUMN_ID, projectId);
+
+                                            project.setId(projectId);
+                                            session.setAttribute(Project.KEY, project);
+
                                             response.sendRedirect("index.jsp");
                                         } else {
                                             throw new RequestException("Failed to create project");

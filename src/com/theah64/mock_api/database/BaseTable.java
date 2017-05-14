@@ -20,14 +20,14 @@ import java.util.regex.Pattern;
  */
 public class BaseTable<T> {
 
-    public static final String COLUMN_ID = "id";
+    protected static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_IS_ACTIVE = "is_active";
     public static final String TRUE = "1";
     public static final String FALSE = "0";
     private static final String ERROR_MESSAGE_UNDEFINED_METHOD = "Undefined method.";
     private static final String COLUMN_AS_TOTAL_ROWS = "total_rows";
-    private final String tableName;
+    protected final String tableName;
 
     public BaseTable(String tableName) {
         this.tableName = tableName;
@@ -63,6 +63,10 @@ public class BaseTable<T> {
     private static final Pattern DUPLICATE_ENTRY_ERROR_FORMAT = Pattern.compile("Duplicate entry '(?<value>.+)' for key '(?<column>.+)'");
 
     void manageError(String error) throws SQLException {
+
+        if (error == null) {
+            return;
+        }
 
         final Matcher matcher = DUPLICATE_ENTRY_ERROR_FORMAT.matcher(error);
         if (matcher.matches()) {

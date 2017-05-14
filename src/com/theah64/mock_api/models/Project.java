@@ -4,7 +4,10 @@ package com.theah64.mock_api.models;
  * Created by theapache64 on 14/5/17.
  */
 public class Project {
-    private final String id, name, passHash;
+    public static final String KEY = "project";
+    private String id;
+    private final String name;
+    private final String passHash;
 
     public Project(String id, String name, String passHash) {
         this.id = id;
@@ -22,5 +25,9 @@ public class Project {
 
     public String getPassHash() {
         return passHash;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

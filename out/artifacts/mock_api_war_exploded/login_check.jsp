@@ -7,7 +7,7 @@
   To change this template use FileNode | Settings | FileNode Templates.
 --%>
 <%
-    final Object projectId = session.getAttribute(Projects.COLUMN_ID);
+    final Object projectId = session.getAttribute(Project.KEY);
     if (projectId == null) {
         response.sendRedirect("login.jsp");
         return;
