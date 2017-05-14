@@ -896,7 +896,7 @@
       <option name="presentableId" value="Default" />
       <updated>1494726940630</updated>
       <workItem from="1494726943393" duration="28493000" />
-      <workItem from="1494777016204" duration="1192000" />
+      <workItem from="1494777016204" duration="1792000" />
     </task>
     <task id="LOCAL-00001" summary="Added delete json page&#10;">
       <created>1494773641600</created>
@@ -909,11 +909,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29685000" />
+    <option name="totallyTimeSpent" value="30285000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="51" y="24" width="1315" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
