@@ -102,4 +102,36 @@ public class JSONS extends BaseTable<JSON> {
         return jsonList;
 
     }
+
+    public String getResponse(String projectName, String route) throws SQLException {
+        String error = null;
+        String response = null;
+        final String query = "SELECT j.response FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, projectName);
+            ps.setString(2, route);
+            final ResultSet rs = ps.executeQuery();
+            if (rs.first()) {
+                response = rs.getString(COLUMN_RESPONSE);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            error = e.getMessage();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        manageError(error);
+        if (response == null) {
+            throw new SQLException("No response found");
+        }
+        return response;
+    }
 }

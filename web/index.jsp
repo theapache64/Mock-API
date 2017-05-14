@@ -64,6 +64,11 @@
                             $(resultDiv).html("<strong>Error! </strong> " + data.message);
                             $(resultDiv).show();
                         }
+                    },
+                    error: function () {
+                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                        $(resultDiv).show();
                     }
                 });
             })
