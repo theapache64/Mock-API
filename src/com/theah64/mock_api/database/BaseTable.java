@@ -1,4 +1,4 @@
-package com.theah64.mock_api.database.tables;
+package com.theah64.mock_api.database;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by theapache64 on 11/22/2015.
@@ -58,10 +60,20 @@ public class BaseTable<T> {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 
+    private static final Pattern DUPLICATE_ENTRY_ERROR_FORMAT = Pattern.compile("Duplicate entry '(?<value>.+)' for key '(?<column>.+)'");
+
     void manageError(String error) throws SQLException {
-        if (error != null) {
-            throw new SQLException(error);
+
+        final Matcher matcher = DUPLICATE_ENTRY_ERROR_FORMAT.matcher(error);
+        if (matcher.matches()) {
+            //It's a duplicate entry error
+            final String column = matcher.group("column");
+            final String value = matcher.group("value");
+            error = String.format("Existing %s : %s", column, value);
         }
+
+        //Some mysterious error
+        throw new SQLException(error);
     }
 
     public void update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) throws SQLException {
@@ -280,6 +292,38 @@ public class BaseTable<T> {
 
 
         return jaFcmIds;
+    }
+
+    public String get(String column1, String value1, String column2, String value2, String columnToReturn) {
+        final String query = String.format("SELECT %s FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", columnToReturn, tableName, column1, column2);
+
+        String resultValue = null;
+        final java.sql.Connection con = Connection.getConnection();
+
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, value1);
+            ps.setString(2, value2);
+
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.first()) {
+                resultValue = rs.getString(columnToReturn);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultValue;
     }
 
 

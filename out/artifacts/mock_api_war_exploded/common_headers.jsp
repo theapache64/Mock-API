@@ -1,4 +1,4 @@
-<%@ page import="com.theah64.mock_api.Connection" %>
+<%@ page import="com.theah64.mock_api.database.Connection" %>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 

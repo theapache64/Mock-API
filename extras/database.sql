@@ -8,7 +8,8 @@ CREATE TABLE projects (
   pass_hash TEXT NOT NULL,
   is_active TINYINT NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  UNIQUE KEY (name)
 );
 
 CREATE TABLE jsons(
