@@ -35,7 +35,7 @@
             $("button#bClear").on('click', function () {
                 $("input#route").val("");
                 $("textarea#response").val("");
-                $('select#routes option:eq(0)').attr('selected', 'selected');
+                $("select#routes").val($("select#routes option:first").val());
             });
 
             $("button#bSubmit").on('click', function () {
@@ -59,6 +59,9 @@
                             $(resultDiv).removeClass('alert-danger').addClass('alert-success');
                             $(resultDiv).html("<strong>Success! </strong> " + data.message);
                             $(resultDiv).show();
+
+                            //Adding added route to select list
+                            $("select#routes").append("<option data-response='" + response + "' value=" + data.data.id + ">"+ route +" </option>");
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
                             $(resultDiv).html("<strong>Error! </strong> " + data.message);
@@ -108,8 +111,7 @@
                     if (jsonList != null) {
                         for (final JSON json : jsonList) {
                 %>
-                <option data-response='<%=json.getResponse()%>' value="<%=json.getId()%>"><%=json.getRoute()%>
-                </option>
+                <option data-response='<%=json.getResponse()%>' value="<%=json.getId()%>"><%=json.getRoute()%></option>
                 <%
                         }
                     }
