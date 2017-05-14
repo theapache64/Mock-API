@@ -23,6 +23,15 @@
 <head>
     <title>Admin Login - WASP</title>
     <%@include file="common_headers.jsp" %>
+    <script>
+        $(document).ready(function () {
+            $("input#iProjectName").on('keyup', function () {
+                var oldVal = $(this).val();
+                var newVal = $.trim(oldVal.toLowerCase().replace(/\s+/, ''));
+                $(this).val(newVal);
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="container">
@@ -44,9 +53,9 @@
             <form action="login.jsp" method="POST" role="form">
 
                 <div class="form-group">
-                    <label for="iProject Name">Project Name : </label>
-                    <input name="name" type="text"
-                           id="iProject Name" class="form-control"
+                    <label for="iProjectName">Project Name : </label>
+                    <input name="name" type="text" maxlength="50"
+                           id="iProjectName" class="form-control"
                            placeholder="Project Name"/>
                 </div>
 

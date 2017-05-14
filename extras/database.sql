@@ -4,7 +4,7 @@ USE mock_api;
 
 CREATE TABLE projects (
   id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR (10) NOT NULL,
+  name VARCHAR (50) NOT NULL,
   api_key VARCHAR (10) NOT NULL,
   pass_hash TEXT NOT NULL,
   is_active TINYINT NOT NULL DEFAULT 1,

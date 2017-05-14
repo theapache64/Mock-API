@@ -7,12 +7,17 @@ import org.json.JSONObject;
  * Created by theapache64 on 14/5/17.
  */
 public class JSON {
-    private final String projectId, route, response;
+    private final String id,projectId, route, response;
 
-    public JSON(String projectId, String route, String response) throws JSONException {
+    public JSON(String id, String projectId, String route, String response) throws JSONException {
+        this.id = id;
         this.projectId = projectId;
         this.route = route;
-        this.response = new JSONObject(response).toString();
+        this.response = response != null ? new JSONObject(response).toString() : null;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getProjectId() {

@@ -1,10 +1,14 @@
 package com.theah64.mock_api.database;
 
 import com.theah64.mock_api.models.JSON;
+import org.json.JSONException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by theapache64 on 14/5/17.
@@ -54,5 +58,48 @@ public class JSONS extends BaseTable<JSON> {
         }
         manageError(error);
         return id;
+    }
+
+    @Override
+    public List<JSON> getAll() throws SQLException {
+        List<JSON> jsonList = null;
+        final String query = "SELECT id,response, route FROM jsons WHERE is_active = 1";
+        String error = null;
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final Statement stmt = con.createStatement();
+            final ResultSet rs = stmt.executeQuery(query);
+            if (rs.first()) {
+                jsonList = new ArrayList<>();
+                do {
+                    final String id = rs.getString(COLUMN_ID);
+                    final String response = rs.getString(COLUMN_RESPONSE);
+                    final String route = rs.getString(COLUMN_ROUTE);
+                    jsonList.add(new JSON(id, null, route, response));
+                } while (rs.next());
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            error = e.getMessage();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (jsonList == null) {
+            throw new SQLException("No route found");
+        }
+
+        manageError(error);
+
+        return jsonList;
+
     }
 }
