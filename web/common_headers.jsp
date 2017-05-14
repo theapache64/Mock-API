@@ -1,6 +1,8 @@
 <%@ page import="com.theah64.mock_api.database.Connection" %>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="/mock_api/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/mock_api/favicon.ico" type="image/x-icon">
 
 <%
     if (Connection.isDebugMode()) {

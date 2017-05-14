@@ -36,6 +36,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
+
         try {
             final PathInfo pathInfo = new PathInfo(getHttpServletRequest().getPathInfo(), 2, 2);
             final String projectName = pathInfo.getPart(1);

@@ -26,10 +26,35 @@
             $("select#routes").on('change', function () {
                 var selIndex = $(this).prop('selectedIndex');
                 if (selIndex != 0) {
+
                     var selOption = $(this).find(":selected");
-                    $("input#route").val($.trim(selOption.text()));
-                    $("textarea#response").val(JSON.stringify(selOption.data("response")));
-                    $("button#bDelete").show();
+                    var route = selOption.text();
+                    $.ajax({
+                        type: "GET",
+                        beforeSend: function () {
+                            startLoading(true);
+                        },
+                        url: "get_json/<%=project.getName()%>/" + route,
+                        success: function (data) {
+                            stopLoading(true);
+
+                            $(resultDiv).removeClass('alert-danger').addClass('alert-success');
+                            var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
+                            $(resultDiv).html("<strong>Success! </strong> Route loaded : " + link);
+                            $(resultDiv).show();
+
+                            $("input#route").val(route);
+                            $("textarea#response").val(JSON.stringify(data));
+                            $("button#bDelete").show();
+                        },
+                        error: function () {
+                            stopLoading(true);
+                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                            $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                            $(resultDiv).show();
+                        }
+                    });
+
                 } else {
                     $("button#bDelete").hide();
                 }
@@ -69,7 +94,7 @@
                             $(resultDiv).show();
 
                             //Adding added route to select list
-                            $("select#routes").append("<option data-response='" + response + "' value=" + data.data.id + ">" + route + " </option>");
+                            $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
 
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
@@ -93,6 +118,7 @@
                 $("select#routes").prop('disabled', true);
                 $("input#route").prop('disabled', true);
                 $("textarea#response").prop('disabled', true);
+                $("div#resultDiv").hide();
 
                 if (isSubmit) {
                     $("button#bSubmit").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> SAVE');
@@ -102,6 +128,7 @@
             }
 
             function stopLoading(isSubmit) {
+                $("div#resultDiv").show();
                 $("button#bDelete").prop('disabled', false);
                 $("button#bSubmit").prop('disabled', false);
                 $("button#bClear").prop('disabled', false);
@@ -196,7 +223,7 @@
                     if (jsonList != null) {
                         for (final JSON json : jsonList) {
                 %>
-                <option data-response='<%=json.getResponse()%>' value="<%=json.getId()%>"><%=json.getRoute()%>
+                <option value="<%=json.getId()%>"><%=json.getRoute()%>
                 </option>
                 <%
                         }
