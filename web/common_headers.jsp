@@ -22,7 +22,13 @@
     }
 %>
 
+<script src="/mock_api/js/codemirror.js"></script>
+<link rel="stylesheet" href="/mock_api/styles/codemirror.css">
+<script src="/mock_api/js/javascript.js"></script>
+
 <link rel="stylesheet" href="/mock_api/styles/style.css">
 <script src="/mock_api/js/code.js"></script>
+
+
 
 

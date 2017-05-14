@@ -23,12 +23,32 @@
     <script>
         $(document).ready(function () {
 
+            var editor = CodeMirror.fromTextArea(document.getElementById("response"), {
+                lineNumbers: true,
+                mode: "application/json",
+                matchBrackets: true
+            });
+
+            $("input#route").on('keyup', function () {
+                var oldVal = $(this).val();
+                var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/, '_'));
+                $(this).val(newVal);
+            });
+
+
+            editor.on('keyup', function () {
+                if (event.ctrlKey && event.altKey && event.keyCode == 76) {
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
+                }
+            });
+
+
             $("select#routes").on('change', function () {
                 var selIndex = $(this).prop('selectedIndex');
                 if (selIndex != 0) {
 
                     var selOption = $(this).find(":selected");
-                    var route = selOption.text();
+                    var route = $.trim(selOption.text());
                     $.ajax({
                         type: "GET",
                         beforeSend: function () {
@@ -44,8 +64,10 @@
                             $(resultDiv).show();
 
                             $("input#route").val(route);
-                            $("textarea#response").val(JSON.stringify(data));
                             $("button#bDelete").show();
+
+                            editor.getDoc().setValue(JSON.stringify(data, undefined, 4));
+
                         },
                         error: function () {
                             stopLoading(true);
@@ -62,7 +84,7 @@
 
             $("button#bClear").on('click', function () {
                 $("input#route").val("");
-                $("textarea#response").val("");
+                editor.getDoc().setValue("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
             });
@@ -72,7 +94,7 @@
                 var resultDiv = $("div#resultDiv");
                 resultDiv.hide();
                 var route = $("input#route").val();
-                var response = $("textarea#response").val();
+                var response = editor.getDoc().getValue();
 
                 //Processing the add/update request
                 $.ajax({
@@ -117,7 +139,7 @@
                 $("button#bClear").prop('disabled', true);
                 $("select#routes").prop('disabled', true);
                 $("input#route").prop('disabled', true);
-                $("textarea#response").prop('disabled', true);
+                editor.setOption('readOnly', 'nocursor');
                 $("div#resultDiv").hide();
 
                 if (isSubmit) {
@@ -134,7 +156,7 @@
                 $("button#bClear").prop('disabled', false);
                 $("select#routes").prop('disabled', false);
                 $("input#route").prop('disabled', false);
-                $("textarea#response").prop('disabled', false);
+                editor.setOption('readOnly', false);
 
                 if (isSubmit) {
                     $("button#bSubmit").html('<span class="glyphicon glyphicon-save"></span> SAVE');
@@ -255,5 +277,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
