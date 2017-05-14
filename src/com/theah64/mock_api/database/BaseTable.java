@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  */
 public class BaseTable<T> {
 
-    protected static final String COLUMN_ID = "id";
+    public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_IS_ACTIVE = "is_active";
     public static final String TRUE = "1";
@@ -195,7 +195,7 @@ public class BaseTable<T> {
 
     public boolean isExist(String whereColumn1, String whereColumnValue1, String whereColumn2, String whereColumnValue2) {
         boolean isExist = false;
-        final String query = String.format("SELECT id FROM %s WHERE %s = ? AND %s = ? LIMIT 1", tableName, whereColumn1, whereColumn2);
+        final String query = String.format("SELECT id FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, whereColumn1, whereColumn2);
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);

@@ -8,11 +8,17 @@ public class Project {
     private String id;
     private final String name;
     private final String passHash;
+    private final String apiKey;
 
-    public Project(String id, String name, String passHash) {
+    public Project(String id, String name, String passHash, String apiKey) {
         this.id = id;
         this.name = name;
         this.passHash = passHash;
+        this.apiKey = apiKey;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 
     public String getId() {

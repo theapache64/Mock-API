@@ -4,6 +4,7 @@
 <%@ page import="com.theah64.mock_api.utils.DarKnight" %>
 <%@ page import="com.theah64.mock_api.utils.Form" %>
 <%@ page import="java.sql.SQLException" %>
+<%@ page import="com.theah64.mock_api.utils.RandomString" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -81,7 +82,8 @@
                                 } else {
 
                                     //Project doesn't exist
-                                    project = new Project(null, name, passHash);
+                                    final String apiKey = RandomString.getNewApiKey(10);
+                                    project = new Project(null, name, passHash, apiKey);
 
                                     try {
 
