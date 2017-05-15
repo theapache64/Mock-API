@@ -1,8 +1,8 @@
-<%@ page import="com.theah64.mock_api.models.Project" %>
-<%@ page import="com.theah64.mock_api.models.JSON" %>
-<%@ page import="java.util.List" %>
 <%@ page import="com.theah64.mock_api.database.JSONS" %>
+<%@ page import="com.theah64.mock_api.models.JSON" %>
+<%@ page import="com.theah64.mock_api.models.Project" %>
 <%@ page import="java.sql.SQLException" %>
+<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -29,7 +29,7 @@
                 matchBrackets: true
             });
 
-            $("input#route").on('keyup', function () {
+            $("input#route, input#required_params, input#optional_params").on('keyup', function () {
                 var oldVal = $(this).val();
                 var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/, '_'));
                 $(this).val(newVal);
@@ -54,19 +54,37 @@
                         beforeSend: function () {
                             startLoading(true);
                         },
-                        url: "get_json/<%=project.getName()%>/" + route,
+                        url: "fetch_json/<%=project.getName()%>/" + route,
                         success: function (data) {
                             stopLoading(true);
-
-                            $(resultDiv).removeClass('alert-danger').addClass('alert-success');
                             var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
-                            $(resultDiv).html("<strong>Success! </strong> Route loaded : " + link);
-                            $(resultDiv).show();
 
-                            $("input#route").val(route);
-                            $("button#bDelete").show();
+                            if (!data.error) {
+                                $(resultDiv).removeClass('alert-danger').addClass('alert-success');
+                                $(resultDiv).html("<strong>Success! </strong> " + data.message + " : " + link);
+                                $(resultDiv).show();
 
-                            editor.getDoc().setValue(JSON.stringify(data, undefined, 4));
+                                $("input#route").val(route);
+                                $("button#bDelete").show();
+
+                                $("input#required_params").val(data.data.required_params);
+                                $("input#optional_params").val(data.data.optional_params);
+                                editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
+
+                            } else {
+
+                                $(resultDiv).removeClass('alert-success').addClass('alert-danger');
+                                $(resultDiv).html("<strong>Failure! </strong> " + data.message + ":" + link);
+                                $(resultDiv).show();
+
+                                $("input#required_params").val("");
+                                $("input#optional_params").val("");
+                                $("input#route").val("");
+                                $("button#bDelete").hide();
+
+                                editor.getDoc().setValue("");
+                            }
+
 
                         },
                         error: function () {
@@ -85,6 +103,8 @@
             $("button#bClear").on('click', function () {
                 $("input#route").val("");
                 editor.getDoc().setValue("");
+                $("input#required_params").val("");
+                $("input#optional_params").val("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
             });
@@ -95,6 +115,8 @@
                 resultDiv.hide();
                 var route = $("input#route").val();
                 var response = editor.getDoc().getValue();
+                var reqParams = $("input#required_params").val();
+                var opParams = $("input#optional_params").val();
 
                 //Processing the add/update request
                 $.ajax({
@@ -104,7 +126,12 @@
                         request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
                     },
                     url: "v1/save_json",
-                    data: {route: route, response: response},
+                    data: {
+                        route: route,
+                        response: response,
+                        required_params: reqParams,
+                        optional_params: opParams
+                    },
                     success: function (data) {
                         stopLoading(true);
                         console.log(data);
@@ -136,6 +163,8 @@
             function startLoading(isSubmit) {
                 $("button#bDelete").prop('disabled', true);
                 $("button#bSubmit").prop('disabled', true);
+                $("input#required_params").prop('disabled', true);
+                $("input#optional_params").prop('disabled', true);
                 $("button#bClear").prop('disabled', true);
                 $("select#routes").prop('disabled', true);
                 $("input#route").prop('disabled', true);
@@ -156,7 +185,10 @@
                 $("button#bClear").prop('disabled', false);
                 $("select#routes").prop('disabled', false);
                 $("input#route").prop('disabled', false);
+                $("input#required_params").prop('disabled', false);
+                $("input#optional_params").prop('disabled', false);
                 editor.setOption('readOnly', false);
+
 
                 if (isSubmit) {
                     $("button#bSubmit").html('<span class="glyphicon glyphicon-save"></span> SAVE');
@@ -257,6 +289,9 @@
         <%--Add new route panel--%>
         <div class="col-md-10">
             <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route"><br>
+            <input class="form-control" type="text" id="required_params" placeholder="Required params"><br>
+            <input class="form-control" type="text" id="optional_params" placeholder="Optional params"><br>
+
             <textarea class="form-control" id="response" name="response" style="width: 100%;height: 50%"
                       placeholder="Response" title="JSON"></textarea>
             <br>

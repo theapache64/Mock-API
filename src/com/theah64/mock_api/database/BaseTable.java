@@ -41,7 +41,7 @@ public class BaseTable<T> {
         return null;
     }
 
-    public T get(final String column, final String value) {
+    public T get(final String column, final String value) throws SQLException {
         throw new IllegalArgumentException(ERROR_MESSAGE_UNDEFINED_METHOD);
     }
 

@@ -6,7 +6,6 @@ import org.json.JSONException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +18,8 @@ public class JSONS extends BaseTable<JSON> {
     public static final String COLUMN_RESPONSE = "response";
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_ROUTE = "route";
+    public static final String COLUMN_REQUIRED_PARAMS = "required_params";
+    public static final String COLUMN_OPTIONAL_PARAMS = "optional_params";
 
     private JSONS() {
         super("jsons");
@@ -32,13 +33,15 @@ public class JSONS extends BaseTable<JSON> {
     public String addv3(JSON json) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO jsons (project_id, route, response) VALUES (?,?,?);";
+        final String query = "INSERT INTO jsons (project_id, route, response, required_params, optional_params) VALUES (?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, json.getProjectId());
             ps.setString(2, json.getRoute());
             ps.setString(3, json.getResponse());
+            ps.setString(4, json.getRequiredParams());
+            ps.setString(5, json.getOptionalParams());
             ps.executeUpdate();
             final ResultSet rs = ps.getGeneratedKeys();
             if (rs.first()) {
@@ -62,7 +65,7 @@ public class JSONS extends BaseTable<JSON> {
 
     public List<JSON> getAll(final String projectId) throws SQLException {
         List<JSON> jsonList = null;
-        final String query = "SELECT id,response, route FROM jsons WHERE project_id = ? AND is_active = 1";
+        final String query = "SELECT id, route FROM jsons WHERE project_id = ? AND is_active = 1";
         String error = null;
         final java.sql.Connection con = Connection.getConnection();
         try {
@@ -74,9 +77,8 @@ public class JSONS extends BaseTable<JSON> {
                 jsonList = new ArrayList<>();
                 do {
                     final String id = rs.getString(COLUMN_ID);
-                    final String response = rs.getString(COLUMN_RESPONSE);
                     final String route = rs.getString(COLUMN_ROUTE);
-                    jsonList.add(new JSON(id, null, route, response));
+                    jsonList.add(new JSON(id, null, route, null, null, null));
                 } while (rs.next());
             }
             rs.close();
@@ -104,10 +106,10 @@ public class JSONS extends BaseTable<JSON> {
 
     }
 
-    public String getResponse(String projectName, String route) throws SQLException {
+    public JSON get(String projectName, String route) throws SQLException {
         String error = null;
-        String response = null;
-        final String query = "SELECT j.response FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
+        JSON json = null;
+        final String query = "SELECT j.response, j.required_params, j.optional_params FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -115,11 +117,14 @@ public class JSONS extends BaseTable<JSON> {
             ps.setString(2, route);
             final ResultSet rs = ps.executeQuery();
             if (rs.first()) {
-                response = rs.getString(COLUMN_RESPONSE);
+                final String response = rs.getString(COLUMN_RESPONSE);
+                final String reqPar = rs.getString(COLUMN_REQUIRED_PARAMS);
+                final String opPar = rs.getString(COLUMN_OPTIONAL_PARAMS);
+                json = new JSON(null, null, null, response, reqPar, opPar);
             }
             rs.close();
             ps.close();
-        } catch (SQLException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
             error = e.getMessage();
         } finally {
@@ -130,10 +135,39 @@ public class JSONS extends BaseTable<JSON> {
             }
         }
         manageError(error);
-        if (response == null) {
+
+        if (json == null) {
             throw new SQLException("No response found");
         }
-        return response;
+        return json;
     }
 
+    @Override
+    public boolean update(JSON json) {
+        boolean isUpdated = false;
+        final String query = "UPDATE jsons SET response = ?, required_params = ? , optional_params = ? WHERE route = ? AND project_id = ?;";
+        java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, json.getResponse());
+            ps.setString(2, json.getRequiredParams());
+            ps.setString(3, json.getOptionalParams());
+            ps.setString(4, json.getRoute());
+            ps.setString(5, json.getProjectId());
+            isUpdated = ps.executeUpdate() == 1;
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!isUpdated) {
+            throw new IllegalArgumentException("Failed to update json");
+        }
+        return true;
+    }
 }

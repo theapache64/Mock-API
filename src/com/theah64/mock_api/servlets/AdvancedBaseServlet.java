@@ -3,6 +3,7 @@ package com.theah64.mock_api.servlets;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.HeaderSecurity;
+import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
 
@@ -57,10 +58,6 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
         try {
 
-            if (getRequiredParameters() != null) {
-                request = new Request(req, getRequiredParameters());
-            }
-
 
             if (isSecureServlet()) {
 
@@ -75,10 +72,13 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
                 hs = new HeaderSecurity(apiKey);
             }
 
+            if (getRequiredParameters() != null) {
+                request = new Request(req, getRequiredParameters());
+            }
 
             doAdvancedPost();
 
-        } catch (JSONException | RequestException | SQLException | HeaderSecurity.AuthorizationException | Request.RequestException e) {
+        } catch (JSONException | PathInfo.PathInfoException | RequestException | SQLException | HeaderSecurity.AuthorizationException | Request.RequestException e) {
             e.printStackTrace();
             out.write(new APIResponse(e.getMessage()).toString());
         }
@@ -90,9 +90,9 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
     protected abstract boolean isSecureServlet();
 
-    protected abstract String[] getRequiredParameters();
+    protected abstract String[] getRequiredParameters() throws Request.RequestException;
 
-    protected abstract void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException;
+    protected abstract void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException;
 
     public HeaderSecurity getHeaderSecurity() {
         if (!isSecureServlet()) {

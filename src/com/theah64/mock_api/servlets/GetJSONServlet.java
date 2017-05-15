@@ -1,12 +1,12 @@
 package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.JSONS;
+import com.theah64.mock_api.models.JSON;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,14 +19,36 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = {"/get_json/*"})
 public class GetJSONServlet extends AdvancedBaseServlet {
 
+    private JSON json;
+
     @Override
     protected boolean isSecureServlet() {
         return false;
     }
 
     @Override
-    protected String[] getRequiredParameters() {
-        return new String[0];
+    protected String[] getRequiredParameters() throws Request.RequestException {
+
+        try {
+            final PathInfo pathInfo = new PathInfo(getHttpServletRequest().getPathInfo(), 2, 2);
+            final String projectName = pathInfo.getPart(1);
+            final String route = pathInfo.getPart(2);
+            json = JSONS.getInstance().get(projectName, route);
+            System.out.println("Required param is " + json.getRequiredParams());
+            if (json.getRequiredParams() != null) {
+                final String[] reqParams = json.getRequiredParams().split(",");
+                for (final String reqParam : reqParams) {
+                    System.out.println(reqParam);
+                }
+                return reqParams;
+            }
+
+        } catch (PathInfo.PathInfoException | SQLException e) {
+            e.printStackTrace();
+            throw new Request.RequestException(e.getMessage());
+        }
+
+        return null;
     }
 
     @Override
@@ -36,17 +58,6 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
-
-        try {
-            final PathInfo pathInfo = new PathInfo(getHttpServletRequest().getPathInfo(), 2, 2);
-            final String projectName = pathInfo.getPart(1);
-            final String route = pathInfo.getPart(2);
-            final String response = JSONS.getInstance().getResponse(projectName, route);
-            getWriter().write(new JSONObject(response).toString());
-
-        } catch (PathInfo.PathInfoException e) {
-            e.printStackTrace();
-            throw new Request.RequestException("Either project name or route missing");
-        }
+        getWriter().write(new JSONObject(json.getResponse()).toString());
     }
 }
