@@ -39,12 +39,6 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException {
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         final PathInfo pathInfo = new PathInfo(getHttpServletRequest().getPathInfo(), 2, 2);
         final String projectName = pathInfo.getPart(1);
         final String route = pathInfo.getPart(2);
