@@ -7,8 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e68c5f61-360d-44ef-8e78-cb8f97af6906" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/theah64/mock_api/database/Connection.java" afterPath="$PROJECT_DIR$/src/com/theah64/mock_api/database/Connection.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/index.jsp" afterPath="$PROJECT_DIR$/web/index.jsp" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -28,8 +26,8 @@
       <file leaf-file-name="index.jsp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web/index.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="45" column="142" lean-forward="false" selection-start-line="45" selection-start-column="142" selection-end-line="45" selection-end-column="142" />
+            <state relative-caret-position="390">
+              <caret line="49" column="131" lean-forward="false" selection-start-line="49" selection-start-column="131" selection-end-line="49" selection-end-column="131" />
               <folding />
             </state>
           </provider>
@@ -915,7 +913,7 @@
       <workItem from="1494827288815" duration="3732000" />
       <workItem from="1494831781729" duration="1302000" />
       <workItem from="1494841588082" duration="126000" />
-      <workItem from="1494901299693" duration="759000" />
+      <workItem from="1494901299693" duration="912000" />
     </task>
     <task id="LOCAL-00001" summary="Added delete json page&#10;">
       <created>1494773641600</created>
@@ -928,7 +926,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41213000" />
+    <option name="totallyTimeSpent" value="41366000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="53" y="24" width="1313" height="744" extended-state="6" />
@@ -1429,8 +1427,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/index.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="45" column="142" lean-forward="false" selection-start-line="45" selection-start-column="142" selection-end-line="45" selection-end-column="142" />
+        <state relative-caret-position="390">
+          <caret line="49" column="131" lean-forward="false" selection-start-line="49" selection-start-column="131" selection-end-line="49" selection-end-column="131" />
           <folding />
         </state>
       </provider>

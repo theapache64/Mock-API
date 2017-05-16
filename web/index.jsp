@@ -46,6 +46,9 @@
                     editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": false, "message": "This is a sample message", "data": {} }'), undefined, 4));
                 }
 
+                if (event.ctrlKey && event.altKey && event.keyCode == 69) {
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": true, "message": "This is a sample error message"}'), undefined, 4));
+                }
 
             });
 
