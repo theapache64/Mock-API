@@ -26,9 +26,11 @@
       <file leaf-file-name="index.jsp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web/index.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="49" column="131" lean-forward="false" selection-start-line="49" selection-start-column="131" selection-end-line="49" selection-end-column="131" />
-              <folding />
+            <state relative-caret-position="487">
+              <caret line="335" column="74" lean-forward="false" selection-start-line="335" selection-start-column="74" selection-end-line="335" selection-end-column="74" />
+              <folding>
+                <element signature="e#14137#14144#0#HTML" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -913,7 +915,7 @@
       <workItem from="1494827288815" duration="3732000" />
       <workItem from="1494831781729" duration="1302000" />
       <workItem from="1494841588082" duration="126000" />
-      <workItem from="1494901299693" duration="912000" />
+      <workItem from="1494901299693" duration="1352000" />
     </task>
     <task id="LOCAL-00001" summary="Added delete json page&#10;">
       <created>1494773641600</created>
@@ -926,7 +928,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41366000" />
+    <option name="totallyTimeSpent" value="41806000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="53" y="24" width="1313" height="744" extended-state="6" />
@@ -1088,7 +1090,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="990">
           <caret line="66" column="64" lean-forward="false" selection-start-line="66" selection-start-column="64" selection-end-line="66" selection-end-column="64" />
-          <folding />
+          <folding>
+            <element signature="e#14137#14144#0#HTML" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1427,9 +1431,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/index.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="49" column="131" lean-forward="false" selection-start-line="49" selection-start-column="131" selection-end-line="49" selection-end-column="131" />
-          <folding />
+        <state relative-caret-position="487">
+          <caret line="335" column="74" lean-forward="false" selection-start-line="335" selection-start-column="74" selection-end-line="335" selection-end-column="74" />
+          <folding>
+            <element signature="e#14137#14144#0#HTML" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
