@@ -40,6 +40,13 @@
                 if (event.ctrlKey && event.altKey && event.keyCode == 76) {
                     editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
                 }
+
+
+                if (event.ctrlKey && event.altKey && event.keyCode == 78) {
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": false, "message": "This is a sample message", "data": {} }'), undefined, 4));
+                }
+
+
             });
 
 
