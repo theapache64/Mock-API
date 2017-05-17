@@ -1,4 +1,4 @@
 # Mock-API
 
 ### TODOs
-- Add basic format button
+- Add duplicate object with incremented value option

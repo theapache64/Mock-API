@@ -17,10 +17,10 @@ CREATE TABLE projects (
 CREATE TABLE jsons(
   id INT NOT NULL AUTO_INCREMENT,
   project_id INT NOT NULL,
-  route VARCHAR (50),
+  route VARCHAR (50) NOT NULL,
   required_params TEXT,
   optional_params TEXT,
-  response TEXT,
+  response TEXT NOT NULL,
   is_active TINYINT NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   PRIMARY KEY(id),
