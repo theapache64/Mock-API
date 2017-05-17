@@ -55,6 +55,7 @@
                     var selection = editor.getSelection();
 
                     if (selection.length > 0) {
+
                         var n = prompt("Number of nodes? ", 1);
                         var builder = "";
                         var temp = selection;
