@@ -355,6 +355,7 @@
                     <p><code>Control + Alt + L </code>To format JSON</p>
                     <p><code>Control + Alt + N </code>To get default success response</p>
                     <p><code>Control + Alt + E </code>To get default error response</p>
+                    <p><code>Control + Alt + D </code>To duplicate selection (with numerical increment)</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
