@@ -50,6 +50,26 @@
                     editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": true, "message": "This is a sample error message"}'), undefined, 4));
                 }
 
+                if (event.ctrlKey && event.altKey && event.keyCode == 68) {
+
+                    var selection = editor.getSelection();
+
+                    if (selection.length > 0) {
+                        var n = prompt("Number of nodes? ", 1);
+                        var builder = "";
+                        var temp = selection;
+
+                        for (var i = 0; i < n; i++) {
+                            temp = temp.replace(/\.*(\d+)\.*/g, function (fullMatch, n) {
+                                return (Number(n) + 1);
+                            });
+                            builder += temp + "\n";
+                        }
+
+                        editor.replaceSelection(selection + "\n" + builder);
+                    }
+                }
+
             });
 
 
