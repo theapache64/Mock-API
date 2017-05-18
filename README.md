@@ -1,4 +1,6 @@
 # Mock-API
 
 ### TODOs
-- Add duplicate object with incremented value option
+- Add ask success message on new success response
+- Add isSecureApi
+- Save request to specific routes
