@@ -37,6 +37,9 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String response = getStringParameter(JSONS.COLUMN_RESPONSE);
         String requiredParams = getStringParameter(JSONS.COLUMN_REQUIRED_PARAMS);
         String optionalParams = getStringParameter(JSONS.COLUMN_OPTIONAL_PARAMS);
+        final String description = getStringParameter(JSONS.COLUMN_DESCRIPTION);
+        final boolean isSecure = getBooleanParameter(JSONS.COLUMN_IS_SECURE);
+        final long delay = getLongParameter(JSONS.COLUMN_DELAY);
 
         if (requiredParams.trim().isEmpty()) {
             requiredParams = null;
@@ -50,7 +53,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             optionalParams = optionalParams.replaceAll("\\s+", "_");
         }
 
-        final JSON json = new JSON(null, projectId, route, response, requiredParams, optionalParams);
+        final JSON json = new JSON(null, projectId, route, response, requiredParams, optionalParams, description, isSecure, delay);
 
         if (!isRouteExist) {
             //Route doesn't exist

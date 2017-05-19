@@ -43,11 +43,13 @@
 
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 78) {
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": false, "message": "This is a sample message", "data": {} }'), undefined, 4));
+                    var successMsg = prompt("Success message", "This is a sample success message");
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": false, "message": "' + successMsg + '", "data": {} }'), undefined, 4));
                 }
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 69) {
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": true, "message": "This is a sample error message"}'), undefined, 4));
+                    var errorMsg = prompt("Error message", "This is a sample error message");
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": true, "message": "' + errorMsg + '"}'), undefined, 4));
                 }
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 68) {
@@ -60,7 +62,7 @@
                         var builder = "";
                         var temp = selection;
 
-                        for (var i = 0; i < n; i++) {
+                        for (var i = 1; i < n; i++) {
                             temp = temp.replace(/\.*(\d+)\.*/g, function (fullMatch, n) {
                                 return (Number(n) + 1);
                             });
@@ -322,6 +324,21 @@
             <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route"><br>
             <input class="form-control" type="text" id="required_params" placeholder="Required params"><br>
             <input class="form-control" type="text" id="optional_params" placeholder="Optional params"><br>
+
+            <div class="row">
+
+                <div class="col-md-1 checkbox">
+                    <input type="checkbox" id="is_secure"/>Secure</label>
+                </div>
+
+                <div class="col-md-3">
+                    <input class="form-control" type="number" placeholder="Delay" id="delay"/>
+                </div>
+
+                <div class="col-md-8">
+                    <input class="form-control" type="text" placeholder="Description" id="description"/>
+                </div>
+            </div>
 
             <textarea class="form-control" id="response" name="response" style="width: 100%;height: 50%"
                       placeholder="Response" title="JSON"></textarea>

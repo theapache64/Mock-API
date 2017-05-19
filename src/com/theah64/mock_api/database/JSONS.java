@@ -20,6 +20,9 @@ public class JSONS extends BaseTable<JSON> {
     public static final String COLUMN_ROUTE = "route";
     public static final String COLUMN_REQUIRED_PARAMS = "required_params";
     public static final String COLUMN_OPTIONAL_PARAMS = "optional_params";
+    public static final String COLUMN_DESCRIPTION = "description";
+    public static final String COLUMN_IS_SECURE = "is_secure";
+    public static final String COLUMN_DELAY = "delay";
 
     private JSONS() {
         super("jsons");
@@ -33,7 +36,7 @@ public class JSONS extends BaseTable<JSON> {
     public String addv3(JSON json) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO jsons (project_id, route, response, required_params, optional_params) VALUES (?,?,?,?,?);";
+        final String query = "INSERT INTO jsons (project_id, route, response, required_params, optional_params, description, is_secure, delay) VALUES (?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -42,6 +45,10 @@ public class JSONS extends BaseTable<JSON> {
             ps.setString(3, json.getResponse());
             ps.setString(4, json.getRequiredParams());
             ps.setString(5, json.getOptionalParams());
+            ps.setString(6, json.getDescription());
+            ps.setBoolean(7, json.isSecure());
+            ps.setLong(8, json.getDelay());
+
             ps.executeUpdate();
             final ResultSet rs = ps.getGeneratedKeys();
             if (rs.first()) {
@@ -78,7 +85,7 @@ public class JSONS extends BaseTable<JSON> {
                 do {
                     final String id = rs.getString(COLUMN_ID);
                     final String route = rs.getString(COLUMN_ROUTE);
-                    jsonList.add(new JSON(id, null, route, null, null, null));
+                    jsonList.add(new JSON(id, null, route, null, null, null, null, false, 0));
                 } while (rs.next());
             }
             rs.close();
@@ -109,7 +116,7 @@ public class JSONS extends BaseTable<JSON> {
     public JSON get(String projectName, String route) throws SQLException {
         String error = null;
         JSON json = null;
-        final String query = "SELECT j.response, j.required_params, j.optional_params FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
+        final String query = "SELECT j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -120,7 +127,11 @@ public class JSONS extends BaseTable<JSON> {
                 final String response = rs.getString(COLUMN_RESPONSE);
                 final String reqPar = rs.getString(COLUMN_REQUIRED_PARAMS);
                 final String opPar = rs.getString(COLUMN_OPTIONAL_PARAMS);
-                json = new JSON(null, null, null, response, reqPar, opPar);
+                final String description = rs.getString(COLUMN_DESCRIPTION);
+                final boolean isSecure = rs.getBoolean(COLUMN_IS_SECURE);
+                final long delay = rs.getLong(COLUMN_DELAY);
+
+                json = new JSON(null, null, null, response, reqPar, opPar, description, isSecure, delay);
             }
             rs.close();
             ps.close();
@@ -145,15 +156,20 @@ public class JSONS extends BaseTable<JSON> {
     @Override
     public boolean update(JSON json) {
         boolean isUpdated = false;
-        final String query = "UPDATE jsons SET response = ?, required_params = ? , optional_params = ? WHERE route = ? AND project_id = ?;";
+        final String query = "UPDATE jsons SET response = ?, required_params = ? , optional_params = ? , description = ? , is_secure = ? , delay = ?   WHERE route = ? AND project_id = ?;";
         java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
+
             ps.setString(1, json.getResponse());
             ps.setString(2, json.getRequiredParams());
             ps.setString(3, json.getOptionalParams());
-            ps.setString(4, json.getRoute());
-            ps.setString(5, json.getProjectId());
+            ps.setString(4, json.getDescription());
+            ps.setBoolean(5, json.isSecure());
+            ps.setLong(6, json.getDelay());
+            ps.setString(7, json.getRoute());
+            ps.setString(8, json.getProjectId());
+
             isUpdated = ps.executeUpdate() == 1;
             ps.close();
         } catch (SQLException e) {
