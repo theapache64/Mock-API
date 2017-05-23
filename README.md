@@ -8,3 +8,5 @@
 - Add description to routes
 - Multiple response to a route
 - Add note to each route
+
+/keep-alive/
