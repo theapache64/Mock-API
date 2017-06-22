@@ -148,7 +148,7 @@ public class JSONS extends BaseTable<JSON> {
         manageError(error);
 
         if (json == null) {
-            throw new SQLException("No response found");
+            throw new SQLException("No response found for " + route);
         }
         return json;
     }

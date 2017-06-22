@@ -30,9 +30,9 @@ public class GetJSONServlet extends AdvancedBaseServlet {
     protected String[] getRequiredParameters() throws Request.RequestException {
 
         try {
-            final PathInfo pathInfo = new PathInfo(getHttpServletRequest().getPathInfo(), 2, 2);
+            final PathInfo pathInfo = new PathInfo(getHttpServletRequest().getPathInfo(), 2, PathInfo.UNLIMITED);
             final String projectName = pathInfo.getPart(1);
-            final String route = pathInfo.getPart(2);
+            final String route = pathInfo.getPartFrom(2);
             json = JSONS.getInstance().get(projectName, route);
             System.out.println("Required param is " + json.getRequiredParams());
             if (json.getRequiredParams() != null) {

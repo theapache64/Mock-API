@@ -10,6 +10,7 @@ public class PathInfo {
     private final int minNumberOfParams, maxNumberOfParams;
     private String[] pathParts;
 
+
     public PathInfo(String pathInfo, int minNumberOfParams, int maxNumberOfParams) throws PathInfoException {
 
         this.pathInfo = pathInfo;
@@ -44,6 +45,15 @@ public class PathInfo {
 
     public String getLastPart(String defValue) {
         return getPart(pathParts.length - 1);
+    }
+
+    public String getPartFrom(int fromIndex) {
+        final StringBuilder sb = new StringBuilder();
+        for (int i = fromIndex; i < pathParts.length; i++) {
+            sb.append(pathParts[i]).append("/");
+        }
+        final String pathFrom = sb.toString();
+        return pathFrom.isEmpty() ? null : pathFrom.substring(0, pathFrom.length() - 1);
     }
 
     public static final class PathInfoException extends Exception {
