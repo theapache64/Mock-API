@@ -94,7 +94,7 @@ public class Request {
 
     public long getLongParameter(String key) {
         final String value = getStringParameter(key);
-        return value != null ? Long.parseLong(value) : -1;
+        return value != null && !value.isEmpty() ? Long.parseLong(value) : -1;
     }
 
     public static class RequestException extends Exception {

@@ -25,11 +25,18 @@
     <%@include file="common_headers.jsp" %>
     <script>
         $(document).ready(function () {
+
             $("input#iProjectName").on('keyup', function () {
                 var oldVal = $(this).val();
                 var newVal = $.trim(oldVal.toLowerCase().replace(/\s+/, ''));
                 $(this).val(newVal);
             });
+
+            //Double click on password makes it visible
+            $("input#iPassword").on('dblclick', function () {
+                $(this).attr('type','text');
+            });
+
         });
     </script>
 </head>

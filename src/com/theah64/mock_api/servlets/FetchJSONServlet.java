@@ -48,6 +48,9 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         joJson.put(JSONS.COLUMN_RESPONSE, json.getResponse());
         joJson.put(JSONS.COLUMN_REQUIRED_PARAMS, json.getRequiredParams());
         joJson.put(JSONS.COLUMN_OPTIONAL_PARAMS, json.getOptionalParams());
+        joJson.put(JSONS.COLUMN_IS_SECURE, json.isSecure());
+        joJson.put(JSONS.COLUMN_DELAY, json.getDelay());
+        joJson.put(JSONS.COLUMN_DESCRIPTION, json.getDescription());
 
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
     }

@@ -30,13 +30,16 @@
             });
 
             $("input#route, input#required_params, input#optional_params").on('keyup', function () {
-                var oldVal = $(this).val();
-                var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/, '_'));
-                $(this).val(newVal);
+                if (!event.ctrlKey && !event.altKey) {
+                    var oldVal = $(this).val();
+                    var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/, '_'));
+                    $(this).val(newVal);
+                }
             });
 
 
             editor.on('keyup', function () {
+
                 if (event.ctrlKey && event.altKey && event.keyCode == 76) {
                     editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
                 }
@@ -77,6 +80,7 @@
 
 
             $("select#routes").on('change', function () {
+
                 var selIndex = $(this).prop('selectedIndex');
                 if (selIndex != 0) {
 
@@ -102,6 +106,11 @@
 
                                 $("input#required_params").val(data.data.required_params);
                                 $("input#optional_params").val(data.data.optional_params);
+
+                                $("input#delay").val(data.data.delay);
+                                $("input#description").val(data.data.description);
+                                $("input#is_secure").prop('checked', data.data.is_secure);
+
                                 editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
 
                             } else {
@@ -150,6 +159,11 @@
                 var response = editor.getDoc().getValue();
                 var reqParams = $("input#required_params").val();
                 var opParams = $("input#optional_params").val();
+                var isSecure = $("input#is_secure").is(":checked") ? true : false;
+                var delay = $("input#delay").val();
+                var description = $("input#description").val();
+
+                console.log("isSecure: " + isSecure);
 
                 //Processing the add/update request
                 $.ajax({
@@ -163,7 +177,11 @@
                         route: route,
                         response: response,
                         required_params: reqParams,
-                        optional_params: opParams
+                        optional_params: opParams,
+                        is_secure: isSecure,
+                        delay: delay,
+                        description: description
+
                     },
                     success: function (data) {
                         stopLoading(true);
@@ -175,8 +193,10 @@
                             $(resultDiv).html("<strong>Success! </strong> " + data.message + ": " + link);
                             $(resultDiv).show();
 
-                            //Adding added route to select list
-                            $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
+                            if ('id' in data) {
+                                //Adding added route to select list
+                                $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
+                            }
 
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
@@ -319,11 +339,13 @@
             </select>
         </div>
 
+
         <%--Add new route panel--%>
         <div class="col-md-10">
             <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route"><br>
             <input class="form-control" type="text" id="required_params" placeholder="Required params"><br>
             <input class="form-control" type="text" id="optional_params" placeholder="Optional params"><br>
+
 
             <div class="row">
 
@@ -340,6 +362,23 @@
                 </div>
             </div>
 
+            <br>
+
+            <div class="row">
+                <div class="pull-right">
+                    <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
+                            class="glyphicon glyphicon-trash"></span> DELETE
+                    </button>
+                    <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#shortcuts">SHORTCUTS</button>
+                    <button id="bClear" class="btn btn-info  btn-sm"><span class="glyphicon glyphicon-flash"></span>
+                        CLEAR
+                    </button>
+                    <button id="bSubmit" class="btn btn-primary  btn-sm"><span class="glyphicon glyphicon-save"></span>
+                        SAVE
+                    </button>
+                </div>
+            </div>
+
             <textarea class="form-control" id="response" name="response" style="width: 100%;height: 50%"
                       placeholder="Response" title="JSON"></textarea>
             <br>
@@ -347,17 +386,6 @@
             <div id="resultDiv" style="display: none" class="alert">
             </div>
 
-
-            <div class="pull-right">
-                <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
-                        class="glyphicon glyphicon-trash"></span> DELETE
-                </button>
-                <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#shortcuts">SHORTCUTS</button>
-                <button id="bClear" class="btn btn-info  btn-sm"><span class="glyphicon glyphicon-flash"></span> CLEAR
-                </button>
-                <button id="bSubmit" class="btn btn-primary  btn-sm"><span class="glyphicon glyphicon-save"></span> SAVE
-                </button>
-            </div>
         </div>
     </div>
 

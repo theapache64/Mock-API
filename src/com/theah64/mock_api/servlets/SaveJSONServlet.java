@@ -21,9 +21,19 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         return true;
     }
 
+    /*route: route,
+                        response: response,
+                        required_params: reqParams,
+                        optional_params: opParams,
+                        is_secure :isSecure,
+                        delay : delay,
+                        description: description
+                        */
     @Override
     protected String[] getRequiredParameters() {
-        return new String[]{JSONS.COLUMN_ROUTE, JSONS.COLUMN_RESPONSE};
+        return new String[]{
+                JSONS.COLUMN_ROUTE,
+                JSONS.COLUMN_RESPONSE};
     }
 
     @Override

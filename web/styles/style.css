@@ -17,6 +17,10 @@ a:hover {
     text-decoration: none;
 }
 
+select#routes {
+    margin-bottom: 15px;
+}
+
 
 .glyphicon-refresh-animate {
     -animation: spin .7s infinite linear;
