@@ -107,7 +107,9 @@
                                 $("input#required_params").val(data.data.required_params);
                                 $("input#optional_params").val(data.data.optional_params);
 
-                                $("input#delay").val(data.data.delay);
+                                if (data.data.delay > 0) {
+                                    $("input#delay").val(data.data.delay);
+                                }
                                 $("input#description").val(data.data.description);
                                 $("input#is_secure").prop('checked', data.data.is_secure);
 
@@ -364,6 +366,11 @@
 
             <br>
 
+            <div id="resultDiv" style="display: none" class="alert">
+            </div>
+
+            <br>
+
             <div class="row">
                 <div class="pull-right">
                     <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
@@ -383,8 +390,6 @@
                       placeholder="Response" title="JSON"></textarea>
             <br>
 
-            <div id="resultDiv" style="display: none" class="alert">
-            </div>
 
         </div>
     </div>

@@ -2,6 +2,7 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.JSONS;
 import com.theah64.mock_api.models.JSON;
+import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
@@ -58,6 +59,23 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
+
+        if (json.isSecure()) {
+            final String authorization = getHttpServletRequest().getHeader(HeaderSecurity.KEY_AUTHORIZATION);
+            if (authorization == null) {
+                throw new Request.RequestException("Authorization header missing");
+            }
+        }
+
+        if (json.getDelay() > 0) {
+            try {
+                System.out.println("Sleep for " + json.getDelay() + "ms");
+                Thread.sleep(json.getDelay());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         getWriter().write(new JSONObject(json.getResponse()).toString());
     }
 }
