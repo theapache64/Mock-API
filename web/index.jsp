@@ -195,7 +195,7 @@
                             $(resultDiv).html("<strong>Success! </strong> " + data.message + ": " + link);
                             $(resultDiv).show();
 
-                            if ('id' in data) {
+                            if ('id' in data.data) {
                                 //Adding added route to select list
                                 $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
                             }
