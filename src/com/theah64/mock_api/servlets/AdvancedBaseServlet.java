@@ -19,6 +19,9 @@ import java.sql.SQLException;
  */
 public abstract class AdvancedBaseServlet extends HttpServlet {
 
+    protected static final String URL_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+
+
     public static final String VERSION_CODE = "/v1";
     protected static final String CONTENT_TYPE_JSON = "application/json";
     private static final String ERROR_GET_NOT_SUPPORTED = "GET method not supported";
@@ -51,6 +54,8 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType(getContentType());
+
+
 
         this.httpServletRequest = req;
 

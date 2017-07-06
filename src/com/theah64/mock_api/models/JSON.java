@@ -7,11 +7,11 @@ import org.json.JSONObject;
  * Created by theapache64 on 14/5/17.
  */
 public class JSON {
-    private final String id, projectId, route, response, requiredParams, optionalParams, description;
+    private final String id, projectId, route, response, requiredParams, optionalParams, description,externalApiUrl;
     private boolean isSecure;
     private final long delay;
 
-    public JSON(String id, String projectId, String route, String response, String requiredParams, String optionalParams, String description, boolean isSecure, long delay) throws JSONException {
+    public JSON(String id, String projectId, String route, String response, String requiredParams, String optionalParams, String description, String externalApiUrl, boolean isSecure, long delay) throws JSONException {
         this.id = id;
         this.projectId = projectId;
         this.route = route;
@@ -19,8 +19,13 @@ public class JSON {
         this.requiredParams = requiredParams;
         this.optionalParams = optionalParams;
         this.description = description;
+        this.externalApiUrl = externalApiUrl;
         this.isSecure = isSecure;
         this.delay = delay;
+    }
+
+    public String getExternalApiUrl() {
+        return externalApiUrl;
     }
 
     public String getDescription() {

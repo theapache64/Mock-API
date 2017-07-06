@@ -6,8 +6,8 @@
   To change this template use FileNode | Settings | FileNode Templates.
 --%>
 <%
-    final Object projectId = session.getAttribute(Project.KEY);
-    if (projectId == null) {
+    final Object project = session.getAttribute(Project.KEY);
+    if (project == null) {
         response.sendRedirect("login.jsp");
         return;
     }

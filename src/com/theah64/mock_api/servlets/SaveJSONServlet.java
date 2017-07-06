@@ -1,6 +1,7 @@
 package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.JSONS;
+import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.models.JSON;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.Request;
@@ -21,14 +22,6 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         return true;
     }
 
-    /*route: route,
-                        response: response,
-                        required_params: reqParams,
-                        optional_params: opParams,
-                        is_secure :isSecure,
-                        delay : delay,
-                        description: description
-                        */
     @Override
     protected String[] getRequiredParameters() {
         return new String[]{
@@ -37,7 +30,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException {
 
         final String route = getStringParameter(JSONS.COLUMN_ROUTE);
         final String projectId = getHeaderSecurity().getProjectId();
@@ -50,6 +43,11 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String description = getStringParameter(JSONS.COLUMN_DESCRIPTION);
         final boolean isSecure = getBooleanParameter(JSONS.COLUMN_IS_SECURE);
         final long delay = getLongParameter(JSONS.COLUMN_DELAY);
+        final String externalApiUrl = getStringParameter(JSONS.COLUMN_EXTERNAL_API_URL);
+
+        if (externalApiUrl != null && !externalApiUrl.matches(URL_REGEX)) {
+            throw new RequestException("Invalid external api url :" + externalApiUrl);
+        }
 
         if (requiredParams.trim().isEmpty()) {
             requiredParams = null;
@@ -63,7 +61,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             optionalParams = optionalParams.replaceAll("\\s+", "_");
         }
 
-        final JSON json = new JSON(null, projectId, route, response, requiredParams, optionalParams, description, isSecure, delay);
+        final JSON json = new JSON(null, projectId, route, response, requiredParams, optionalParams, description, externalApiUrl, isSecure, delay);
 
         if (!isRouteExist) {
             //Route doesn't exist

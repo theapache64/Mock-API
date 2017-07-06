@@ -13,11 +13,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="login_check.jsp" %>
 <%
-    final Project project = (Project) session.getAttribute(Project.KEY);
+    final Project theProject = (Project) session.getAttribute(Project.KEY);
 %>
 <html>
 <head>
-    <title>Mock API - <%=project.getName()%>
+    <title>Mock API - <%=theProject.getName()%>
     </title>
     <%@include file="common_headers.jsp" %>
     <script>
@@ -34,6 +34,13 @@
                     var oldVal = $(this).val();
                     var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/, '_'));
                     $(this).val(newVal);
+                }
+            });
+
+            $("input#route").on('keyup', function () {
+                if (!event.ctrlKey && !event.altKey) {
+                    var oldVal = $(this).val();
+                    $("input#external_api_url").val('<%=theProject.getBaseOgApiUrl()%>/' + oldVal);
                 }
             });
 
@@ -91,10 +98,10 @@
                         beforeSend: function () {
                             startLoading(true);
                         },
-                        url: "fetch_json/<%=project.getName()%>/" + route,
+                        url: "fetch_json/<%=theProject.getName()%>/" + route,
                         success: function (data) {
                             stopLoading(true);
-                            var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
+                            var link = "<a target='blank' href='get_json/<%=theProject.getName()%>/" + route + "'>/" + route + "</a>";
 
                             if (!data.error) {
                                 $(resultDiv).removeClass('alert-danger').addClass('alert-success');
@@ -106,6 +113,7 @@
 
                                 $("input#required_params").val(data.data.required_params);
                                 $("input#optional_params").val(data.data.optional_params);
+                                $("input#external_api_url").val(data.data.external_api_url);
 
                                 if (data.data.delay > 0) {
                                     $("input#delay").val(data.data.delay);
@@ -123,6 +131,7 @@
 
                                 $("input#required_params").val("");
                                 $("input#optional_params").val("");
+                                $("input#external_api_url").val("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
 
@@ -149,6 +158,9 @@
                 editor.getDoc().setValue("");
                 $("input#required_params").val("");
                 $("input#optional_params").val("");
+                $("input#external_api_url").val("");
+                $("input#delay").val("");
+                $("input#description").val("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
             });
@@ -164,6 +176,7 @@
                 var isSecure = $("input#is_secure").is(":checked") ? true : false;
                 var delay = $("input#delay").val();
                 var description = $("input#description").val();
+                var external_api_url = $("input#external_api_url").val();
 
                 console.log("isSecure: " + isSecure);
 
@@ -172,7 +185,7 @@
                     type: "POST",
                     beforeSend: function (request) {
                         startLoading(true);
-                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
+                        request.setRequestHeader('Authorization', '<%=theProject.getApiKey()%>')
                     },
                     url: "v1/save_json",
                     data: {
@@ -180,6 +193,7 @@
                         response: response,
                         required_params: reqParams,
                         optional_params: opParams,
+                        external_api_url: external_api_url,
                         is_secure: isSecure,
                         delay: delay,
                         description: description
@@ -191,7 +205,7 @@
 
                         if (!data.error) {
                             $(resultDiv).removeClass('alert-danger').addClass('alert-success');
-                            var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
+                            var link = "<a target='blank' href='get_json/<%=theProject.getName()%>/" + route + "'>/" + route + "</a>";
                             $(resultDiv).html("<strong>Success! </strong> " + data.message + ": " + link);
                             $(resultDiv).show();
 
@@ -220,9 +234,12 @@
                 $("button#bSubmit").prop('disabled', true);
                 $("input#required_params").prop('disabled', true);
                 $("input#optional_params").prop('disabled', true);
+                $("input#external_api_url").prop('disabled', true);
                 $("button#bClear").prop('disabled', true);
                 $("select#routes").prop('disabled', true);
                 $("input#route").prop('disabled', true);
+                $("input#delay").prop('disabled', true);
+                $("input#description").prop('disabled', true);
                 editor.setOption('readOnly', 'nocursor');
                 $("div#resultDiv").hide();
 
@@ -242,6 +259,9 @@
                 $("input#route").prop('disabled', false);
                 $("input#required_params").prop('disabled', false);
                 $("input#optional_params").prop('disabled', false);
+                $("input#external_api_url").prop('disabled', false);
+                $("input#delay").prop('disabled', false);
+                $("input#description").prop('disabled', false);
                 editor.setOption('readOnly', false);
 
 
@@ -264,7 +284,7 @@
                     type: "POST",
                     beforeSend: function (request) {
                         startLoading(false);
-                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
+                        request.setRequestHeader('Authorization', '<%=theProject.getApiKey()%>')
                     },
                     url: "v1/delete_json",
                     data: {id: selOption.val()},
@@ -296,6 +316,51 @@
 
             });
 
+            $("input#external_api_url").on('dblclick', function () {
+                var oldVal = $(this).val();
+                var newVal = oldVal.replace('<%=theProject.getBaseOgApiUrl()%>','');
+                $(this).val(newVal);
+            });
+
+            $("p#base_og_api_url").on('click', function () {
+                var curVal = $.trim($(this).text());
+                if (!curVal.startsWith("http")) {
+                    //It's not a url so no pre-text
+                    curVal = "";
+                }
+
+                var newUrl = prompt("Set new base og API URL", curVal);
+
+                if (newUrl != null) {
+                    $.ajax({
+                        type: "POST",
+                        beforeSend: function (request) {
+                            startLoading(true);
+                            request.setRequestHeader('Authorization', '<%=theProject.getApiKey()%>')
+                        },
+                        url: "v1/update_project",
+                        data: {
+                            column: 'base_og_api_url',
+                            value: newUrl
+
+                        },
+                        success: function (data) {
+                            stopLoading(true);
+                            if (!data.error) {
+                                $("p#base_og_api_url").text(newUrl);
+
+                            } else {
+                                alert(data.message);
+                            }
+                        },
+                        error: function () {
+                            alert("Failed to update theProject");
+                        }
+                    });
+                }
+
+
+            });
 
         });
     </script>
@@ -306,8 +371,19 @@
     <div class="row ">
         <div class="col-md-12 text-center">
             <h1>Mock API</h1>
+            <%
+                if (theProject.getBaseOgApiUrl() != null) {
+            %>
+            <a href="compare.jsp">Compare with </a>
+            <%
+                }
+            %>
+            <p id="base_og_api_url">
+                <%=theProject.getBaseOgApiUrl() != null ? theProject.getBaseOgApiUrl() : "Tap here to set base og API URL"%>
+            </p>
+
             <p>
-                <small>Project <%=project.getName()%>
+                <small>Project <%=theProject.getName()%>
                 </small>
                 <a href="logout.jsp"><i>(logout)</i></a>
             </p>
@@ -315,13 +391,16 @@
         </div>
     </div>
 
+
+    <br>
+
     <div class="row">
         <%--Available jsonList--%>
         <div class="col-md-2">
             <%
                 List<JSON> jsonList = null;
                 try {
-                    jsonList = JSONS.getInstance().getAll(project.getId());
+                    jsonList = JSONS.getInstance().getAll(theProject.getId());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -347,6 +426,7 @@
             <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route"><br>
             <input class="form-control" type="text" id="required_params" placeholder="Required params"><br>
             <input class="form-control" type="text" id="optional_params" placeholder="Optional params"><br>
+            <input class="form-control" type="text" id="external_api_url" placeholder="External API URL"><br>
 
 
             <div class="row">
@@ -371,6 +451,7 @@
 
             <br>
 
+
             <div class="row">
                 <div class="pull-right">
                     <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
@@ -385,6 +466,8 @@
                     </button>
                 </div>
             </div>
+
+            <br>
 
             <textarea class="form-control" id="response" name="response" style="width: 100%;height: 50%"
                       placeholder="Response" title="JSON"></textarea>

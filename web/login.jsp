@@ -3,8 +3,8 @@
 <%@ page import="com.theah64.mock_api.models.Project" %>
 <%@ page import="com.theah64.mock_api.utils.DarKnight" %>
 <%@ page import="com.theah64.mock_api.utils.Form" %>
-<%@ page import="java.sql.SQLException" %>
 <%@ page import="com.theah64.mock_api.utils.RandomString" %>
+<%@ page import="java.sql.SQLException" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -34,7 +34,7 @@
 
             //Double click on password makes it visible
             $("input#iPassword").on('dblclick', function () {
-                $(this).attr('type','text');
+                $(this).attr('type', 'text');
             });
 
         });
@@ -99,7 +99,7 @@
 
                                     //Project doesn't exist
                                     final String apiKey = RandomString.getNewApiKey(10);
-                                    project = new Project(null, name, passHash, apiKey);
+                                    project = new Project(null, name, passHash, apiKey, null);
 
                                     try {
 

@@ -1,7 +1,6 @@
 package com.theah64.mock_api.database;
 
 import com.theah64.mock_api.models.Project;
-import com.theah64.mock_api.utils.RandomString;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +14,7 @@ public class Projects extends BaseTable<Project> {
     private static final Projects instance = new Projects();
     public static final String COLUMN_PASS_HASH = "pass_hash";
     public static final String COLUMN_API_KEY = "api_key";
+    public static final String COLUMN_BASE_OG_API_URL = "base_og_api_url";
 
     private Projects() {
         super("projects");
@@ -27,7 +27,7 @@ public class Projects extends BaseTable<Project> {
     @Override
     public Project get(String column1, String value1, String column2, String value2) {
         Project project = null;
-        final String query = String.format("SELECT id,name,api_key FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
+        final String query = String.format("SELECT id,name,api_key,base_og_api_url FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
 
         String resultValue = null;
         final java.sql.Connection con = Connection.getConnection();
@@ -43,7 +43,8 @@ public class Projects extends BaseTable<Project> {
                 final String id = rs.getString(COLUMN_ID);
                 final String name = rs.getString(COLUMN_NAME);
                 final String apiKey = rs.getString(COLUMN_API_KEY);
-                project = new Project(id, name, null, apiKey);
+                final String baseOgApiUrl = rs.getString(COLUMN_BASE_OG_API_URL);
+                project = new Project(id, name, null, apiKey, baseOgApiUrl);
             }
 
             rs.close();
