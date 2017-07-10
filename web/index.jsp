@@ -57,6 +57,20 @@
                     editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": false, "message": "' + successMsg + '", "data": {} }'), undefined, 4));
                 }
 
+
+                if (event.ctrlKey && event.altKey && event.keyCode == 83) {
+                    //'S' Pressed along with control and alt
+                    var key = prompt("Key for the object");
+                    if (key) {
+                        var value = prompt("Value for " + key);
+                        //check if the data int or not
+                        editor.replaceSelection('"' + key + '":' + (isNaN(value) ? '"' + value + '"' : value));
+                    } else {
+                        alert("Can't accept empty key");
+                    }
+                }
+
+
                 if (event.ctrlKey && event.altKey && event.keyCode == 69) {
                     var errorMsg = prompt("Error message", "This is a sample error message");
                     editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": true, "message": "' + errorMsg + '"}'), undefined, 4));
@@ -318,7 +332,7 @@
 
             $("input#external_api_url").on('dblclick', function () {
                 var oldVal = $(this).val();
-                var newVal = oldVal.replace('<%=theProject.getBaseOgApiUrl()%>','');
+                var newVal = oldVal.replace('<%=theProject.getBaseOgApiUrl()%>', '');
                 $(this).val(newVal);
             });
 
@@ -489,6 +503,7 @@
                     <p><code>Control + Alt + N </code>To get default success response</p>
                     <p><code>Control + Alt + E </code>To get default error response</p>
                     <p><code>Control + Alt + D </code>To duplicate selection (with numerical increment)</p>
+                    <p><code>Control + Alt + S </code>To insert a string object at selected position</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
