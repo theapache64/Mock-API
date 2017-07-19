@@ -42,7 +42,7 @@
             <table class="table table-bordered table-responsive table-striped">
                 <thead>
                 <tr>
-                    <th>Route (M-API)</th>
+                    <th>Route (Internal)</th>
                     <th>Route (External)</th>
                     <th>Status</th>
                     <th>

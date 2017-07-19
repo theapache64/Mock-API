@@ -84,8 +84,6 @@ public class BaseTable<T> {
     public void update(String whereColumn, String whereColumnValue, String updateColumn, String newUpdateColumnValue) throws SQLException {
         String error = null;
         final String query = String.format("UPDATE %s SET %s = ? WHERE %s = ?;", tableName, updateColumn, whereColumn);
-        final String query2 = String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s';", tableName, updateColumn, newUpdateColumnValue, whereColumn, whereColumnValue);
-        System.out.println(query2);
 
         final java.sql.Connection con = Connection.getConnection();
 
@@ -107,6 +105,7 @@ public class BaseTable<T> {
                 e.printStackTrace();
             }
         }
+
 
         manageError(error);
 

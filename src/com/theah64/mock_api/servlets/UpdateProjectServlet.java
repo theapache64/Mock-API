@@ -1,5 +1,6 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.database.JSONS;
 import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.models.Project;
@@ -40,11 +41,16 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
             throw new RequestException("Invalid URL");
         }
 
-        Projects.getInstance().update(Projects.COLUMN_ID, getHeaderSecurity().getProjectId(), column, value);
+        final Projects projectsTable = Projects.getInstance();
+        projectsTable.update(Projects.COLUMN_ID, getHeaderSecurity().getProjectId(), column, value);
 
         if (column.equals(Projects.COLUMN_BASE_OG_API_URL)) {
             //update project url
             final Project theProject = (Project) getHttpServletRequest().getSession().getAttribute(Project.KEY);
+
+            //updating all old instance of string with new route
+            JSONS.getInstance().updateBaseOGAPIURL(getHeaderSecurity().getProjectId(), theProject.getBaseOgApiUrl(), value);
+
             theProject.setBaseOgApiUrl(value);
         }
 
