@@ -27,7 +27,7 @@ public class Projects extends BaseTable<Project> {
     @Override
     public Project get(String column1, String value1, String column2, String value2) {
         Project project = null;
-        final String query = String.format("SELECT id,name,api_key,base_og_api_url FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
+        final String query = String.format("SELECT id,name,api_key,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
 
         String resultValue = null;
         final java.sql.Connection con = Connection.getConnection();
@@ -44,7 +44,8 @@ public class Projects extends BaseTable<Project> {
                 final String name = rs.getString(COLUMN_NAME);
                 final String apiKey = rs.getString(COLUMN_API_KEY);
                 final String baseOgApiUrl = rs.getString(COLUMN_BASE_OG_API_URL);
-                project = new Project(id, name, null, apiKey, baseOgApiUrl);
+                final String passHash = rs.getString(COLUMN_PASS_HASH);
+                project = new Project(id, name, passHash, apiKey, baseOgApiUrl);
             }
 
             rs.close();

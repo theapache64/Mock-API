@@ -400,7 +400,9 @@
                 <small>Project <%=theProject.getName()%>
                 </small>
                 <a href="logout.jsp"><i>(logout)</i></a>
+                <a href="login.jsp?name=<%=theProject.getName()%>&pass_hash=<%=theProject.getPassHash()%>&simple_auth=true"><i>(simple_auth)</i></a>
             </p>
+
 
         </div>
     </div>

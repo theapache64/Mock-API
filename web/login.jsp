@@ -18,6 +18,23 @@
         response.sendRedirect("index.jsp");
         return;
     }
+
+    String name = request.getParameter("name");
+    String passHash = request.getParameter("pass_hash");
+    final boolean isSimpleAuth = request.getParameter("simple_auth") != null;
+
+    if (name != null && passHash != null && isSimpleAuth) {
+        final Projects projectsTable = Projects.getInstance();
+        Project project = projectsTable.get(Projects.COLUMN_NAME, name, Projects.COLUMN_PASS_HASH, passHash);
+
+        if (project != null) {
+
+            //Project exists
+            session.setAttribute(Project.KEY, project);
+            response.sendRedirect("index.jsp");
+            return;
+        }
+    }
 %>
 <html>
 <head>
@@ -83,10 +100,10 @@
 
                             if (form.isSubmitted()) {
 
-                                final String name = request.getParameter("name");
-                                final String passHash = DarKnight.getEncrypted(request.getParameter("password"));
+                                name = request.getParameter("name");
+                                final String password = request.getParameter("password");
+                                passHash = DarKnight.getEncrypted(password);
                                 final Projects projectsTable = Projects.getInstance();
-
                                 Project project = projectsTable.get(Projects.COLUMN_NAME, name, Projects.COLUMN_PASS_HASH, passHash);
 
                                 if (project != null) {
