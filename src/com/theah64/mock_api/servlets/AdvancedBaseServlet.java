@@ -56,7 +56,6 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         resp.setContentType(getContentType());
 
 
-
         this.httpServletRequest = req;
 
         out = resp.getWriter();
@@ -89,7 +88,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         }
     }
 
-    protected String getContentType() {
+    private String getContentType() {
         return CONTENT_TYPE_JSON;
     }
 
@@ -99,14 +98,14 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
     protected abstract void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException;
 
-    public HeaderSecurity getHeaderSecurity() {
+    HeaderSecurity getHeaderSecurity() {
         if (!isSecureServlet()) {
             throw new IllegalArgumentException("It's not a secure servlet");
         }
         return hs;
     }
 
-    public String getStringParameter(String key) {
+    String getStringParameter(String key) {
         return request.getStringParameter(key);
     }
 
@@ -125,7 +124,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         return defValue;
     }
 
-    public boolean getBooleanParameter(String key) {
+    boolean getBooleanParameter(String key) {
         return request.getBooleanParameter(key);
     }
 
@@ -133,11 +132,11 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         return request.has(key);
     }
 
-    public HttpServletRequest getHttpServletRequest() {
+    HttpServletRequest getHttpServletRequest() {
         return httpServletRequest;
     }
 
-    public long getLongParameter(String key) {
+    long getLongParameter(String key) {
         return request.getLongParameter(key);
     }
 

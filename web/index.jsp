@@ -398,7 +398,6 @@
                 <small>Project <%=project.getName()%>
                 </small>
                 <a href="logout.jsp"><i>(logout)</i></a>
-                <a href="index.jsp?api_key=<%=project.getApiKey()%>"><i>(simple_auth)</i></a>
             </p>
 
 
