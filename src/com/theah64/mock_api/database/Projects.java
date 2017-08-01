@@ -1,5 +1,6 @@
 package com.theah64.mock_api.database;
 
+import com.sun.istack.internal.Nullable;
 import com.theah64.mock_api.models.Project;
 
 import java.sql.PreparedStatement;
@@ -24,18 +25,31 @@ public class Projects extends BaseTable<Project> {
         return instance;
     }
 
-    @Override
-    public Project get(String column1, String value1, String column2, String value2) {
-        Project project = null;
-        final String query = String.format("SELECT id,name,api_key,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
 
+    @Override
+    public Project get(String column, String value) {
+        return get(column, value, null, null);
+    }
+
+    @Override
+    public Project get(String column1, String value1, @Nullable String column2, @Nullable String value2) {
+        Project project = null;
+        final String query;
+        if (column2 != null && value2 != null) {
+            query = String.format("SELECT id,name,api_key,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
+        } else {
+            query = String.format("SELECT id,name,api_key,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND is_active = 1 LIMIT 1", tableName, column1);
+        }
         String resultValue = null;
         final java.sql.Connection con = Connection.getConnection();
 
         try {
             final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, value1);
-            ps.setString(2, value2);
+            if (column2 != null && value2 != null) {
+                ps.setString(2, value2);
+            }
+
 
             final ResultSet rs = ps.executeQuery();
 

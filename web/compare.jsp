@@ -1,6 +1,5 @@
 <%@ page import="com.theah64.mock_api.database.JSONS" %>
 <%@ page import="com.theah64.mock_api.models.JSON" %>
-<%@ page import="com.theah64.mock_api.models.Project" %>
 <%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
@@ -11,12 +10,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="login_check.jsp" %>
-<%
-    final Project theProject = (Project) session.getAttribute(Project.KEY);
-%>
 <html>
 <head>
-    <title>Compare - Mock API - <%=theProject.getName()%>
+    <title>Compare - Mock API - <%=project.getName()%>
     </title>
     <%@include file="common_headers.jsp" %>
 
@@ -29,7 +25,7 @@
         <div class="col-md-12 text-center">
             <h1>Mock API</h1>
             <p>
-                <small>Project <%=theProject.getName()%>
+                <small>Project <%=project.getName()%>
                 </small>
                 <a href="logout.jsp"><i>(logout)</i></a>
             </p>
@@ -53,12 +49,12 @@
 
                 <tbody>
                 <%
-                    final List<JSON> jsons = JSONS.getInstance().getAll(theProject.getId());
+                    final List<JSON> jsons = JSONS.getInstance().getAll(project.getId());
                     for (final JSON json : jsons) {
                 %>
                 <tr>
                     <td width="30%"><a target="blank"
-                                       href="get_json/<%=theProject.getName()%>/<%=json.getRoute()%>"><%=json.getRoute()%>
+                                       href="get_json/<%=project.getName()%>/<%=json.getRoute()%>"><%=json.getRoute()%>
                     </a></td>
                     <td width="30%"><a target="blank"
                                        href="<%=json.getExternalApiUrl()!=null ? json.getExternalApiUrl() : ""%>"><%=json.getExternalApiUrl() != null ? json.getExternalApiUrl() : "-"%>

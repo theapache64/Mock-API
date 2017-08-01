@@ -13,29 +13,6 @@
   To change this template use FileNode | Settings | FileNode Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    if (session.getAttribute(Project.KEY) != null) {
-        response.sendRedirect("index.jsp");
-        return;
-    }
-
-    String name = request.getParameter("name");
-    String passHash = request.getParameter("pass_hash");
-    final boolean isSimpleAuth = request.getParameter("simple_auth") != null;
-
-    if (name != null && passHash != null && isSimpleAuth) {
-        final Projects projectsTable = Projects.getInstance();
-        Project project = projectsTable.get(Projects.COLUMN_NAME, name, Projects.COLUMN_PASS_HASH, passHash);
-
-        if (project != null) {
-
-            //Project exists
-            session.setAttribute(Project.KEY, project);
-            response.sendRedirect("index.jsp");
-            return;
-        }
-    }
-%>
 <html>
 <head>
     <title>Admin Login - WASP</title>
@@ -100,17 +77,16 @@
 
                             if (form.isSubmitted()) {
 
-                                name = request.getParameter("name");
+                                final String name = request.getParameter("name");
                                 final String password = request.getParameter("password");
-                                passHash = DarKnight.getEncrypted(password);
+                                final String passHash = DarKnight.getEncrypted(password);
                                 final Projects projectsTable = Projects.getInstance();
                                 Project project = projectsTable.get(Projects.COLUMN_NAME, name, Projects.COLUMN_PASS_HASH, passHash);
 
                                 if (project != null) {
 
                                     //Project exists
-                                    session.setAttribute(Project.KEY, project);
-                                    response.sendRedirect("index.jsp");
+                                    response.sendRedirect("index.jsp?api_key=" + project.getApiKey());
 
                                 } else {
 
@@ -126,9 +102,7 @@
                                         if (projectId != null) {
 
                                             project.setId(projectId);
-                                            session.setAttribute(Project.KEY, project);
-
-                                            response.sendRedirect("index.jsp");
+                                            response.sendRedirect("index.jsp?api_key=" + project.getApiKey());
                                         } else {
                                             throw new RequestException("Failed to create project");
                                         }

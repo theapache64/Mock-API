@@ -12,12 +12,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="login_check.jsp" %>
-<%
-    final Project theProject = (Project) session.getAttribute(Project.KEY);
-%>
+
 <html>
 <head>
-    <title>Mock API - <%=theProject.getName()%>
+    <title>Mock API - <%=project.getName()%>
     </title>
     <%@include file="common_headers.jsp" %>
     <script>
@@ -40,7 +38,7 @@
             $("input#route").on('keyup', function () {
                 if (!event.ctrlKey && !event.altKey) {
                     var oldVal = $(this).val();
-                    $("input#external_api_url").val('<%=theProject.getBaseOgApiUrl()%>/' + oldVal);
+                    $("input#external_api_url").val('<%=project.getBaseOgApiUrl()%>/' + oldVal);
                 }
             });
 
@@ -112,10 +110,10 @@
                         beforeSend: function () {
                             startLoading(true);
                         },
-                        url: "fetch_json/<%=theProject.getName()%>/" + route,
+                        url: "fetch_json/<%=project.getName()%>/" + route,
                         success: function (data) {
                             stopLoading(true);
-                            var link = "<a target='blank' href='get_json/<%=theProject.getName()%>/" + route + "'>/" + route + "</a>";
+                            var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
 
                             if (!data.error) {
                                 $(resultDiv).removeClass('alert-danger').addClass('alert-success');
@@ -199,7 +197,7 @@
                     type: "POST",
                     beforeSend: function (request) {
                         startLoading(true);
-                        request.setRequestHeader('Authorization', '<%=theProject.getApiKey()%>')
+                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
                     },
                     url: "v1/save_json",
                     data: {
@@ -219,7 +217,7 @@
 
                         if (!data.error) {
                             $(resultDiv).removeClass('alert-danger').addClass('alert-success');
-                            var link = "<a target='blank' href='get_json/<%=theProject.getName()%>/" + route + "'>/" + route + "</a>";
+                            var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
                             $(resultDiv).html("<strong>Success! </strong> " + data.message + ": " + link);
                             $(resultDiv).show();
 
@@ -298,7 +296,7 @@
                     type: "POST",
                     beforeSend: function (request) {
                         startLoading(false);
-                        request.setRequestHeader('Authorization', '<%=theProject.getApiKey()%>')
+                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
                     },
                     url: "v1/delete_json",
                     data: {id: selOption.val()},
@@ -332,7 +330,7 @@
 
             $("input#external_api_url").on('dblclick', function () {
                 var oldVal = $(this).val();
-                var newVal = oldVal.replace('<%=theProject.getBaseOgApiUrl()%>', '');
+                var newVal = oldVal.replace('<%=project.getBaseOgApiUrl()%>', '');
                 $(this).val(newVal);
             });
 
@@ -350,7 +348,7 @@
                         type: "POST",
                         beforeSend: function (request) {
                             startLoading(true);
-                            request.setRequestHeader('Authorization', '<%=theProject.getApiKey()%>')
+                            request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
                         },
                         url: "v1/update_project",
                         data: {
@@ -386,21 +384,21 @@
         <div class="col-md-12 text-center">
             <h1>Mock API</h1>
             <%
-                if (theProject.getBaseOgApiUrl() != null) {
+                if (project.getBaseOgApiUrl() != null) {
             %>
             <a href="compare.jsp">Compare with </a>
             <%
                 }
             %>
             <p id="base_og_api_url">
-                <%=theProject.getBaseOgApiUrl() != null ? theProject.getBaseOgApiUrl() : "Tap here to set base og API URL"%>
+                <%=project.getBaseOgApiUrl() != null ? project.getBaseOgApiUrl() : "Tap here to set base og API URL"%>
             </p>
 
             <p>
-                <small>Project <%=theProject.getName()%>
+                <small>Project <%=project.getName()%>
                 </small>
                 <a href="logout.jsp"><i>(logout)</i></a>
-                <a href="login.jsp?name=<%=theProject.getName()%>&pass_hash=<%=theProject.getPassHash()%>&simple_auth=true"><i>(simple_auth)</i></a>
+                <a href="index.jsp?api_key=<%=project.getApiKey()%>"><i>(simple_auth)</i></a>
             </p>
 
 
@@ -412,11 +410,11 @@
 
     <div class="row">
         <%--Available jsonList--%>
-        <div class="col-md-2">
+        <div class=" col-md-2">
             <%
                 List<JSON> jsonList = null;
                 try {
-                    jsonList = JSONS.getInstance().getAll(theProject.getId());
+                    jsonList = JSONS.getInstance().getAll(project.getId());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
