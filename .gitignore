@@ -18,3 +18,4 @@ out/
 workspace.xml
 
 mock_api_sql_backups/
+private_releases/
