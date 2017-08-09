@@ -1,6 +1,5 @@
 <%@ page import="com.theah64.mock_api.database.JSONS" %>
 <%@ page import="com.theah64.mock_api.models.JSON" %>
-<%@ page import="com.theah64.mock_api.models.Project" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
 <%--
@@ -24,7 +23,15 @@
             var editor = CodeMirror.fromTextArea(document.getElementById("response"), {
                 lineNumbers: true,
                 mode: "application/json",
-                matchBrackets: true
+                matchBrackets: true,
+                extraKeys: {
+                    "F11": function (cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                }
             });
 
             $("input#route, input#required_params, input#optional_params").on('keyup', function () {
@@ -376,6 +383,17 @@
 
         });
     </script>
+    <style>
+        .CodeMirror-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: auto;
+            z-index: 9;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -386,7 +404,7 @@
             <%
                 if (project.getBaseOgApiUrl() != null) {
             %>
-            <a href="compare.jsp">Compare with </a>
+            <a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare with </a>
             <%
                 }
             %>
@@ -436,9 +454,13 @@
 
         <%--Add new route panel--%>
         <div class="col-md-10">
+            <label for="route">Route</label>
             <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route"><br>
+            <label for="required_params">Required params</label>
             <input class="form-control" type="text" id="required_params" placeholder="Required params"><br>
+            <label for="optional_params">Optional params</label>
             <input class="form-control" type="text" id="optional_params" placeholder="Optional params"><br>
+            <label for="external_api_url">External API URL</label>
             <input class="form-control" type="text" id="external_api_url" placeholder="External API URL"><br>
 
 
@@ -449,10 +471,13 @@
                 </div>
 
                 <div class="col-md-3">
+
+                    <label for="delay">Delay</label>
                     <input class="form-control" type="number" placeholder="Delay" id="delay"/>
                 </div>
 
                 <div class="col-md-8">
+                    <label for="description">Description</label>
                     <input class="form-control" type="text" placeholder="Description" id="description"/>
                 </div>
             </div>
@@ -482,7 +507,7 @@
 
             <br>
 
-            <textarea class="form-control" id="response" name="response" style="width: 100%;height: 50%"
+            <textarea class="form-control" id="response" name="response"
                       placeholder="Response" title="JSON"></textarea>
             <br>
 

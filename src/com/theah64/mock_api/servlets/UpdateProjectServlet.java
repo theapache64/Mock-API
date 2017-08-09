@@ -51,6 +51,7 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
 
         final Projects projectsTable = Projects.getInstance();
         final String id = getHeaderSecurity().getProjectId();
+        final String oldBaseUrl = projectsTable.get(Projects.COLUMN_ID, id, Projects.COLUMN_BASE_OG_API_URL, true);
         projectsTable.update(Projects.COLUMN_ID, id, column, value);
 
         if (column.equals(Projects.COLUMN_BASE_OG_API_URL)) {
@@ -58,7 +59,6 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
             System.out.println("Updating og base api url");
 
             //update project url
-            final String oldBaseUrl = projectsTable.get(Projects.COLUMN_ID, id, Projects.COLUMN_BASE_OG_API_URL, true);
 
             //updating all old instance of string with new route
             JSONS.getInstance().updateBaseOGAPIURL(id, oldBaseUrl, value);

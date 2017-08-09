@@ -23,6 +23,7 @@
 %>
 
 <script src="/mock_api/js/codemirror.js"></script>
+<script src="/mock_api/js/fullscreen_cm.js"></script>
 <link rel="stylesheet" href="/mock_api/styles/codemirror.css">
 <script src="/mock_api/js/javascript.js"></script>
 

@@ -35,6 +35,7 @@ public class Projects extends BaseTable<Project> {
     public Project get(String column1, String value1, @Nullable String column2, @Nullable String value2) {
         Project project = null;
         final String query;
+
         if (column2 != null && value2 != null) {
             query = String.format("SELECT id,name,api_key,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
         } else {
@@ -64,6 +65,7 @@ public class Projects extends BaseTable<Project> {
 
             rs.close();
             ps.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
