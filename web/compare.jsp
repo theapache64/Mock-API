@@ -15,6 +15,26 @@
     <title>Compare - Mock API - <%=project.getName()%>
     </title>
     <%@include file="common_headers.jsp" %>
+    <script>
+        $(document).ready(function () {
+            $("button.bCompare").on('click', function () {
+                var url = $(this).data('external-api-url');
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                }).done(function (data, statusText, xhr) {
+                    var status = xhr.status;                //200
+                    if (status == 200) {
+                        alert("ok");
+                    } else {
+                        alert("not ok");
+                    }
+                }).error(function (data, statusText, xhr) {
+
+                });
+            })
+        });
+    </script>
 
 </head>
 <body>
@@ -59,9 +79,9 @@
                     <td width="30%"><a target="blank"
                                        href="<%=json.getExternalApiUrl()!=null ? json.getExternalApiUrl() : ""%>"><%=json.getExternalApiUrl() != null ? json.getExternalApiUrl() : "-"%>
                     </a></td>
-                    <td width="60%">-</td>
+                    <td width="60%"><span class="btn btn-success">OK</span> </td>
                     <td width="10%">
-                        <%=json.getExternalApiUrl() != null ? "<button class=\"bCompare btn btn-info\" data-json-id=\"" + json.getId() + "\">COMPARE</button>" : "-"%>
+                        <%=json.getExternalApiUrl() != null ? "<button class=\"bCompare btn btn-info\" data-external-api-url=\"" + json.getExternalApiUrl() + "\">COMPARE</button>" : "-"%>
                     </td>
                 </tr>
                 <%
