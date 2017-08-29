@@ -1,25 +1,36 @@
 package com.theah64.mock_api.test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MyClass {
 
-    private static final String IPHONE_FLIPKART = "https://www.flipkart.com/apple-iphone-7-plus-black-128-gb/p/itmen6dasgrskmyh?pid=MOBEMK62XSANTWGZ&srno=b_1_2&otracker=browse&lid=LSTMOBEMK62XSANTWGZ0SIVZ6";
+
+    public static void main(String[] args) {
 
 
-    public static void main(String[] args) throws IOException {
+        final int gridCount = 3;
 
-        final URL url = new URL(IPHONE_FLIPKART);
-        final BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-        final StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = br.readLine()) != null) {
-            sb.append(line).append("\n");
+        final List<String> categories = new ArrayList<>();
+        categories.add("Category 1");
+        categories.add("Category 2");
+        categories.add("Category 3");
+        categories.add("Category 4");
+        categories.add("Category 5");
+        categories.add("Category 6");
+        categories.add("Category 7");
+        categories.add("Category 8");
+        categories.add("Category 9");
+        categories.add("Category 10");
+
+        List<List<String>> partitions = new LinkedList<>();
+        for (int i = 0; i < categories.size(); i += gridCount) {
+            partitions.add(categories.subList(i,
+                    Math.min(i + gridCount, categories.size())));
         }
 
-        System.out.println(sb);
+        System.out.println(partitions);
     }
+
 }
