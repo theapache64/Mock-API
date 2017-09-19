@@ -14,7 +14,7 @@
 
 <html>
 <head>
-    <title>Mock API - <%=project.getName()%>
+    <title><%=project.getName()%> / MockAPI
     </title>
     <%@include file="common_headers.jsp" %>
     <script>
@@ -123,6 +123,7 @@
                             var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
 
                             if (!data.error) {
+
                                 $(resultDiv).removeClass('alert-danger').addClass('alert-success');
                                 $(resultDiv).html("<strong>Success! </strong> " + data.message + " : " + link);
                                 $(resultDiv).show();
@@ -133,6 +134,9 @@
                                 $("input#required_params").val(data.data.required_params);
                                 $("input#optional_params").val(data.data.optional_params);
                                 $("input#external_api_url").val(data.data.external_api_url);
+
+                                //Setting last modified
+                                $("p#pLastModified").text("Last modified: " + data.data.last_modified);
 
                                 if (data.data.delay > 0) {
                                     $("input#delay").val(data.data.delay);
@@ -151,6 +155,7 @@
                                 $("input#required_params").val("");
                                 $("input#optional_params").val("");
                                 $("input#external_api_url").val("");
+                                $("p#pLastModified").text("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
 
@@ -180,6 +185,7 @@
                 $("input#external_api_url").val("");
                 $("input#delay").val("");
                 $("input#description").val("");
+                $("p#pLastModified").text("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
             });
@@ -400,7 +406,8 @@
 
     <div class="row ">
         <div class="col-md-12 text-center">
-            <h1>Mock API</h1>
+            <h1><%=project.getName()%>
+            </h1>
             <%
                 if (project.getBaseOgApiUrl() != null) {
             %>
@@ -413,8 +420,6 @@
             </p>
 
             <p>
-                <small>Project <%=project.getName()%>
-                </small>
                 <a href="logout.jsp"><i>(logout)</i></a>
             </p>
 
@@ -451,6 +456,7 @@
             </select>
         </div>
 
+        <p id="pLastModified" class="pull-right"></p>
 
         <%--Add new route panel--%>
         <div class="col-md-10">

@@ -5,6 +5,7 @@ import com.theah64.mock_api.models.JSON;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
+import com.theah64.mock_api.utils.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,6 +53,7 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         joJson.put(JSONS.COLUMN_IS_SECURE, json.isSecure());
         joJson.put(JSONS.COLUMN_DELAY, json.getDelay());
         joJson.put(JSONS.COLUMN_DESCRIPTION, json.getDescription());
+        joJson.put("last_modified", TimeUtils.millisToLongDHMS(json.getUpdatedInMillis()));
 
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
     }

@@ -61,7 +61,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             optionalParams = optionalParams.replaceAll("\\s+", "_");
         }
 
-        final JSON json = new JSON(null, projectId, route, response, requiredParams, optionalParams, description, externalApiUrl, isSecure, delay);
+        final JSON json = new JSON(null, projectId, route, response, requiredParams, optionalParams, description, externalApiUrl, isSecure, delay, -1);
 
         if (!isRouteExist) {
             //Route doesn't exist

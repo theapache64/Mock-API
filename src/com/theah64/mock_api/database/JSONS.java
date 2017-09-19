@@ -24,6 +24,7 @@ public class JSONS extends BaseTable<JSON> {
     public static final String COLUMN_IS_SECURE = "is_secure";
     public static final String COLUMN_DELAY = "delay";
     public static final String COLUMN_EXTERNAL_API_URL = "external_api_url";
+    public static final String COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis";
 
     private JSONS() {
         super("jsons");
@@ -37,7 +38,7 @@ public class JSONS extends BaseTable<JSON> {
     public String addv3(JSON json) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO jsons (project_id, route, response, required_params, optional_params, description, is_secure, delay,external_api_url) VALUES (?,?,?,?,?,?,?,?,?);";
+        final String query = "INSERT INTO jsons (project_id, route, response, required_params, optional_params, description, is_secure, delay,external_api_url,updated_at_in_millis) VALUES (?,?,?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -50,6 +51,7 @@ public class JSONS extends BaseTable<JSON> {
             ps.setBoolean(7, json.isSecure());
             ps.setLong(8, json.getDelay());
             ps.setString(9, json.getExternalApiUrl());
+            ps.setLong(10, System.currentTimeMillis());
 
             ps.executeUpdate();
             final ResultSet rs = ps.getGeneratedKeys();
@@ -88,7 +90,7 @@ public class JSONS extends BaseTable<JSON> {
                     final String id = rs.getString(COLUMN_ID);
                     final String route = rs.getString(COLUMN_ROUTE);
                     final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
-                    jsonList.add(new JSON(id, null, route, null, null, null, null, externalApiUrl, false, 0));
+                    jsonList.add(new JSON(id, null, route, null, null, null, null, externalApiUrl, false, 0, -1));
                 } while (rs.next());
             }
             rs.close();
@@ -119,7 +121,7 @@ public class JSONS extends BaseTable<JSON> {
     public JSON get(String projectName, String route) throws SQLException {
         String error = null;
         JSON json = null;
-        final String query = "SELECT j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params, external_api_url FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
+        final String query = "SELECT j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params, external_api_url FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -134,8 +136,9 @@ public class JSONS extends BaseTable<JSON> {
                 final boolean isSecure = rs.getBoolean(COLUMN_IS_SECURE);
                 final long delay = rs.getLong(COLUMN_DELAY);
                 final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
+                final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
 
-                json = new JSON(null, null, null, response, reqPar, opPar, description, externalApiUrl, isSecure, delay);
+                json = new JSON(null, null, null, response, reqPar, opPar, description, externalApiUrl, isSecure, delay, updatedInMillis);
             }
             rs.close();
             ps.close();
@@ -160,7 +163,7 @@ public class JSONS extends BaseTable<JSON> {
     @Override
     public boolean update(JSON json) {
         boolean isUpdated = false;
-        final String query = "UPDATE jsons SET response = ?, required_params = ? , optional_params = ? , description = ? , is_secure = ? , delay = ?, external_api_url = ?   WHERE route = ? AND project_id = ?;";
+        final String query = "UPDATE jsons SET response = ?, required_params = ? , optional_params = ? , description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?   WHERE route = ? AND project_id = ?;";
         java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -172,8 +175,10 @@ public class JSONS extends BaseTable<JSON> {
             ps.setBoolean(5, json.isSecure());
             ps.setLong(6, json.getDelay());
             ps.setString(7, json.getExternalApiUrl());
-            ps.setString(8, json.getRoute());
-            ps.setString(9, json.getProjectId());
+            ps.setLong(8, System.currentTimeMillis());
+            ps.setString(9, json.getRoute());
+            ps.setString(10, json.getProjectId());
+
 
             isUpdated = ps.executeUpdate() == 1;
             ps.close();
