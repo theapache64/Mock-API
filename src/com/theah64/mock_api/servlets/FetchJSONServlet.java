@@ -53,7 +53,7 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         joJson.put(JSONS.COLUMN_IS_SECURE, json.isSecure());
         joJson.put(JSONS.COLUMN_DELAY, json.getDelay());
         joJson.put(JSONS.COLUMN_DESCRIPTION, json.getDescription());
-        joJson.put("last_modified", TimeUtils.millisToLongDHMS(json.getUpdatedInMillis()));
+        joJson.put("last_modified", TimeUtils.millisToLongDHMS(json.getUpdatedInMillis()) + " ago");
 
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
     }

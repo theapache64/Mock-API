@@ -107,11 +107,16 @@
 
             $("select#routes").on('change', function () {
 
+
+
                 var selIndex = $(this).prop('selectedIndex');
                 if (selIndex != 0) {
 
                     var selOption = $(this).find(":selected");
                     var route = $.trim(selOption.text());
+
+
+
                     $.ajax({
                         type: "GET",
                         beforeSend: function () {
@@ -119,6 +124,11 @@
                         },
                         url: "fetch_json/<%=project.getName()%>/" + route,
                         success: function (data) {
+
+                            //Changing browser url without reloading the page
+                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route='+route);
+
+
                             stopLoading(true);
                             var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
 
@@ -136,7 +146,7 @@
                                 $("input#external_api_url").val(data.data.external_api_url);
 
                                 //Setting last modified
-                                $("p#pLastModified").text("Last modified: " + data.data.last_modified);
+                                $("p#pLastModified").html("Last modified: <b>" + data.data.last_modified + "</b>");
 
                                 if (data.data.delay > 0) {
                                     $("input#delay").val(data.data.delay);
@@ -155,7 +165,7 @@
                                 $("input#required_params").val("");
                                 $("input#optional_params").val("");
                                 $("input#external_api_url").val("");
-                                $("p#pLastModified").text("");
+                                $("p#pLastModified").html("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
 
@@ -185,7 +195,7 @@
                 $("input#external_api_url").val("");
                 $("input#delay").val("");
                 $("input#description").val("");
-                $("p#pLastModified").text("");
+                $("p#pLastModified").html("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
             });
@@ -387,6 +397,13 @@
 
             });
 
+            var selectedRoute = "<%=request.getParameter("route")%>";
+            if (selectedRoute != "null") {
+                $("select#routes option").filter(function () {
+                    return this.text == selectedRoute;
+                }).attr('selected', true).trigger("change");
+            }
+
         });
     </script>
     <style>
@@ -430,6 +447,10 @@
 
     <br>
 
+
+    <p id="pLastModified" class="pull-right"></p>
+
+
     <div class="row">
         <%--Available jsonList--%>
         <div class=" col-md-2">
@@ -456,7 +477,6 @@
             </select>
         </div>
 
-        <p id="pLastModified" class="pull-right"></p>
 
         <%--Add new route panel--%>
         <div class="col-md-10">
