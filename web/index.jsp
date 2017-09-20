@@ -18,6 +18,9 @@
     </title>
     <%@include file="common_headers.jsp" %>
     <script>
+        function setLastModified(message) {
+            $("p#pLastModified").html("Last modified: <b>" + message + "</b>");
+        }
         $(document).ready(function () {
 
             var editor = CodeMirror.fromTextArea(document.getElementById("response"), {
@@ -146,8 +149,8 @@
                                 $("input#external_api_url").val(data.data.external_api_url);
 
                                 //Setting last modified
-                                $("p#pLastModified").html("Last modified: <b>" + data.data.last_modified + "</b>");
-
+                                //$("p#pLastModified").html("Last modified: <b>" + data.data.last_modified + "</b>");
+                                setLastModified(data.data.last_modified);
                                 if (data.data.delay > 0) {
                                     $("input#delay").val(data.data.delay);
                                 }
@@ -238,7 +241,10 @@
                         stopLoading(true);
                         console.log(data);
 
+                        setLastModified("Just now");
+
                         if (!data.error) {
+
                             $(resultDiv).removeClass('alert-danger').addClass('alert-success');
                             var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "'>/" + route + "</a>";
                             $(resultDiv).html("<strong>Success! </strong> " + data.message + ": " + link);
@@ -248,6 +254,8 @@
                                 //Adding added route to select list
                                 $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
                             }
+
+
 
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
