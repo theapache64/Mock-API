@@ -14,6 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * Created by theapache64 on 14/5/17.
@@ -37,6 +42,7 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         super.doPost(req, resp);
     }
 
+
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException {
 
@@ -54,7 +60,15 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         joJson.put(JSONS.COLUMN_DELAY, json.getDelay());
         joJson.put(JSONS.COLUMN_DESCRIPTION, json.getDescription());
         joJson.put("last_modified", TimeUtils.millisToLongDHMS(json.getUpdatedInMillis()) + " ago");
+        joJson.put("last_modified_date", getIndianDate(json.getUpdatedInMillis()));
 
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
+    }
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+
+    private String getIndianDate(long updatedInMillis) {
+        LocalDateTime ldt = LocalDateTime.parse(DATE_FORMAT.format(new Date(updatedInMillis)), DateTimeFormatter.ofPattern(DATE_FORMAT.toPattern()));
+        return DATE_FORMAT.format(Date.from(ldt.atZone(ZoneId.of("Asia/Kolkata")).toInstant()));
     }
 }

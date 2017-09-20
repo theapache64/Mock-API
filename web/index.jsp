@@ -18,8 +18,9 @@
     </title>
     <%@include file="common_headers.jsp" %>
     <script>
-        function setLastModified(message) {
+        function setLastModified(message,date) {
             $("p#pLastModified").html("Last modified: <b>" + message + "</b>");
+            $("p#pLastModified").attr("title",date);
         }
         $(document).ready(function () {
 
@@ -150,7 +151,7 @@
 
                                 //Setting last modified
                                 //$("p#pLastModified").html("Last modified: <b>" + data.data.last_modified + "</b>");
-                                setLastModified(data.data.last_modified);
+                                setLastModified(data.data.last_modified, data.data.last_modified_date);
                                 if (data.data.delay > 0) {
                                     $("input#delay").val(data.data.delay);
                                 }
@@ -241,7 +242,7 @@
                         stopLoading(true);
                         console.log(data);
 
-                        setLastModified("Just now");
+                        setLastModified("Just now","Just now");
 
                         if (!data.error) {
 
@@ -456,7 +457,7 @@
     <br>
 
 
-    <p id="pLastModified" class="pull-right"></p>
+    <p id="pLastModified" title="" class="pull-right"></p>
 
 
     <div class="row">
