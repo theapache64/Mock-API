@@ -18,9 +18,9 @@
     </title>
     <%@include file="common_headers.jsp" %>
     <script>
-        function setLastModified(message,date) {
+        function setLastModified(message, date) {
             $("p#pLastModified").html("Last modified: <b>" + message + "</b>");
-            $("p#pLastModified").attr("title",date);
+            $("p#pLastModified").attr("title", date);
         }
         $(document).ready(function () {
 
@@ -53,8 +53,25 @@
                 }
             });
 
+            $(window).keydown(function(event){
+                if (event.ctrlKey && event.altKey && event.keyCode == 70) {
+                    var routeToSearch = prompt("Search route");
+                    console.log("x:" + routeToSearch);
+                    $("select#routes option").filter(function () {
+                        return this.text.indexOf(routeToSearch) > 0;
+                    }).attr('selected', true).trigger("change");
+
+                }
+            });
+
 
             editor.on('keyup', function () {
+
+
+                if (event.ctrlKey && event.altKey && event.keyCode == 76) {
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
+                }
+
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 76) {
                     editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
@@ -112,13 +129,11 @@
             $("select#routes").on('change', function () {
 
 
-
                 var selIndex = $(this).prop('selectedIndex');
                 if (selIndex != 0) {
 
                     var selOption = $(this).find(":selected");
                     var route = $.trim(selOption.text());
-
 
 
                     $.ajax({
@@ -130,7 +145,7 @@
                         success: function (data) {
 
                             //Changing browser url without reloading the page
-                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route='+route);
+                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + route);
 
 
                             stopLoading(true);
@@ -242,7 +257,7 @@
                         stopLoading(true);
                         console.log(data);
 
-                        setLastModified("Just now","Just now");
+                        setLastModified("Just now", "Just now");
 
                         if (!data.error) {
 
@@ -255,7 +270,6 @@
                                 //Adding added route to select list
                                 $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
                             }
-
 
 
                         } else {
@@ -563,6 +577,7 @@
                     <p><code>Control + Alt + E </code>To get default error response</p>
                     <p><code>Control + Alt + D </code>To duplicate selection (with numerical increment)</p>
                     <p><code>Control + Alt + S </code>To insert a string object at selected position</p>
+                    <p><code>Control + Alt + F </code>To search for a route</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
