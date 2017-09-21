@@ -62,6 +62,10 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
         try {
 
+            if (getRequiredParameters() != null) {
+                request = new Request(req, getRequiredParameters());
+            }
+
 
             if (isSecureServlet()) {
 
@@ -76,9 +80,6 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
                 hs = new HeaderSecurity(apiKey);
             }
 
-            if (getRequiredParameters() != null) {
-                request = new Request(req, getRequiredParameters());
-            }
 
             doAdvancedPost();
 

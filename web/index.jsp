@@ -53,16 +53,77 @@
                 }
             });
 
+
             $(window).keydown(function (event) {
-                event.preventDefault();
+
+
+                if (event.ctrlKey && event.altKey && event.keyCode == 70) {
+
+                    var sValue = prompt("Search for response");
+                    if (sValue == null || sValue == "") {
+                        return;
+                    }
+
+                    $.ajax({
+                        type: "GET",
+                        beforeSend: function () {
+                            startLoading(true);
+                        },
+                        url: "v1/search?column=<%=JSONS.COLUMN_RESPONSE%>&value=" + sValue,
+                        headers: {"Authorization": "<%=project.getApiKey()%>"},
+                        success: function (data) {
+
+                            stopLoading(true);
+
+                            if (!data.error) {
+                                console.log(data.data.routes);
+
+                                //Clearing old data
+                                $("div#search_result_content").html("");
+                                $("div#search_result").modal("show");
+
+                                $.each(data.data.routes, function (key, value) {
+                                    $("div#search_result_content").append('<button class="btn btn-default btn-search-result">' + value + '</button> ');
+                                });
+
+                                $("button.btn-search-result").on('click', function () {
+                                    var routeName = $(this).text();
+
+                                    $("select#routes option").filter(function () {
+                                        return this.text == routeName;
+                                    }).attr('selected', true).trigger("change");
+
+                                    $("div#search_result").modal("hide");
+                                });
+
+                                $("#search_result_title").text("Search result for '"+sValue+"'");
+                                $("div#search_result").modal("show");
+
+                            } else {
+                                alert(data.message);
+                            }
+
+
+                        },
+                        error: function () {
+                            stopLoading(true);
+                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                            $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                            $(resultDiv).show();
+                        }
+                    });
+                }
 
                 if (event.keyCode == 112) {
+                    event.preventDefault();
+
                     var routeToSearch = prompt("Search route");
                     console.log("x:" + routeToSearch);
                     $("select#routes option").filter(function () {
                         console.log("text: " + this.text + ":" + routeToSearch);
-                        return this.text==routeToSearch || this.text.indexOf(routeToSearch) > 0;
+                        return this.text == routeToSearch || this.text.indexOf(routeToSearch) > 0;
                     }).attr('selected', true).trigger("change");
+
 
                 }
             });
@@ -425,6 +486,7 @@
                 }).attr('selected', true).trigger("change");
             }
 
+
         });
     </script>
     <style>
@@ -572,6 +634,22 @@
             <br>
 
 
+        </div>
+    </div>
+
+    <div class="modal fade" id="search_result" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="search_result_title"></h4>
+                </div>
+                <div class="modal-body" id="search_result_content">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 

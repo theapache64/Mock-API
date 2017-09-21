@@ -2,7 +2,6 @@ package com.theah64.mock_api.database;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
-import com.theah64.mock_api.database.Connection;
 import com.theah64.mock_api.exceptions.RequestException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -328,6 +328,40 @@ public class BaseTable<T> {
         }
 
         return resultValue;
+    }
+
+    public List<String> getLike(String column1, String value1, String column2, String value2Like, String columnToReturn) {
+        final String query = String.format("SELECT %s FROM %s WHERE %s = ? AND %s LIKE '%%%s%%' AND is_active = 1", columnToReturn, tableName, column1, column2, value2Like);
+
+        List<String> resultValues = null;
+        final java.sql.Connection con = Connection.getConnection();
+
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, value1);
+
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.first()) {
+                resultValues = new ArrayList<>();
+                do {
+                    resultValues.add(rs.getString(columnToReturn));
+                } while (rs.next());
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return resultValues;
     }
 
     public void delete(final String column1, final String value1, final String column2, final String value2) throws RequestException {
