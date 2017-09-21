@@ -53,12 +53,15 @@
                 }
             });
 
-            $(window).keydown(function(event){
-                if (event.ctrlKey && event.altKey && event.keyCode == 70) {
+            $(window).keydown(function (event) {
+                event.preventDefault();
+
+                if (event.keyCode == 112) {
                     var routeToSearch = prompt("Search route");
                     console.log("x:" + routeToSearch);
                     $("select#routes option").filter(function () {
-                        return this.text.indexOf(routeToSearch) > 0;
+                        console.log("text: " + this.text + ":" + routeToSearch);
+                        return this.text==routeToSearch || this.text.indexOf(routeToSearch) > 0;
                     }).attr('selected', true).trigger("change");
 
                 }
@@ -66,11 +69,6 @@
 
 
             editor.on('keyup', function () {
-
-
-                if (event.ctrlKey && event.altKey && event.keyCode == 76) {
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
-                }
 
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 76) {
@@ -475,6 +473,9 @@
 
 
     <div class="row">
+
+        <br><br>
+
         <%--Available jsonList--%>
         <div class=" col-md-2">
             <%
@@ -485,6 +486,7 @@
                     e.printStackTrace();
                 }
             %>
+            <label for="routes">Select route</label>
             <select id="routes" class="form-control" title="Routes">
                 <option value="">Select a route</option>
                 <%
@@ -515,20 +517,29 @@
 
             <div class="row">
 
-                <div class="col-md-1 checkbox">
-                    <input type="checkbox" id="is_secure"/>Secure</label>
-                </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
 
                     <label for="delay">Delay</label>
                     <input class="form-control" type="number" placeholder="Delay" id="delay"/>
+
+
                 </div>
 
                 <div class="col-md-8">
                     <label for="description">Description</label>
                     <input class="form-control" type="text" placeholder="Description" id="description"/>
                 </div>
+            </div>
+
+            <br>
+            <%--checkboxes--%>
+            <div class="row">
+
+                <div class="col-md-4">
+                    <label class="checkbox-inline"><input type="checkbox" id="is_secure">Authorization</label>\
+                </div>
+
             </div>
 
             <br>
@@ -577,7 +588,7 @@
                     <p><code>Control + Alt + E </code>To get default error response</p>
                     <p><code>Control + Alt + D </code>To duplicate selection (with numerical increment)</p>
                     <p><code>Control + Alt + S </code>To insert a string object at selected position</p>
-                    <p><code>Control + Alt + F </code>To search for a route</p>
+                    <p><code>F1 </code>To search for a route</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

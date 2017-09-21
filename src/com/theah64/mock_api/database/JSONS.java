@@ -76,7 +76,7 @@ public class JSONS extends BaseTable<JSON> {
 
     public List<JSON> getAll(final String projectId) throws SQLException {
         List<JSON> jsonList = null;
-        final String query = "SELECT id, route, external_api_url FROM jsons WHERE project_id = ? AND is_active = 1";
+        final String query = "SELECT id, route, external_api_url FROM jsons WHERE project_id = ? AND is_active = 1 ORDER BY updated_at_in_millis DESC";
         String error = null;
         final java.sql.Connection con = Connection.getConnection();
         try {
