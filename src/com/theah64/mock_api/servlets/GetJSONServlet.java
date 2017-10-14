@@ -3,6 +3,7 @@ package com.theah64.mock_api.servlets;
 import com.theah64.mock_api.database.JSONS;
 import com.theah64.mock_api.models.JSON;
 import com.theah64.mock_api.utils.HeaderSecurity;
+import com.theah64.mock_api.utils.LogBuilder;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 /**
  * Created by theapache64 on 14/5/17.
@@ -54,6 +56,48 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
+        doPost(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        //Building request body
+        final LogBuilder logBuilder = new LogBuilder();
+
+        try {
+
+            Enumeration<String> headers = req.getHeaderNames();
+            while (headers.hasMoreElements()) {
+                final String name = headers.nextElement();
+                logBuilder.append(name, req.getHeader(name));
+            }
+
+            logBuilder.append("PathInfo", req.getPathInfo());
+
+            final PathInfo pathInfo = new PathInfo(req.getPathInfo(), 2, PathInfo.UNLIMITED);
+            final String projectName = pathInfo.getPart(1);
+            final String route = pathInfo.getPartFrom(2);
+            json = JSONS.getInstance().get(projectName, route);
+
+            logBuilder.append("Authorization", req.getHeader("Authorization"));
+            logBuilder.append("Required params", json.getRequiredParams());
+            logBuilder.append("-------------------------", "");
+
+            if (json.getRequiredParams() != null) {
+                final String[] reqParams = json.getRequiredParams().split(",");
+                for (final String reqParam : reqParams) {
+                    logBuilder.append(reqParam, req.getParameter(reqParam));
+                }
+            }
+
+            System.out.println("Log:" + logBuilder.build());
+
+        } catch (PathInfo.PathInfoException | SQLException e) {
+            e.printStackTrace();
+        }
+
+
         super.doPost(req, resp);
     }
 

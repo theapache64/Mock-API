@@ -59,10 +59,18 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         joJson.put(JSONS.COLUMN_IS_SECURE, json.isSecure());
         joJson.put(JSONS.COLUMN_DELAY, json.getDelay());
         joJson.put(JSONS.COLUMN_DESCRIPTION, json.getDescription());
+        joJson.put("dummy_params", getDummyParams(json.getRequiredParams()));
         joJson.put("last_modified", TimeUtils.millisToLongDHMS(json.getUpdatedInMillis()) + " ago");
         joJson.put("last_modified_date", getIndianDate(json.getUpdatedInMillis()));
 
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
+    }
+
+    public static String getDummyParams(String requiredParams) {
+        if (requiredParams != null && !requiredParams.isEmpty()) {
+            return requiredParams.replaceAll(",", "=sampleParam&") + "=sampleParam";
+        }
+        return "";
     }
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
