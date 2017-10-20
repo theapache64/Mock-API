@@ -62,6 +62,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
+
         //Building request body
         final LogBuilder logBuilder = new LogBuilder();
 
@@ -90,6 +91,8 @@ public class GetJSONServlet extends AdvancedBaseServlet {
                     logBuilder.append(reqParam, req.getParameter(reqParam));
                 }
             }
+
+
 
             System.out.println("Log:" + logBuilder.build());
 
