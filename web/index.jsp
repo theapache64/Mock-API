@@ -25,7 +25,7 @@
         $(document).ready(function () {
 
             $("button#bHitLogs").on('click', function () {
-                window.location = "hit_logs.jsp?api_key=<%=project.getApiKey()%>&route=" + $(this).data('route');
+                window.location = "hit_logs.jsp?limit=10&api_key=<%=project.getApiKey()%>&route=" + $(this).data('route');
             });
 
             var editor = CodeMirror.fromTextArea(document.getElementById("response"), {

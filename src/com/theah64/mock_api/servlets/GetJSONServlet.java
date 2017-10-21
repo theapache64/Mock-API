@@ -122,7 +122,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
                 errorResponse = e.getMessage();
             }
 
-            HitLogs.getInstance().add(new HitLog(json.getId(), logBuilder.build(), errorResponse));
+            HitLogs.getInstance().add(new HitLog(json.getId(), logBuilder.build(), errorResponse, null));
 
         } catch (PathInfo.PathInfoException | SQLException e) {
             e.printStackTrace();

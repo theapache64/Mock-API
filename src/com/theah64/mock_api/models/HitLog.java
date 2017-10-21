@@ -5,13 +5,18 @@ package com.theah64.mock_api.models;
  */
 public class HitLog {
 
-    private final String routeId, requestBody, errorResponse;
+    private final String routeId, requestBody, errorResponse,createdAt;
 
 
-    public HitLog(String routeId, String requestBody, String errorResponse) {
+    public HitLog(String routeId, String requestBody, String errorResponse, String createdAt) {
         this.routeId = routeId;
         this.requestBody = requestBody;
         this.errorResponse = errorResponse;
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 
     public String getRouteId() {
