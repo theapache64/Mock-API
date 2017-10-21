@@ -1,6 +1,8 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.database.HitLogs;
 import com.theah64.mock_api.database.JSONS;
+import com.theah64.mock_api.models.HitLog;
 import com.theah64.mock_api.models.JSON;
 import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.LogBuilder;
@@ -63,6 +65,8 @@ public class GetJSONServlet extends AdvancedBaseServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 
+        setHttpServletRequest(req);
+
         //Building request body
         final LogBuilder logBuilder = new LogBuilder();
 
@@ -92,9 +96,33 @@ public class GetJSONServlet extends AdvancedBaseServlet {
                 }
             }
 
+            //Checking if there's any error
+            String errorResponse = null;
+            try {
+                if (getRequiredParameters() != null) {
+                    setRequest(new Request(req, getRequiredParameters()));
+                }
+
+                if (json.isSecure()) {
+
+                    //Checking if the apikey present in header
+                    String apiKey = req.getHeader(HeaderSecurity.KEY_AUTHORIZATION);
+
+                    if (apiKey == null) {
+                        //not present in header, so checking on the request
+                        apiKey = getStringParameter(HeaderSecurity.KEY_AUTHORIZATION);
+                    }
+
+                    new HeaderSecurity(apiKey);
+                }
 
 
-            System.out.println("Log:" + logBuilder.build());
+            } catch (Request.RequestException | HeaderSecurity.AuthorizationException e) {
+                e.printStackTrace();
+                errorResponse = e.getMessage();
+            }
+
+            HitLogs.getInstance().add(new HitLog(json.getId(), logBuilder.build(), errorResponse));
 
         } catch (PathInfo.PathInfoException | SQLException e) {
             e.printStackTrace();

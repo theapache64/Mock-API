@@ -5,13 +5,13 @@ package com.theah64.mock_api.models;
  */
 public class HitLog {
 
-    private final String routeId, requestBody;
-    private final boolean isSuccess;
+    private final String routeId, requestBody, errorResponse;
 
-    public HitLog(String routeId, String requestBody, boolean isSuccess) {
+
+    public HitLog(String routeId, String requestBody, String errorResponse) {
         this.routeId = routeId;
         this.requestBody = requestBody;
-        this.isSuccess = isSuccess;
+        this.errorResponse = errorResponse;
     }
 
     public String getRouteId() {
@@ -22,7 +22,7 @@ public class HitLog {
         return requestBody;
     }
 
-    public boolean isSuccess() {
-        return isSuccess;
+    public String getErrorResponse() {
+        return errorResponse;
     }
 }

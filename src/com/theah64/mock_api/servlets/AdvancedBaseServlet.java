@@ -35,6 +35,10 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
         notSupported(ERROR_GET_NOT_SUPPORTED, response);
     }
 
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+
     protected static void POSTMethodNotSupported(HttpServletResponse response) throws IOException {
         notSupported(ERROR_POST_NOT_SUPPORTED, response);
     }
@@ -49,6 +53,11 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
     public PrintWriter getWriter() {
         return out;
+    }
+
+
+    public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
+        this.httpServletRequest = httpServletRequest;
     }
 
     @Override

@@ -121,7 +121,7 @@ public class JSONS extends BaseTable<JSON> {
     public JSON get(String projectName, String route) throws SQLException {
         String error = null;
         JSON json = null;
-        final String query = "SELECT j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params, external_api_url FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
+        final String query = "SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params, external_api_url FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -129,6 +129,7 @@ public class JSONS extends BaseTable<JSON> {
             ps.setString(2, route);
             final ResultSet rs = ps.executeQuery();
             if (rs.first()) {
+                final String id = rs.getString(COLUMN_ID);
                 final String response = rs.getString(COLUMN_RESPONSE);
                 final String reqPar = rs.getString(COLUMN_REQUIRED_PARAMS);
                 final String opPar = rs.getString(COLUMN_OPTIONAL_PARAMS);
@@ -138,7 +139,7 @@ public class JSONS extends BaseTable<JSON> {
                 final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
                 final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
 
-                json = new JSON(null, null, null, response, reqPar, opPar, description, externalApiUrl, isSecure, delay, updatedInMillis);
+                json = new JSON(id, null, null, response, reqPar, opPar, description, externalApiUrl, isSecure, delay, updatedInMillis);
             }
             rs.close();
             ps.close();
