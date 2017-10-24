@@ -705,6 +705,7 @@
                     <p><code>Control + Alt + E </code>To get default error response</p>
                     <p><code>Control + Alt + D </code>To duplicate selection (with numerical increment)</p>
                     <p><code>Control + Alt + S </code>To insert a string object at selected position</p>
+                    <p><code>Control + Alt + I </code>To insert random image urls at selected position</p>
                     <p><code>F1 </code>To search for a route</p>
                 </div>
                 <div class="modal-footer">
