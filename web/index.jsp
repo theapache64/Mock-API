@@ -25,7 +25,7 @@
         $(document).ready(function () {
 
             $("button#bHitLogs").on('click', function () {
-                window.open("hit_logs.jsp?limit=10&api_key=<%=project.getApiKey()%>&route=" + $(this).data('route'),'_blank');
+                window.open("hit_logs.jsp?limit=10&api_key=<%=project.getApiKey()%>&route=" + $(this).data('route'), '_blank');
             });
 
             var editor = CodeMirror.fromTextArea(document.getElementById("response"), {
@@ -135,6 +135,29 @@
 
             editor.on('keyup', function () {
 
+                //Control + Alt + I
+                if (event.ctrlKey && event.altKey && event.keyCode == 73) {
+                    var dimen = prompt("Enter dimension", "500x500");
+                    dimen = dimen.split("x");
+                    if (dimen.length == 2) {
+
+                        var imgCount = prompt("Enter number of images", "1");
+                        var imageUrls = "";
+                        for (var j = 0; j < imgCount; j++) {
+                            var min = 1;
+                            var max = 1084;
+                            var imageId = Math.floor(Math.random() * (max - min + 1)) + min;
+                            var imageUrl = "https://picsum.photos/" + dimen[0] + "/" + dimen[1] + "/?image=" + imageId;
+                            imageUrls+='"' + imageUrl + '",';
+                        }
+
+                        editor.replaceSelection(imageUrls.substring(0,imageUrls.length-1));
+
+                    } else {
+                        alert("Invalid dimension format " + dimen);
+                    }
+
+                }
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 76) {
                     editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
