@@ -130,6 +130,7 @@
 
 
                 }
+
             });
 
 
@@ -148,10 +149,10 @@
                             var max = 1084;
                             var imageId = Math.floor(Math.random() * (max - min + 1)) + min;
                             var imageUrl = "https://picsum.photos/" + dimen[0] + "/" + dimen[1] + "/?image=" + imageId;
-                            imageUrls+='"' + imageUrl + '",';
+                            imageUrls += '"' + imageUrl + '",';
                         }
 
-                        editor.replaceSelection(imageUrls.substring(0,imageUrls.length-1));
+                        editor.replaceSelection(imageUrls.substring(0, imageUrls.length - 1));
 
                     } else {
                         alert("Invalid dimension format " + dimen);
@@ -538,8 +539,17 @@
 <body>
 <div class="container">
 
+    <ul class="nav navbar-nav pull-right">
+        <li><a href="butter_layout.jsp"> <span class="glyphicon glyphicon glyphicon-hand-right"></span> ButterLayout</a>
+        </li>
+    </ul>
+
+
     <div class="row ">
+
         <div class="col-md-12 text-center">
+
+
             <h1><%=project.getName()%>
             </h1>
             <%
@@ -560,7 +570,6 @@
 
         </div>
     </div>
-
 
     <br>
 
