@@ -92,7 +92,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
             doAdvancedPost();
 
-        } catch (JSONException | PathInfo.PathInfoException | RequestException | SQLException | HeaderSecurity.AuthorizationException | Request.RequestException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             out.write(new APIResponse(e.getMessage()).toString());
         }
