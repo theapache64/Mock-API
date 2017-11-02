@@ -74,7 +74,7 @@
             }
 
             function stopLoading() {
-                xmlEditor.setOption('readOnly', 'false');
+                xmlEditor.setOption('readOnly', false);
                 $("button#bGenButterLayout").prop('disabled', false);
             }
 
