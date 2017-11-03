@@ -539,12 +539,6 @@
 <body>
 <div class="container">
 
-    <ul class="nav navbar-nav pull-right">
-        <li><a href="butter_layout.jsp"> <span class="glyphicon glyphicon glyphicon-hand-right"></span> ButterLayout</a>
-        </li>
-    </ul>
-
-
     <div class="row ">
 
         <div class="col-md-12 text-center">

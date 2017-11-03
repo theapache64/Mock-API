@@ -1,5 +1,3 @@
 # Mock-API
 
-### TODOs
-- ButterLayout (to get butterknife view refer java codes from xml layout)
-/keep-alive/
+A Web Application to build Mock API http://theapache64.xyz:8080/mock_api
