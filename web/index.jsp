@@ -160,6 +160,54 @@
 
                 }
 
+
+//                JSON to java model
+
+
+                //Control + Alt + M
+                if (event.ctrlKey && event.altKey && event.keyCode == 77) {
+
+                    var selection = editor.getSelection();
+
+                    if (selection.length > 0) {
+                        var modelName = prompt("Model name ? ", "MyModel");
+                        var isRetrofitModel = confirm("is this a Retrofit model ?");
+
+                        $.ajax({
+                            type: "POST",
+                            beforeSend: function () {
+                                startLoading(true);
+                            },
+                            data: {
+                                jo_string: selection,
+                                is_retrofit_model: isRetrofitModel,
+                                model_name: modelName
+                            },
+                            url: "v1/json_to_model_engine",
+                            success: function (data) {
+
+                                stopLoading(true);
+
+                                if (!data.error) {
+                                    prompt(data.data);
+                                } else {
+                                    alert(data.message);
+                                }
+
+
+                            },
+                            error: function () {
+                                stopLoading(true);
+                                $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                                $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                                $(resultDiv).show();
+                            }
+                        });
+
+                    }
+
+                }
+
                 if (event.ctrlKey && event.altKey && event.keyCode == 76) {
                     editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
                 }
@@ -189,6 +237,7 @@
                     editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": true, "message": "' + errorMsg + '"}'), undefined, 4));
                 }
 
+                //D
                 if (event.ctrlKey && event.altKey && event.keyCode == 68) {
 
                     var selection = editor.getSelection();
