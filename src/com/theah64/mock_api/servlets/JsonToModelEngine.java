@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,6 +56,18 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
             final String dataType = getDataType(joModel, variableName);
             properties.add(new Model.Property(dataType, variableName));
         }
+
+        //Sorting
+        Collections.sort(properties, new Comparator<Model.Property>() {
+            @Override
+            public int compare(Model.Property o1, Model.Property o2) {
+                if (o1.variableName.equals("id")) {
+                    return -1;
+                }
+                return o1.getVariableName().length() - o2.getVariableName().length();
+            }
+
+        });
 
         final String generator = genModelCode(modelName, properties, isRetrofitModel);
         getWriter().write(new APIResponse("Done", "data", generator).getResponse());
@@ -118,12 +128,15 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     private String getDataType(final JSONObject joModel, String variableName) throws JSONException {
 
         final Object data = joModel.get(variableName);
+
         if (data instanceof Integer) {
             return "int";
         } else if (data instanceof Double) {
             return "double";
-        } else {
+        } else if (data instanceof String) {
             return "String";
+        } else {
+            return data.getClass().getSimpleName();
         }
 
     }

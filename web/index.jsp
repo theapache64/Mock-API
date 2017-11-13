@@ -756,7 +756,8 @@
                     <h4 class="modal-title">Shortcuts</h4>
                 </div>
                 <div class="modal-body">
-                    <p><code>Control + Alt + L </code>To format JSON</p>
+                    <p><code>Control + Alt + L </code>To format <code>JSON</code></p>
+                    <p><code>Control + Alt + M </code>To create Java model object from selected <code>JSON</code> object </p>
                     <p><code>Control + Alt + N </code>To get default success response</p>
                     <p><code>Control + Alt + E </code>To get default error response</p>
                     <p><code>Control + Alt + D </code>To duplicate selection (with numerical increment)</p>
