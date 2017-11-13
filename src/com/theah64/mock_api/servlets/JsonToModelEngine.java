@@ -66,7 +66,7 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     private String genModelCode(String modelName, List<Model.Property> properties, boolean isRetrofitModel) {
 
         final StringBuilder codeBuilder = new StringBuilder();
-        codeBuilder.append(String.format("public class %s {", modelName)).append("\n\n");
+        codeBuilder.append(String.format("public class %s {", modelName)).append("<br><br>");
 
         final StringBuilder constructorParams = new StringBuilder();
         final StringBuilder constructorThis = new StringBuilder();
@@ -74,23 +74,23 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
 
         for (final Model.Property property : properties) {
             if (isRetrofitModel) {
-                codeBuilder.append(String.format("\t@SerializedName(\"%s\")\n", property.getVariableName()));
+                codeBuilder.append(String.format("&nbsp;&nbsp;&nbsp;&nbsp;@SerializedName(\"%s\")<br>", property.getVariableName()));
             }
             String variableCamelCase = toCamelCase(property.getVariableName());
             final String a = String.format("%s %s", property.getDataType(), variableCamelCase);
-            codeBuilder.append(String.format("\tprivate final %s;", a)).append("\n").append(isRetrofitModel ? "\n" : "");
+            codeBuilder.append(String.format("&nbsp;&nbsp;&nbsp;&nbsp;private final %s;", a)).append("<br>").append(isRetrofitModel ? "<br>" : "");
 
             constructorParams.append(a).append(",");
-            constructorThis.append("\n\t\tthis.").append(variableCamelCase).append("=").append(variableCamelCase).append(";");
+            constructorThis.append("<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.").append(variableCamelCase).append("=").append(variableCamelCase).append(";");
 
-            getters.append("\tpublic ").append(property.getDataType()).append(" ").append(toGetterName(variableCamelCase)).append("{\n\t\treturn ").append(variableCamelCase).append(";\n\t}\n\n");
+            getters.append("&nbsp;&nbsp;&nbsp;&nbsp;public ").append(property.getDataType()).append(" ").append(toGetterName(variableCamelCase)).append("{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ").append(variableCamelCase).append(";<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>");
         }
 
-        codeBuilder.append("\tpublic ").append(modelName).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");
+        codeBuilder.append("&nbsp;&nbsp;&nbsp;&nbsp;public ").append(modelName).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");
         codeBuilder.append(constructorThis);
-        codeBuilder.append("\n\t}");
+        codeBuilder.append("<br>&nbsp;&nbsp;&nbsp;&nbsp;}");
 
-        codeBuilder.append("\n\n").append(getters);
+        codeBuilder.append("<br><br>").append(getters);
 
         //class end
         codeBuilder.append("}");

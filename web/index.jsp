@@ -189,7 +189,11 @@
                                 stopLoading(true);
 
                                 if (!data.error) {
-                                    prompt(data.data);
+                                    console.log(data.data.data);
+
+                                    var newWindow = window.open();
+                                    newWindow.document.write(data.data.data);
+
                                 } else {
                                     alert(data.message);
                                 }
