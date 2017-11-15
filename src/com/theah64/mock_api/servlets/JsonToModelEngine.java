@@ -49,6 +49,7 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
 
         final JSONObject joModel = new JSONObject(joString);
 
+
         Iterator iterator = joModel.keys();
         List<Model.Property> properties = new ArrayList<>();
         while (iterator.hasNext()) {
