@@ -1,5 +1,7 @@
 package com.theah64.mock_api;
 
+import com.theah64.mock_api.utils.Inflector;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;

@@ -2,8 +2,10 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
+import com.theah64.mock_api.utils.Inflector;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -50,62 +53,59 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
         final boolean isRetrofitModel = getBooleanParameter(KEY_IS_RETROFIT_MODEL);
 
         final JSONObject joModel = new JSONObject(joString);
-        Iterator iterator = joModel.keys();
+        final StringBuilder codeBuilder = new StringBuilder();
+        getGenClassCode(false, codeBuilder, joModel, modelName, isRetrofitModel);
 
-        List<Model.Property> properties = new ArrayList<>();
+        codeBuilder.insert(0, String.format("/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n", new Date().toString(), modelName));
+        codeBuilder.append("\n\n}");
 
-        while (iterator.hasNext()) {
-            final String variableName = (String) iterator.next();
-            final String dataType = getDataType(joModel, variableName);
-            properties.add(new Model.Property(dataType, variableName));
-
-        }
-
-        //Sorting
-        properties.sort((o1, o2) -> {
-            if (o1.variableName.equals("id")) {
-                return -1;
-            }
-            return o1.getVariableName().length() - o2.getVariableName().length();
-        });
-
-        final String generatedClassCode = genClassCode(modelName, properties, isRetrofitModel);
-        getWriter().write(new APIResponse("Done", "data", generatedClassCode).getResponse());
+        getWriter().write(new APIResponse("Done", "data", codeBuilder.toString().replaceAll("\\n", "<br>").replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;")).getResponse());
     }
 
-    private String genClassCode(String modelName, List<Model.Property> properties, boolean isRetrofitModel) {
+    private String genClassCode(boolean isNestedClass, String modelName, List<Model.Property> properties, boolean isRetrofitModel) {
 
         final StringBuilder codeBuilder = new StringBuilder();
-        codeBuilder.append(String.format("public class %s {", modelName)).append("\n\n");
+        if (isNestedClass) {
+            codeBuilder.append(String.format("\tpublic static class %s {", removePlural(modelName))).append("\n\n");
+        }
 
         final StringBuilder constructorParams = new StringBuilder();
         final StringBuilder constructorThis = new StringBuilder();
         final StringBuilder getters = new StringBuilder();
 
         for (final Model.Property property : properties) {
+
             if (isRetrofitModel) {
-                codeBuilder.append(String.format("\t@SerializedName(\"%s\")\n", property.getVariableName()));
+                codeBuilder.append(String.format("%s\t@SerializedName(\"%s\")\n", isNestedClass ? "\t" : "", property.getVariableName()));
             }
             String variableCamelCase = toCamelCase(property.getVariableName());
             final String a = String.format("%s %s", property.getDataType(), variableCamelCase);
-            codeBuilder.append(String.format("\tprivate final %s;", a)).append("\n").append(isRetrofitModel ? "\n" : "");
+            codeBuilder.append(String.format("%s\tprivate final %s;", isNestedClass ? "\t" : "", a)).append("\n").append(isRetrofitModel ? "\n" : "");
 
             constructorParams.append(a).append(",");
-            constructorThis.append("\n\t\tthis.").append(variableCamelCase).append(" = ").append(variableCamelCase).append(";");
+            constructorThis.append(String.format("\n%s\t\tthis.", isNestedClass ? "\t" : "")).append(variableCamelCase).append(" = ").append(variableCamelCase).append(";");
 
-            getters.append("\tpublic ").append(property.getDataType()).append(" ").append(toGetterName(variableCamelCase)).append("{\n\t\treturn ").append(variableCamelCase).append(";\n\t}\n\n");
+
+            getters.append(String.format("%s\tpublic ", isNestedClass ? "\t" : "")).append(property.getDataType()).append(" ").append(toGetterName(variableCamelCase)).append("{\n\t\treturn ").append(variableCamelCase).append(String.format(";\n%s\t}\n\n", isNestedClass ? "\t" : ""));
         }
 
-        codeBuilder.append("\tpublic ").append(modelName).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");
+        codeBuilder.append(String.format("\n%s\tpublic ", isNestedClass ? "\t" : "")).append(removePlural(modelName)).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");
         codeBuilder.append(constructorThis);
-        codeBuilder.append("\n\t}");
+        codeBuilder.append(String.format("\n%s\t}", isNestedClass ? "\t" : ""));
 
         codeBuilder.append("\n\n").append(getters);
 
         //class end
-        codeBuilder.append("}");
+        if (isNestedClass) {
+            codeBuilder.append("\t}\n\n");
+        }
 
-        return codeBuilder.toString().replaceAll("\\n", "<br>").replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+
+        return codeBuilder.toString();
+    }
+
+    private String removePlural(String modelName) {
+        return Inflector.getInstance().singularize(modelName);
     }
 
     private String toGetterName(String input) {
@@ -115,7 +115,7 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     private static final Pattern p = Pattern.compile("_(.)");
 
     private String toCamelCase(String string) {
-
+        string = string.toLowerCase();
         Matcher m = p.matcher(string);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
@@ -145,6 +145,63 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
         super.doPost(req, resp);
+    }
+
+    public void getGenClassCode(final boolean isNestedClass, final StringBuilder codeBuilder, final Object object, final String modelName, final boolean isRetrofitModel) throws JSONException {
+
+        JSONObject joModel = null;
+
+        if (object instanceof JSONObject) {
+
+            joModel = (JSONObject) object;
+
+            Iterator iterator = joModel.keys();
+
+            List<Model.Property> properties = new ArrayList<>();
+
+            while (iterator.hasNext()) {
+
+                final String variableName = (String) iterator.next();
+                String dataType = getDataType(joModel, variableName);
+                if (dataType.equals("JSONArray") || dataType.equals("JSONObject")) {
+
+                    final Object joModel1 = dataType.equals("JSONArray") ? joModel.getJSONArray(variableName).get(0) : joModel.getJSONObject(variableName);
+
+                    //Capital first letter
+                    dataType = variableName.substring(0, 1).toUpperCase() + variableName.substring(1);
+
+                    if (dataType.contains("_")) {
+                        final String[] chunks = dataType.split("_");
+                        final StringBuilder sb = new StringBuilder();
+                        for (final String chunk : chunks) {
+                            sb.append(chunk.substring(0, 1).toUpperCase()).append(chunk.substring(1));
+                        }
+                        dataType = sb.toString();
+                    }
+
+
+                    getGenClassCode(true, codeBuilder, joModel1, dataType, isRetrofitModel);
+                    dataType = "List&#60;" + ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? removePlural(dataType) : joModel1.getClass().getSimpleName()) + "&#62;";
+                }
+
+
+                properties.add(new Model.Property(dataType, variableName));
+            }
+
+            //Sorting
+            properties.sort((o1, o2) -> {
+                if (o1.variableName.equals("id")) {
+                    return -1;
+                }
+
+                return o1.getVariableName().length() - o2.getVariableName().length();
+            });
+
+            codeBuilder.insert(0, genClassCode(isNestedClass, modelName, properties, isRetrofitModel));
+
+        }
+
+
     }
 
 
