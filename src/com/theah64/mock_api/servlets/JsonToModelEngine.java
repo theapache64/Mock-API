@@ -52,9 +52,9 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
         final String joString = getStringParameter(KEY_JO_STRING);
         final boolean isRetrofitModel = getBooleanParameter(KEY_IS_RETROFIT_MODEL);
 
-        final JSONObject joModel = new JSONObject(joString);
+
         final StringBuilder codeBuilder = new StringBuilder();
-        getGenClassCode(false, codeBuilder, joModel, modelName, isRetrofitModel);
+        getGenClassCode(false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
 
         codeBuilder.insert(0, String.format("/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n", new Date().toString(), modelName));
         codeBuilder.append("\n\n}");
