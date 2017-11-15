@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,33 +50,30 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
         final boolean isRetrofitModel = getBooleanParameter(KEY_IS_RETROFIT_MODEL);
 
         final JSONObject joModel = new JSONObject(joString);
-
-
         Iterator iterator = joModel.keys();
+
         List<Model.Property> properties = new ArrayList<>();
+
         while (iterator.hasNext()) {
             final String variableName = (String) iterator.next();
             final String dataType = getDataType(joModel, variableName);
             properties.add(new Model.Property(dataType, variableName));
+
         }
 
         //Sorting
-        Collections.sort(properties, new Comparator<Model.Property>() {
-            @Override
-            public int compare(Model.Property o1, Model.Property o2) {
-                if (o1.variableName.equals("id")) {
-                    return -1;
-                }
-                return o1.getVariableName().length() - o2.getVariableName().length();
+        properties.sort((o1, o2) -> {
+            if (o1.variableName.equals("id")) {
+                return -1;
             }
-
+            return o1.getVariableName().length() - o2.getVariableName().length();
         });
 
-        final String generator = genModelCode(modelName, properties, isRetrofitModel);
-        getWriter().write(new APIResponse("Done", "data", generator).getResponse());
+        final String generatedClassCode = genClassCode(modelName, properties, isRetrofitModel);
+        getWriter().write(new APIResponse("Done", "data", generatedClassCode).getResponse());
     }
 
-    private String genModelCode(String modelName, List<Model.Property> properties, boolean isRetrofitModel) {
+    private String genClassCode(String modelName, List<Model.Property> properties, boolean isRetrofitModel) {
 
         final StringBuilder codeBuilder = new StringBuilder();
         codeBuilder.append(String.format("public class %s {", modelName)).append("\n\n");
@@ -92,7 +91,7 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
             codeBuilder.append(String.format("\tprivate final %s;", a)).append("\n").append(isRetrofitModel ? "\n" : "");
 
             constructorParams.append(a).append(",");
-            constructorThis.append("\n\t\tthis.").append(variableCamelCase).append("=").append(variableCamelCase).append(";");
+            constructorThis.append("\n\t\tthis.").append(variableCamelCase).append(" = ").append(variableCamelCase).append(";");
 
             getters.append("\tpublic ").append(property.getDataType()).append(" ").append(toGetterName(variableCamelCase)).append("{\n\t\treturn ").append(variableCamelCase).append(";\n\t}\n\n");
         }

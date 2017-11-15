@@ -22,7 +22,12 @@
             $("p#pLastModified").html("Last modified: <b>" + message + "</b>");
             $("p#pLastModified").attr("title", date);
         }
+
         $(document).ready(function () {
+
+            function formatJSON() {
+                editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
+            }
 
             $("button#bHitLogs").on('click', function () {
                 window.open("hit_logs.jsp?limit=10&api_key=<%=project.getApiKey()%>&route=" + $(this).data('route'), '_blank');
@@ -128,13 +133,13 @@
                         return this.text == routeToSearch || this.text.indexOf(routeToSearch) > 0;
                     }).attr('selected', true).trigger("change");
 
-
                 }
 
             });
 
 
             editor.on('keyup', function () {
+
 
                 //Control + Alt + I
                 if (event.ctrlKey && event.altKey && event.keyCode == 73) {
@@ -171,49 +176,55 @@
 
                     if (selection.length > 0) {
                         var modelName = prompt("Model name ? ", "MyModel");
-                        var isRetrofitModel = confirm("is this a Retrofit model ?");
+                        if (modelName) {
 
-                        $.ajax({
-                            type: "POST",
-                            beforeSend: function () {
-                                startLoading(true);
-                            },
-                            data: {
-                                jo_string: selection,
-                                is_retrofit_model: isRetrofitModel,
-                                model_name: modelName
-                            },
-                            url: "v1/json_to_model_engine",
-                            success: function (data) {
+                            var isRetrofitModel = confirm("is this a Retrofit model ?");
 
-                                stopLoading(true);
+                            $.ajax({
+                                type: "POST",
+                                beforeSend: function () {
+                                    startLoading(true);
+                                },
+                                data: {
+                                    jo_string: selection,
+                                    is_retrofit_model: isRetrofitModel,
+                                    model_name: modelName
+                                },
+                                url: "v1/json_to_model_engine",
+                                success: function (data) {
 
-                                if (!data.error) {
-                                    console.log(data.data.data);
+                                    stopLoading(true);
 
-                                    var newWindow = window.open();
-                                    newWindow.document.write(data.data.data);
+                                    if (!data.error) {
+                                        console.log(data.data.data);
 
-                                } else {
-                                    alert(data.message);
+                                        var newWindow = window.open();
+                                        newWindow.document.write(data.data.data);
+
+                                    } else {
+                                        alert(data.message);
+                                    }
+
+
+                                },
+                                error: function () {
+                                    stopLoading(true);
+                                    $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                                    $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                                    $(resultDiv).show();
                                 }
+                            });
 
 
-                            },
-                            error: function () {
-                                stopLoading(true);
-                                $(resultDiv).addClass('alert-danger').removeClass('alert-success');
-                                $(resultDiv).html("<strong>Error! </strong> Please check your connection");
-                                $(resultDiv).show();
-                            }
-                        });
+                        }
+
 
                     }
 
                 }
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 76) {
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
+                    formatJSON();
                 }
 
 
@@ -249,17 +260,19 @@
                     if (selection.length > 0) {
 
                         var n = prompt("Number of nodes? ", 1);
-                        var builder = "";
-                        var temp = selection;
+                        if (n) {
+                            var builder = "";
+                            var temp = selection;
 
-                        for (var i = 1; i < n; i++) {
-                            temp = temp.replace(/\.*(\d+)\.*/g, function (fullMatch, n) {
-                                return (Number(n) + 1);
-                            });
-                            builder += temp + "\n";
+                            for (var i = 1; i < n; i++) {
+                                temp = temp.replace(/\.*(\d+)\.*/g, function (fullMatch, n) {
+                                    return (Number(n) + 1);
+                                });
+                                builder += temp + "\n";
+                            }
+
+                            editor.replaceSelection(selection + "\n" + builder);
                         }
-
-                        editor.replaceSelection(selection + "\n" + builder);
                     }
                 }
 
@@ -757,7 +770,8 @@
                 </div>
                 <div class="modal-body">
                     <p><code>Control + Alt + L </code>To format <code>JSON</code></p>
-                    <p><code>Control + Alt + M </code>To create Java model object from selected <code>JSON</code> object </p>
+                    <p><code>Control + Alt + M </code>To create Java model object from selected <code>JSON</code> object
+                    </p>
                     <p><code>Control + Alt + N </code>To get default success response</p>
                     <p><code>Control + Alt + E </code>To get default error response</p>
                     <p><code>Control + Alt + D </code>To duplicate selection (with numerical increment)</p>
