@@ -1,36 +1,25 @@
 package com.theah64.mock_api.test;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Random;
 
 public class MyClass {
 
 
     public static void main(String[] args) {
+        System.out.println(generateRandomWords(4));
+    }
 
-
-        final int gridCount = 3;
-
-        final List<String> categories = new ArrayList<>();
-        categories.add("Category 1");
-        categories.add("Category 2");
-        categories.add("Category 3");
-        categories.add("Category 4");
-        categories.add("Category 5");
-        categories.add("Category 6");
-        categories.add("Category 7");
-        categories.add("Category 8");
-        categories.add("Category 9");
-        categories.add("Category 10");
-
-        List<List<String>> partitions = new LinkedList<>();
-        for (int i = 0; i < categories.size(); i += gridCount) {
-            partitions.add(categories.subList(i,
-                    Math.min(i + gridCount, categories.size())));
+    public static String generateRandomWords(int numberOfWords) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < numberOfWords; i++) {
+            char[] word = new char[random.nextInt(8) + 3]; // words of length 3 through 10. (1 and 2 letter words are boring.)
+            for (int j = 0; j < word.length; j++) {
+                word[j] = (char) ('a' + random.nextInt(26));
+            }
+            stringBuilder.append(word).append(" ");
         }
-
-        System.out.println(partitions);
+        return stringBuilder.toString();
     }
 
 }

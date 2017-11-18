@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="com.thedeanda:lorem:2.1" type="repository">
+    <properties maven-id="com.thedeanda:lorem:2.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/thedeanda/lorem/2.1/lorem-2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

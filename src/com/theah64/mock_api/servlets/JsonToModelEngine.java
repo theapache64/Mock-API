@@ -86,7 +86,7 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
             constructorThis.append(String.format("\n%s\t\tthis.", isNestedClass ? "\t" : "")).append(variableCamelCase).append(" = ").append(variableCamelCase).append(";");
 
 
-            getters.append(String.format("%s\tpublic ", isNestedClass ? "\t" : "")).append(property.getDataType()).append(" ").append(toGetterName(variableCamelCase)).append("{\n\t\treturn ").append(variableCamelCase).append(String.format(";\n%s\t}\n\n", isNestedClass ? "\t" : ""));
+            getters.append(String.format("%s\tpublic ", isNestedClass ? "\t" : "")).append(property.getDataType()).append(" ").append(toGetterName(variableCamelCase)).append(String.format("{\n%s\t\treturn ", isNestedClass ? "\t" : "")).append(variableCamelCase).append(String.format(";\n%s\t}\n\n", isNestedClass ? "\t" : ""));
         }
 
         codeBuilder.append(String.format("\n%s\tpublic ", isNestedClass ? "\t" : "")).append(removePlural(modelName)).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");

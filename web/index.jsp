@@ -166,7 +166,16 @@
                 }
 
 
-//                JSON to java model
+                //Control + Alt + R
+                if (event.ctrlKey && event.altKey && event.keyCode == 82) {
+                    $("#random").modal("show");
+                    setTimeout(function () {
+                        $('input#iWords').focus();
+                    }, 500);
+                }
+
+
+                //JSON to java model
 
 
                 //Control + Alt + M
@@ -588,6 +597,56 @@
             }
 
 
+            $("#fRandom").submit(function (e) {
+                e.preventDefault();
+
+                $("#random").modal("hide");
+
+
+                var randomWhat = $(this).serializeArray()[0].value;
+                var count = 1;
+                if (randomWhat == 'words' || randomWhat == 'paragraphs') {
+                    count = prompt("How many?", count);
+                }
+
+                if (!isNaN(count)) {
+
+                    $.ajax({
+                        type: "POST",
+                        beforeSend: function () {
+                            startLoading(true);
+                        },
+                        data: {
+                            random_what: randomWhat,
+                            count: count
+                        },
+                        url: "v1/get_random",
+                        success: function (data) {
+
+                            stopLoading(true);
+
+                            if (!data.error) {
+                                editor.replaceSelection("\"" + data.data.random_output + "\"");
+                            } else {
+                                alert(data.message);
+                            }
+
+
+                        },
+                        error: function () {
+                            stopLoading(true);
+                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                            $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                            $(resultDiv).show();
+                        }
+                    });
+
+                } else {
+                    alert("Bad count!");
+                }
+
+            });
+
         });
     </script>
     <style>
@@ -761,6 +820,63 @@
         </div>
     </div>
 
+    <div class="modal fade" id="random" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">I need random</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="fRandom">
+
+                        <p>Tap enter to choose</p>
+
+                        <div class="radio">
+                            <label><input id="iWords" type="radio" value="words" name="random_what" checked autofocus>Random
+                                words</label>
+                        </div>
+
+                        <div class="radio">
+                            <label><input type="radio" value="paragraphs" name="random_what">Paragraphs</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="name" name="random_what">Name</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="phone" name="random_what">Phone</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="city" name="random_what">City</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="state" name="random_what">State</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="country" name="random_what">Country</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="male_name" name="random_what">Male name</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="female_name" name="random_what">Female name</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="first_name" name="random_what">First name</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="last_name" name="random_what">Last name</label>
+                        </div>
+                        <input type="submit" style="display: none">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="shortcuts" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -769,6 +885,7 @@
                     <h4 class="modal-title">Shortcuts</h4>
                 </div>
                 <div class="modal-body">
+                    <p><code>Control + Alt + R </code>To generate random text</p>
                     <p><code>Control + Alt + L </code>To format <code>JSON</code></p>
                     <p><code>Control + Alt + M </code>To create Java model object from selected <code>JSON</code> object
                     </p>
