@@ -1,12 +1,183 @@
 {
   "data": {
-    "user": {
-      "api_key": "apiKey123",
-      "image_url": "https://image.ibb.co/h79itw/1681z1ylompop8m1.png",
-      "name": "Shifar",
-      "email": "shifar@gmail.com"
-    }
+    "rooms": [
+      {
+        "discount_price": "50",
+        "id": "1",
+        "real_price": "2000",
+        "discount_percentage": "50",
+        "title": "Honeymoon sun 1",
+        "photos": [
+          {
+            "thumb_url": "https://picsum.photos/500/500/?image=469",
+            "image_url": "https://picsum.photos/500/500/?image=469",
+            "id": 1
+          },
+          {
+            "thumb_url": "https://picsum.photos/501/501/?image=470",
+            "image_url": "https://picsum.photos/501/501/?image=470",
+            "id": 2
+          },
+          {
+            "thumb_url": "https://picsum.photos/502/502/?image=471",
+            "image_url": "https://picsum.photos/502/502/?image=471",
+            "id": 3
+          },
+          {
+            "thumb_url": "https://picsum.photos/503/503/?image=472",
+            "image_url": "https://picsum.photos/503/503/?image=472",
+            "id": 4
+          },
+          {
+            "thumb_url": "https://picsum.photos/504/504/?image=473",
+            "image_url": "https://picsum.photos/504/504/?image=473",
+            "id": 5
+          }
+        ],
+        "offer_price": "1000"
+      },
+      {
+        "discount_price": "51",
+        "id": "2",
+        "real_price": "2001",
+        "discount_percentage": "51",
+        "title": "Honeymoon sun 2",
+        "photos": [
+          {
+            "thumb_url": "https://picsum.photos/51/51/?image=470",
+            "image_url": "https://picsum.photos/501/501/?image=470",
+            "id": 2
+          },
+          {
+            "thumb_url": "https://picsum.photos/52/52/?image=471",
+            "image_url": "https://picsum.photos/502/502/?image=471",
+            "id": 3
+          },
+          {
+            "thumb_url": "https://picsum.photos/53/53/?image=472",
+            "image_url": "https://picsum.photos/503/503/?image=472",
+            "id": 4
+          },
+          {
+            "thumb_url": "https://picsum.photos/54/54/?image=473",
+            "image_url": "https://picsum.photos/504/504/?image=473",
+            "id": 5
+          },
+          {
+            "thumb_url": "https://picsum.photos/55/55/?image=474",
+            "image_url": "https://picsum.photos/505/505/?image=474",
+            "id": 6
+          }
+        ],
+        "offer_price": "1001"
+      },
+      {
+        "discount_price": "52",
+        "id": "3",
+        "real_price": "2002",
+        "discount_percentage": "52",
+        "title": "Honeymoon sun 3",
+        "photos": [
+          {
+            "thumb_url": "https://picsum.photos/52/52/?image=471",
+            "image_url": "https://picsum.photos/502/502/?image=471",
+            "id": 3
+          },
+          {
+            "thumb_url": "https://picsum.photos/53/53/?image=472",
+            "image_url": "https://picsum.photos/503/503/?image=472",
+            "id": 4
+          },
+          {
+            "thumb_url": "https://picsum.photos/54/54/?image=473",
+            "image_url": "https://picsum.photos/504/504/?image=473",
+            "id": 5
+          },
+          {
+            "thumb_url": "https://picsum.photos/55/55/?image=474",
+            "image_url": "https://picsum.photos/505/505/?image=474",
+            "id": 6
+          },
+          {
+            "thumb_url": "https://picsum.photos/56/56/?image=475",
+            "image_url": "https://picsum.photos/506/506/?image=475",
+            "id": 7
+          }
+        ],
+        "offer_price": "1002"
+      },
+      {
+        "discount_price": "53",
+        "id": "4",
+        "real_price": "2003",
+        "discount_percentage": "53",
+        "title": "Honeymoon sun 4",
+        "photos": [
+          {
+            "thumb_url": "https://picsum.photos/53/53/?image=472",
+            "image_url": "https://picsum.photos/503/503/?image=472",
+            "id": 4
+          },
+          {
+            "thumb_url": "https://picsum.photos/54/54/?image=473",
+            "image_url": "https://picsum.photos/504/504/?image=473",
+            "id": 5
+          },
+          {
+            "thumb_url": "https://picsum.photos/55/55/?image=474",
+            "image_url": "https://picsum.photos/505/505/?image=474",
+            "id": 6
+          },
+          {
+            "thumb_url": "https://picsum.photos/56/56/?image=475",
+            "image_url": "https://picsum.photos/506/506/?image=475",
+            "id": 7
+          },
+          {
+            "thumb_url": "https://picsum.photos/57/57/?image=476",
+            "image_url": "https://picsum.photos/507/507/?image=476",
+            "id": 8
+          }
+        ],
+        "offer_price": "1003"
+      },
+      {
+        "discount_price": "54",
+        "id": "5",
+        "real_price": "2004",
+        "discount_percentage": "54",
+        "title": "Honeymoon sun 5",
+        "photos": [
+          {
+            "thumb_url": "https://picsum.photos/54/54/?image=473",
+            "image_url": "https://picsum.photos/504/504/?image=473",
+            "id": 5
+          },
+          {
+            "thumb_url": "https://picsum.photos/55/55/?image=474",
+            "image_url": "https://picsum.photos/505/505/?image=474",
+            "id": 6
+          },
+          {
+            "thumb_url": "https://picsum.photos/56/56/?image=475",
+            "image_url": "https://picsum.photos/506/506/?image=475",
+            "id": 7
+          },
+          {
+            "thumb_url": "https://picsum.photos/57/57/?image=476",
+            "image_url": "https://picsum.photos/507/507/?image=476",
+            "id": 8
+          },
+          {
+            "thumb_url": "https://picsum.photos/58/58/?image=477",
+            "image_url": "https://picsum.photos/508/508/?image=477",
+            "id": 9
+          }
+        ],
+        "offer_price": "1004"
+      }
+    ]
   },
   "error": false,
-  "message": "Logged In"
+  "message": "OK"
 }

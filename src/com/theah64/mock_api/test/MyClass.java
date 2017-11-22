@@ -1,16 +1,14 @@
 package com.theah64.mock_api.test;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 public class MyClass {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JSONException, IOException {
 
         //Reading sample file
         final File sampleFile = new File(System.getProperty("user.dir") + File.separator + "sample.json");
@@ -26,9 +24,13 @@ public class MyClass {
             e.printStackTrace();
         }
 
-        final JSONObject joResponse = new JSONObject(jsonData);
-        final String pojoCode = CodeGen.getCode(joResponse);
-        System.out.println(pojoCode);
+        File file = new File(System.getProperty("user.dir") + File.separator + "output.html");
+        if (file.exists()) {
+            file.delete();
+        }
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        bw.write(com.theah64.mock_api.test.CodeGen.getFinalCode(jsonData.toString(), "MyModel", true));
+        bw.close();
     }
 
     static class CodeGen {
