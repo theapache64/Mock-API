@@ -1,0 +1,12 @@
+{
+  "data": {
+    "user": {
+      "api_key": "apiKey123",
+      "image_url": "https://image.ibb.co/h79itw/1681z1ylompop8m1.png",
+      "name": "Shifar",
+      "email": "shifar@gmail.com"
+    }
+  },
+  "error": false,
+  "message": "Logged In"
+}
