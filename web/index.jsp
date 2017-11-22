@@ -29,10 +29,6 @@
                 editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
             }
 
-            $("button#bHitLogs").on('click', function () {
-                window.open("hit_logs.jsp?limit=10&api_key=<%=project.getApiKey()%>&route=" + $(this).data('route'), '_blank');
-            });
-
             var editor = CodeMirror.fromTextArea(document.getElementById("response"), {
                 lineNumbers: true,
                 mode: "application/json",
@@ -321,8 +317,6 @@
 
                                 $("input#route").val(route);
                                 $("button#bDelete").show();
-                                $("button#bHitLogs").show();
-                                $("button#bHitLogs").data('route', route);
 
                                 $("input#required_params").val(data.data.required_params);
                                 $("input#optional_params").val(data.data.optional_params);
@@ -351,7 +345,6 @@
                                 $("p#pLastModified").html("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
-                                $("button#bHitLogs").hide();
 
                                 editor.getDoc().setValue("");
                             }
@@ -368,7 +361,6 @@
 
                 } else {
                     $("button#bDelete").hide();
-                    $("button#bHitLogs").hide();
                 }
             });
 
@@ -383,7 +375,6 @@
                 $("p#pLastModified").html("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
-                $("button#bHitLogs").hide();
             });
 
             $("button#bSubmit").on('click', function () {
@@ -456,7 +447,6 @@
 
             function startLoading(isSubmit) {
                 $("button#bDelete").prop('disabled', true);
-                $("button#bHitLogs").prop('disabled', true);
                 $("button#bSubmit").prop('disabled', true);
                 $("input#required_params").prop('disabled', true);
                 $("input#optional_params").prop('disabled', true);
@@ -479,7 +469,6 @@
             function stopLoading(isSubmit) {
                 $("div#resultDiv").show();
                 $("button#bDelete").prop('disabled', false);
-                $("button#bHitLogs").prop('disabled', false);
                 $("button#bSubmit").prop('disabled', false);
                 $("button#bClear").prop('disabled', false);
                 $("select#routes").prop('disabled', false);
@@ -776,10 +765,6 @@
 
             <div class="row">
                 <div class="pull-right">
-
-                    <button id="bHitLogs" style="display: none" class="btn btn-primary btn-sm"><span
-                            class="glyphicon glyphicon-time"></span> HIT LOGS
-                    </button>
 
                     <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
                             class="glyphicon glyphicon-trash"></span> DELETE
