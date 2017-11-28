@@ -131,6 +131,16 @@
 
                 }
 
+
+                //F4
+                if (event.keyCode == 115) {
+
+                    var route = $("input#route").val();
+                    var responseClassName = prompt("Response class name ? ", "GetProductResponse");
+                    window.open('v1/get_api_interface_method?route=' + route + "&project_name=<%=project.getName()%>&response_class=" + responseClassName);
+
+                }
+
             });
 
 
@@ -769,6 +779,7 @@
                     <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
                             class="glyphicon glyphicon-trash"></span> DELETE
                     </button>
+
                     <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#shortcuts">SHORTCUTS</button>
                     <button id="bClear" class="btn btn-info  btn-sm"><span class="glyphicon glyphicon-flash"></span>
                         CLEAR

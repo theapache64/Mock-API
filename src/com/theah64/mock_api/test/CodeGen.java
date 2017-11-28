@@ -137,12 +137,16 @@ public class CodeGen {
     }
 
     private static String toGetterName(String input) {
-        return "get" + input.substring(0, 1).toUpperCase() + input.substring(1) + "()";
+        return "get" + getFirstCharUppercase(input) + "()";
+    }
+
+    public static String getFirstCharUppercase(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
     private static final Pattern p = Pattern.compile("_(.)");
 
-    private static String toCamelCase(String string) {
+    public static String toCamelCase(String string) {
         string = string.toLowerCase();
         Matcher m = p.matcher(string);
         StringBuffer sb = new StringBuffer();

@@ -12,7 +12,6 @@ import java.sql.SQLException;
  */
 public class Connection {
 
-    private static final boolean debugMode = false;
     private static DataSource ds;
 
     static java.sql.Connection getConnection() {
@@ -22,7 +21,7 @@ public class Connection {
             if (ds == null) {
                 final Context initContext = new InitialContext();
                 Context envContext = (Context) initContext.lookup("java:/comp/env");
-                ds = (DataSource) envContext.lookup(debugMode ? "jdbc/mock_apiLocal" : "jdbc/mock_apiRemote");
+                ds = (DataSource) envContext.lookup("jdbc/mock_api");
             }
 
             return ds.getConnection();
@@ -33,8 +32,4 @@ public class Connection {
         }
     }
 
-
-    public static boolean isDebugMode() {
-        return debugMode;
-    }
 }

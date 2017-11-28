@@ -122,6 +122,7 @@ public class JSONS extends BaseTable<JSON> {
         String error = null;
         JSON json = null;
         final String query = "SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params, external_api_url FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
+        System.out.println(String.format("SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params, external_api_url FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = '%s' AND j.route = '%s' AND p.is_active = 1 AND j.is_active = 1 LIMIT 1", projectName, route));
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -139,7 +140,7 @@ public class JSONS extends BaseTable<JSON> {
                 final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
                 final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
 
-                json = new JSON(id, null, null, response, reqPar, opPar, description, externalApiUrl, isSecure, delay, updatedInMillis);
+                json = new JSON(id, null, route, response, reqPar, opPar, description, externalApiUrl, isSecure, delay, updatedInMillis);
             }
             rs.close();
             ps.close();
