@@ -114,7 +114,7 @@ public class CodeGen {
             constructorThis.append(String.format("\n%s\t\tthis.", isNestedClass ? "\t" : "")).append(variableCamelCase).append(" = ").append(variableCamelCase).append(";");
 
 
-            getters.append(String.format("%s\tpublic ", isNestedClass ? "\t" : "")).append(property.getDataType()).append(" ").append(toGetterName(variableCamelCase)).append(String.format("{\n%s\t\treturn ", isNestedClass ? "\t" : "")).append(variableCamelCase).append(String.format(";\n%s\t}\n\n", isNestedClass ? "\t" : ""));
+            getters.append(String.format("%s\tpublic ", isNestedClass ? "\t" : "")).append(property.getDataType()).append(" ").append(toGetterName(property.getDataType(), variableCamelCase)).append(String.format("{\n%s\t\treturn ", isNestedClass ? "\t" : "")).append(variableCamelCase).append(String.format(";\n%s\t}\n\n", isNestedClass ? "\t" : ""));
         }
 
         codeBuilder.append(String.format("\n%s\tpublic ", isNestedClass ? "\t" : "")).append(removePlural(modelName)).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");
@@ -136,8 +136,8 @@ public class CodeGen {
         return Inflector.getInstance().singularize(modelName);
     }
 
-    private static String toGetterName(String input) {
-        return "get" + getFirstCharUppercase(input) + "()";
+    private static String toGetterName(String dataType, String input) {
+        return (dataType.equals("boolean") ? "is" : "get") + getFirstCharUppercase(input) + "()";
     }
 
     public static String getFirstCharUppercase(String input) {
@@ -168,6 +168,8 @@ public class CodeGen {
             return "double";
         } else if (data instanceof String) {
             return "String";
+        } else if (data instanceof Boolean) {
+            return "boolean";
         } else {
             return data.getClass().getSimpleName();
         }
