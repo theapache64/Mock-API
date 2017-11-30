@@ -1,5 +1,5 @@
-<%@ page import="com.theah64.mock_api.database.JSONS" %>
-<%@ page import="com.theah64.mock_api.models.JSON" %>
+<%@ page import="com.theah64.mock_api.database.Routes" %>
+<%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
@@ -69,19 +69,19 @@
 
                 <tbody>
                 <%
-                    final List<JSON> jsons = JSONS.getInstance().getAll(project.getId());
-                    for (final JSON json : jsons) {
+                    final List<Route> routes = Routes.getInstance().getAll(project.getId());
+                    for (final Route route : routes) {
                 %>
                 <tr>
                     <td width="30%"><a target="blank"
-                                       href="get_json/<%=project.getName()%>/<%=json.getRoute()%>"><%=json.getRoute()%>
+                                       href="get_json/<%=project.getName()%>/<%=route.getName()%>"><%=route.getName()%>
                     </a></td>
                     <td width="30%"><a target="blank"
-                                       href="<%=json.getExternalApiUrl()!=null ? json.getExternalApiUrl() : ""%>"><%=json.getExternalApiUrl() != null ? json.getExternalApiUrl() : "-"%>
+                                       href="<%=route.getExternalApiUrl()!=null ? route.getExternalApiUrl() : ""%>"><%=route.getExternalApiUrl() != null ? route.getExternalApiUrl() : "-"%>
                     </a></td>
                     <td width="60%"><span class="btn btn-success">UNDER CONSTRUCTION</span></td>
                     <td width="10%">
-                        <%=json.getExternalApiUrl() != null ? "<button class=\"bCompare btn btn-info\" data-external-api-url=\"" + json.getExternalApiUrl() + "\">COMPARE</button>" : "-"%>
+                        <%=route.getExternalApiUrl() != null ? "<button class=\"bCompare btn btn-info\" data-external-api-url=\"" + route.getExternalApiUrl() + "\">COMPARE</button>" : "-"%>
                     </td>
                 </tr>
                 <%

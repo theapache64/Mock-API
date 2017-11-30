@@ -1,5 +1,5 @@
-<%@ page import="com.theah64.mock_api.database.JSONS" %>
-<%@ page import="com.theah64.mock_api.models.JSON" %>
+<%@ page import="com.theah64.mock_api.database.Routes" %>
+<%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
 <%--
@@ -74,7 +74,7 @@
                         beforeSend: function () {
                             startLoading(true);
                         },
-                        url: "v1/search?column=<%=JSONS.COLUMN_RESPONSE%>&value=" + sValue,
+                        url: "v1/search?column=<%=Routes.COLUMN_DEFAULT_RESPONSE%>&value=" + sValue,
                         headers: {"Authorization": "<%=project.getApiKey()%>"},
                         success: function (data) {
 
@@ -181,7 +181,7 @@
                 }
 
 
-                //JSON to java model
+                //Route to java model
 
 
                 //Control + Alt + M
@@ -341,7 +341,7 @@
                                 $("input#description").val(data.data.description);
                                 $("input#is_secure").prop('checked', data.data.is_secure);
 
-                                editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
+                                editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.default_response), undefined, 4));
 
                             } else {
 
@@ -411,8 +411,8 @@
                     },
                     url: "v1/save_json",
                     data: {
-                        route: route,
-                        response: response,
+                        name: route,
+                        default_response: response,
                         required_params: reqParams,
                         optional_params: opParams,
                         external_api_url: external_api_url,
@@ -702,9 +702,9 @@
         <%--Available jsonList--%>
         <div class=" col-md-2">
             <%
-                List<JSON> jsonList = null;
+                List<Route> jsonList = null;
                 try {
-                    jsonList = JSONS.getInstance().getAll(project.getId());
+                    jsonList = Routes.getInstance().getAll(project.getId());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -714,9 +714,9 @@
                 <option value="">Select a route</option>
                 <%
                     if (jsonList != null) {
-                        for (final JSON json : jsonList) {
+                        for (final Route json : jsonList) {
                 %>
-                <option value="<%=json.getId()%>"><%=json.getRoute()%>
+                <option value="<%=json.getId()%>"><%=json.getName()%>
                 </option>
                 <%
                         }

@@ -1,7 +1,7 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.database.JSONS;
-import com.theah64.mock_api.models.JSON;
+import com.theah64.mock_api.database.Routes;
+import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
@@ -20,7 +20,7 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = {"/get_json/*"})
 public class GetJSONServlet extends AdvancedBaseServlet {
 
-    private JSON json;
+    private Route route;
 
     @Override
     protected boolean isSecureServlet() {
@@ -33,11 +33,11 @@ public class GetJSONServlet extends AdvancedBaseServlet {
         try {
             final PathInfo pathInfo = new PathInfo(getHttpServletRequest().getPathInfo(), 2, PathInfo.UNLIMITED);
             final String projectName = pathInfo.getPart(1);
-            final String route = pathInfo.getPartFrom(2);
-            json = JSONS.getInstance().get(projectName, route);
-            System.out.println("Required param is " + json.getRequiredParams());
-            if (json.getRequiredParams() != null) {
-                final String[] reqParams = json.getRequiredParams().split(",");
+            final String routeName = pathInfo.getPartFrom(2);
+            route = Routes.getInstance().get(projectName, routeName);
+            System.out.println("Required param is " + route.getRequiredParams());
+            if (route.getRequiredParams() != null) {
+                final String[] reqParams = route.getRequiredParams().split(",");
                 for (final String reqParam : reqParams) {
                     System.out.println(reqParam);
                 }
@@ -60,22 +60,22 @@ public class GetJSONServlet extends AdvancedBaseServlet {
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
 
-        if (json.isSecure()) {
+        if (route.isSecure()) {
             final String authorization = getHttpServletRequest().getHeader(HeaderSecurity.KEY_AUTHORIZATION);
             if (authorization == null) {
                 throw new Request.RequestException("Authorization header missing");
             }
         }
 
-        if (json.getDelay() > 0) {
+        if (route.getDelay() > 0) {
             try {
-                System.out.println("Sleep for " + json.getDelay() + "ms");
-                Thread.sleep(json.getDelay());
+                System.out.println("Sleep for " + route.getDelay() + "ms");
+                Thread.sleep(route.getDelay());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-        getWriter().write(new JSONObject(json.getResponse()).toString());
+        getWriter().write(new JSONObject(route.getDefaultResponse()).toString());
     }
 }

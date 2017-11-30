@@ -1,8 +1,8 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.database.JSONS;
+import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.exceptions.RequestException;
-import com.theah64.mock_api.models.JSON;
+import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.test.CodeGen;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
@@ -36,7 +36,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() throws Request.RequestException {
-        return new String[]{KEY_PROJECT_NAME, KEY_RESPONSE_CLASS, JSONS.COLUMN_ROUTE};
+        return new String[]{KEY_PROJECT_NAME, KEY_RESPONSE_CLASS, Routes.COLUMN_NAME};
     }
 
     @Override
@@ -44,11 +44,11 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
 
         final String projectName = getStringParameter(KEY_PROJECT_NAME);
-        final String route = getStringParameter(JSONS.COLUMN_ROUTE);
+        final String routeName = getStringParameter(Routes.COLUMN_NAME);
         final String responseClass = getStringParameter(KEY_RESPONSE_CLASS);
 
-        final JSON json = JSONS.getInstance().get(projectName, route);
-        if (json != null) {
+        final Route route = Routes.getInstance().get(projectName, routeName);
+        if (route != null) {
             getHttpServletResponse().setContentType("text/plaint");
 
             /**
@@ -66,25 +66,25 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
             StringBuilder codeBuilder = new StringBuilder();
 
             //@POST("add_address") Call<BaseAPIResponse<AddAddressResponse>> editAddress(
-            codeBuilder.append(String.format("@POST(\"%s\") Call<BaseAPIResponse<%s>> %s(", json.getRoute(), responseClass, CodeGen.toCamelCase(json.getRoute())));
+            codeBuilder.append(String.format("@POST(\"%s\") Call<BaseAPIResponse<%s>> %s(", route.getName(), responseClass, CodeGen.toCamelCase(route.getName())));
 
-            if (json.isSecure()) {
+            if (route.isSecure()) {
                 codeBuilder.append("\n\t\t\t\t\t\t\t\t@Header(KEY_AUTHORIZATION) String apiKey,");
             }
 
             boolean hasParams = false;
-            if (json.getRequiredParams() != null) {
+            if (route.getRequiredParams() != null) {
                 hasParams = true;
-                final String[] reqParams = json.getRequiredParams().split(",");
+                final String[] reqParams = route.getRequiredParams().split(",");
                 for (final String reqParam : reqParams) {
                     codeBuilder.append(String.format("\n\t\t\t\t\t\t\t\t@Query(\"%s\") String %s,", reqParam, CodeGen.toCamelCase(reqParam)));
                 }
             }
 
 
-            if (json.getOptionalParams() != null) {
+            if (route.getOptionalParams() != null) {
                 hasParams = true;
-                final String[] optParams = json.getOptionalParams().split(",");
+                final String[] optParams = route.getOptionalParams().split(",");
                 for (final String optParam : optParams) {
                     codeBuilder.append(String.format("\n\t\t\t\t\t\t\t\t@Query(\"%s\") String %s,", optParam, CodeGen.toCamelCase(optParam)));
                 }

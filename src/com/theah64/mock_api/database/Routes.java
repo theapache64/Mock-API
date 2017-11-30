@@ -1,6 +1,6 @@
 package com.theah64.mock_api.database;
 
-import com.theah64.mock_api.models.JSON;
+import com.theah64.mock_api.models.Route;
 import org.json.JSONException;
 
 import java.sql.PreparedStatement;
@@ -12,12 +12,11 @@ import java.util.List;
 /**
  * Created by theapache64 on 14/5/17.
  */
-public class JSONS extends BaseTable<JSON> {
+public class Routes extends BaseTable<Route> {
 
-    private static final JSONS instance = new JSONS();
-    public static final String COLUMN_RESPONSE = "response";
+    private static final Routes instance = new Routes();
+    public static final String COLUMN_DEFAULT_RESPONSE = "default_response";
     public static final String COLUMN_PROJECT_ID = "project_id";
-    public static final String COLUMN_ROUTE = "route";
     public static final String COLUMN_REQUIRED_PARAMS = "required_params";
     public static final String COLUMN_OPTIONAL_PARAMS = "optional_params";
     public static final String COLUMN_DESCRIPTION = "description";
@@ -26,31 +25,31 @@ public class JSONS extends BaseTable<JSON> {
     public static final String COLUMN_EXTERNAL_API_URL = "external_api_url";
     public static final String COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis";
 
-    private JSONS() {
-        super("jsons");
+    private Routes() {
+        super("routes");
     }
 
-    public static JSONS getInstance() {
+    public static Routes getInstance() {
         return instance;
     }
 
     @Override
-    public String addv3(JSON json) throws SQLException {
+    public String addv3(Route route) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO jsons (project_id, route, response, required_params, optional_params, description, is_secure, delay,external_api_url,updated_at_in_millis) VALUES (?,?,?,?,?,?,?,?,?,?);";
+        final String query = "INSERT INTO routes (project_id, route, response, required_params, optional_params, description, is_secure, delay,external_api_url,updated_at_in_millis) VALUES (?,?,?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, json.getProjectId());
-            ps.setString(2, json.getRoute());
-            ps.setString(3, json.getResponse());
-            ps.setString(4, json.getRequiredParams());
-            ps.setString(5, json.getOptionalParams());
-            ps.setString(6, json.getDescription());
-            ps.setBoolean(7, json.isSecure());
-            ps.setLong(8, json.getDelay());
-            ps.setString(9, json.getExternalApiUrl());
+            ps.setString(1, route.getProjectId());
+            ps.setString(2, route.getName());
+            ps.setString(3, route.getDefaultResponse());
+            ps.setString(4, route.getRequiredParams());
+            ps.setString(5, route.getOptionalParams());
+            ps.setString(6, route.getDescription());
+            ps.setBoolean(7, route.isSecure());
+            ps.setLong(8, route.getDelay());
+            ps.setString(9, route.getExternalApiUrl());
             ps.setLong(10, System.currentTimeMillis());
 
             ps.executeUpdate();
@@ -74,9 +73,9 @@ public class JSONS extends BaseTable<JSON> {
         return id;
     }
 
-    public List<JSON> getAll(final String projectId) throws SQLException {
-        List<JSON> jsonList = null;
-        final String query = "SELECT id, route, external_api_url FROM jsons WHERE project_id = ? AND is_active = 1 ORDER BY updated_at_in_millis DESC";
+    public List<Route> getAll(final String projectId) throws SQLException {
+        List<Route> jsonList = null;
+        final String query = "SELECT id, name, external_api_url FROM routes WHERE project_id = ? AND is_active = 1 ORDER BY updated_at_in_millis DESC";
         String error = null;
         final java.sql.Connection con = Connection.getConnection();
         try {
@@ -88,9 +87,9 @@ public class JSONS extends BaseTable<JSON> {
                 jsonList = new ArrayList<>();
                 do {
                     final String id = rs.getString(COLUMN_ID);
-                    final String route = rs.getString(COLUMN_ROUTE);
+                    final String route = rs.getString(COLUMN_NAME);
                     final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
-                    jsonList.add(new JSON(id, null, route, null, null, null, null, externalApiUrl, false, 0, -1));
+                    jsonList.add(new Route(id, null, route, null, null, null, null, externalApiUrl, false, 0, -1));
                 } while (rs.next());
             }
             rs.close();
@@ -118,20 +117,20 @@ public class JSONS extends BaseTable<JSON> {
 
     }
 
-    public JSON get(String projectName, String route) throws SQLException {
+    public Route get(String projectName, String routeName) throws SQLException {
         String error = null;
-        JSON json = null;
-        final String query = "SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params, external_api_url FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.route = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
-        System.out.println(String.format("SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.response, j.required_params, j.optional_params, external_api_url FROM jsons j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = '%s' AND j.route = '%s' AND p.is_active = 1 AND j.is_active = 1 LIMIT 1", projectName, route));
+        Route route = null;
+        final String query = "SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.default_response, j.required_params, j.optional_params, external_api_url FROM routes j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.name = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
+        System.out.println(String.format("SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.default_response, j.required_params, j.optional_params, external_api_url FROM routes j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = '%s' AND j.name = '%s' AND p.is_active = 1 AND j.is_active = 1 LIMIT 1", projectName, route));
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, projectName);
-            ps.setString(2, route);
+            ps.setString(2, routeName);
             final ResultSet rs = ps.executeQuery();
             if (rs.first()) {
                 final String id = rs.getString(COLUMN_ID);
-                final String response = rs.getString(COLUMN_RESPONSE);
+                final String response = rs.getString(COLUMN_DEFAULT_RESPONSE);
                 final String reqPar = rs.getString(COLUMN_REQUIRED_PARAMS);
                 final String opPar = rs.getString(COLUMN_OPTIONAL_PARAMS);
                 final String description = rs.getString(COLUMN_DESCRIPTION);
@@ -140,7 +139,7 @@ public class JSONS extends BaseTable<JSON> {
                 final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
                 final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
 
-                json = new JSON(id, null, route, response, reqPar, opPar, description, externalApiUrl, isSecure, delay, updatedInMillis);
+                route = new Route(id, null, routeName, response, reqPar, opPar, description, externalApiUrl, isSecure, delay, updatedInMillis);
             }
             rs.close();
             ps.close();
@@ -156,30 +155,30 @@ public class JSONS extends BaseTable<JSON> {
         }
         manageError(error);
 
-        if (json == null) {
+        if (route == null) {
             throw new SQLException("No response found for " + route);
         }
-        return json;
+        return route;
     }
 
     @Override
-    public boolean update(JSON json) {
+    public boolean update(Route route) {
         boolean isUpdated = false;
-        final String query = "UPDATE jsons SET response = ?, required_params = ? , optional_params = ? , description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?   WHERE route = ? AND project_id = ?;";
+        final String query = "UPDATE routes SET default_response = ?, required_params = ? , optional_params = ? , description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?  WHERE name = ? AND project_id = ?;";
         java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
 
-            ps.setString(1, json.getResponse());
-            ps.setString(2, json.getRequiredParams());
-            ps.setString(3, json.getOptionalParams());
-            ps.setString(4, json.getDescription());
-            ps.setBoolean(5, json.isSecure());
-            ps.setLong(6, json.getDelay());
-            ps.setString(7, json.getExternalApiUrl());
+            ps.setString(1, route.getDefaultResponse());
+            ps.setString(2, route.getRequiredParams());
+            ps.setString(3, route.getOptionalParams());
+            ps.setString(4, route.getDescription());
+            ps.setBoolean(5, route.isSecure());
+            ps.setLong(6, route.getDelay());
+            ps.setString(7, route.getExternalApiUrl());
             ps.setLong(8, System.currentTimeMillis());
-            ps.setString(9, json.getRoute());
-            ps.setString(10, json.getProjectId());
+            ps.setString(9, route.getName());
+            ps.setString(10, route.getProjectId());
 
 
             isUpdated = ps.executeUpdate() == 1;
@@ -200,8 +199,8 @@ public class JSONS extends BaseTable<JSON> {
     }
 
     public void updateBaseOGAPIURL(String projectId, String oldBaseUrl, String newBaseUrl) throws SQLException {
-        final String query = String.format("UPDATE jsons SET %s = REPLACE(%s, ?, ?) WHERE INSTR(%s, ?) > 0 AND project_id = ?;", COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL);
-        final String query2 = String.format("UPDATE jsons SET %s = REPLACE(%s, '%s', '%s') WHERE INSTR(%s, '%s') > 0 AND project_id = '%s';", COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL, oldBaseUrl, newBaseUrl, COLUMN_EXTERNAL_API_URL, oldBaseUrl, projectId);
+        final String query = String.format("UPDATE routes SET %s = REPLACE(%s, ?, ?) WHERE INSTR(%s, ?) > 0 AND project_id = ?;", COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL);
+        final String query2 = String.format("UPDATE routes SET %s = REPLACE(%s, '%s', '%s') WHERE INSTR(%s, '%s') > 0 AND project_id = '%s';", COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL, oldBaseUrl, newBaseUrl, COLUMN_EXTERNAL_API_URL, oldBaseUrl, projectId);
         System.out.println("Query is " + query2);
         final java.sql.Connection con = Connection.getConnection();
         String error = null;

@@ -1,6 +1,6 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.database.JSONS;
+import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.PathInfo;
@@ -47,7 +47,7 @@ public class SearchServlet extends AdvancedBaseServlet {
         final String projectId = getHeaderSecurity().getProjectId();
         final String column = getStringParameter(KEY_COLUMN);
         final String value = getStringParameter(KEY_VALUE);
-        final List<String> routes = JSONS.getInstance().getLike(JSONS.COLUMN_PROJECT_ID, projectId, column, value, JSONS.COLUMN_ROUTE);
+        final List<String> routes = Routes.getInstance().getLike(Routes.COLUMN_PROJECT_ID, projectId, column, value, Routes.COLUMN_NAME);
         if (routes != null) {
             final JSONArray jaRoutes = new JSONArray();
             for (final String route : routes) {

@@ -1,8 +1,8 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.database.JSONS;
+import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.exceptions.RequestException;
-import com.theah64.mock_api.models.JSON;
+import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
@@ -25,25 +25,25 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     @Override
     protected String[] getRequiredParameters() {
         return new String[]{
-                JSONS.COLUMN_ROUTE,
-                JSONS.COLUMN_RESPONSE};
+                Routes.COLUMN_NAME,
+                Routes.COLUMN_DEFAULT_RESPONSE};
     }
 
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException {
 
-        final String route = getStringParameter(JSONS.COLUMN_ROUTE);
+        final String routeName = getStringParameter(Routes.COLUMN_NAME);
         final String projectId = getHeaderSecurity().getProjectId();
 
-        final boolean isRouteExist = JSONS.getInstance().isExist(JSONS.COLUMN_ROUTE, route, JSONS.COLUMN_PROJECT_ID, projectId);
+        final boolean isRouteExist = Routes.getInstance().isExist(Routes.COLUMN_NAME, routeName, Routes.COLUMN_PROJECT_ID, projectId);
 
-        final String response = getStringParameter(JSONS.COLUMN_RESPONSE);
-        String requiredParams = getStringParameter(JSONS.COLUMN_REQUIRED_PARAMS);
-        String optionalParams = getStringParameter(JSONS.COLUMN_OPTIONAL_PARAMS);
-        final String description = getStringParameter(JSONS.COLUMN_DESCRIPTION);
-        final boolean isSecure = getBooleanParameter(JSONS.COLUMN_IS_SECURE);
-        final long delay = getLongParameter(JSONS.COLUMN_DELAY);
-        final String externalApiUrl = getStringParameter(JSONS.COLUMN_EXTERNAL_API_URL);
+        final String response = getStringParameter(Routes.COLUMN_DEFAULT_RESPONSE);
+        String requiredParams = getStringParameter(Routes.COLUMN_REQUIRED_PARAMS);
+        String optionalParams = getStringParameter(Routes.COLUMN_OPTIONAL_PARAMS);
+        final String description = getStringParameter(Routes.COLUMN_DESCRIPTION);
+        final boolean isSecure = getBooleanParameter(Routes.COLUMN_IS_SECURE);
+        final long delay = getLongParameter(Routes.COLUMN_DELAY);
+        final String externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL);
 
         if (externalApiUrl != null && !externalApiUrl.matches(URL_REGEX)) {
             throw new RequestException("Invalid external api url :" + externalApiUrl);
@@ -61,15 +61,15 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             optionalParams = optionalParams.replaceAll("\\s+", "_");
         }
 
-        final JSON json = new JSON(null, projectId, route, response, requiredParams, optionalParams, description, externalApiUrl, isSecure, delay, -1);
+        final Route route = new Route(null, projectId, routeName, response, requiredParams, optionalParams, description, externalApiUrl, isSecure, delay, -1);
 
         if (!isRouteExist) {
             //Route doesn't exist
-            final String jsonId = JSONS.getInstance().addv3(json);
-            getWriter().write(new APIResponse("Route established ", JSONS.COLUMN_ID, jsonId).getResponse());
+            final String jsonId = Routes.getInstance().addv3(route);
+            getWriter().write(new APIResponse("Route established ", Routes.COLUMN_ID, jsonId).getResponse());
         } else {
             //Update the existing route
-            JSONS.getInstance().update(json);
+            Routes.getInstance().update(route);
             getWriter().write(new APIResponse("Route updated", null).getResponse());
         }
     }

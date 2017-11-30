@@ -1,6 +1,6 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.database.JSONS;
+import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
@@ -61,7 +61,7 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
             //update project url
 
             //updating all old instance of string with new route
-            JSONS.getInstance().updateBaseOGAPIURL(id, oldBaseUrl, value);
+            Routes.getInstance().updateBaseOGAPIURL(id, oldBaseUrl, value);
         }
 
         getWriter().write(new APIResponse("Project updated", null).getResponse());

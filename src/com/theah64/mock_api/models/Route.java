@@ -6,17 +6,17 @@ import org.json.JSONObject;
 /**
  * Created by theapache64 on 14/5/17.
  */
-public class JSON {
-    private final String id, projectId, route, response, requiredParams, optionalParams, description, externalApiUrl;
+public class Route {
+    private final String id, projectId, name, defaultResponse, requiredParams, optionalParams, description, externalApiUrl;
     private boolean isSecure;
     private final long delay;
     private final long updatedInMillis;
 
-    public JSON(String id, String projectId, String route, String response, String requiredParams, String optionalParams, String description, String externalApiUrl, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
+    public Route(String id, String projectId, String route, String response, String requiredParams, String optionalParams, String description, String externalApiUrl, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
         this.id = id;
         this.projectId = projectId;
-        this.route = route;
-        this.response = response != null ? new JSONObject(response).toString() : null;
+        this.name = route;
+        this.defaultResponse = response != null ? new JSONObject(response).toString() : null;
         this.requiredParams = requiredParams;
         this.optionalParams = optionalParams;
         this.description = description;
@@ -62,11 +62,11 @@ public class JSON {
         return projectId;
     }
 
-    public String getRoute() {
-        return route;
+    public String getName() {
+        return name;
     }
 
-    public String getResponse() {
-        return response;
+    public String getDefaultResponse() {
+        return defaultResponse;
     }
 }

@@ -1,7 +1,7 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.database.JSONS;
-import com.theah64.mock_api.models.JSON;
+import com.theah64.mock_api.database.Routes;
+import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
@@ -48,20 +48,20 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
 
         final PathInfo pathInfo = new PathInfo(getHttpServletRequest().getPathInfo(), 2, PathInfo.UNLIMITED);
         final String projectName = pathInfo.getPart(1);
-        final String route = pathInfo.getPartFrom(2);
-        final JSON json = JSONS.getInstance().get(projectName, route);
+        final String routeName = pathInfo.getPartFrom(2);
+        final Route route = Routes.getInstance().get(projectName, routeName);
 
         final JSONObject joJson = new JSONObject();
-        joJson.put(JSONS.COLUMN_RESPONSE, json.getResponse());
-        joJson.put(JSONS.COLUMN_REQUIRED_PARAMS, json.getRequiredParams());
-        joJson.put(JSONS.COLUMN_OPTIONAL_PARAMS, json.getOptionalParams());
-        joJson.put(JSONS.COLUMN_EXTERNAL_API_URL, json.getExternalApiUrl());
-        joJson.put(JSONS.COLUMN_IS_SECURE, json.isSecure());
-        joJson.put(JSONS.COLUMN_DELAY, json.getDelay());
-        joJson.put(JSONS.COLUMN_DESCRIPTION, json.getDescription());
-        joJson.put("dummy_params", getDummyParams(json.getRequiredParams()));
-        joJson.put("last_modified", TimeUtils.millisToLongDHMS(json.getUpdatedInMillis()) + " ago");
-        joJson.put("last_modified_date", getIndianDate(json.getUpdatedInMillis()));
+        joJson.put(Routes.COLUMN_DEFAULT_RESPONSE, route.getDefaultResponse());
+        joJson.put(Routes.COLUMN_REQUIRED_PARAMS, route.getRequiredParams());
+        joJson.put(Routes.COLUMN_OPTIONAL_PARAMS, route.getOptionalParams());
+        joJson.put(Routes.COLUMN_EXTERNAL_API_URL, route.getExternalApiUrl());
+        joJson.put(Routes.COLUMN_IS_SECURE, route.isSecure());
+        joJson.put(Routes.COLUMN_DELAY, route.getDelay());
+        joJson.put(Routes.COLUMN_DESCRIPTION, route.getDescription());
+        joJson.put("dummy_params", getDummyParams(route.getRequiredParams()));
+        joJson.put("last_modified", TimeUtils.millisToLongDHMS(route.getUpdatedInMillis()) + " ago");
+        joJson.put("last_modified_date", getIndianDate(route.getUpdatedInMillis()));
 
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
     }
