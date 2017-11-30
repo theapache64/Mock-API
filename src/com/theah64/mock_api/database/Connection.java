@@ -14,7 +14,7 @@ public class Connection {
 
     private static DataSource ds;
 
-    static java.sql.Connection getConnection() {
+    public static java.sql.Connection getConnection() {
 
         try {
 

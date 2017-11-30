@@ -49,7 +49,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
         final Route route = Routes.getInstance().get(projectName, routeName);
         if (route != null) {
-            getHttpServletResponse().setContentType("text/plaint");
+            getHttpServletResponse().setContentType("text/plain");
 
             /**
              * @POST("add_address") Call<BaseAPIResponse<AddAddressResponse>> editAddress(

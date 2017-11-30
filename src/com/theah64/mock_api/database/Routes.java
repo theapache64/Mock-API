@@ -120,8 +120,7 @@ public class Routes extends BaseTable<Route> {
     public Route get(String projectName, String routeName) throws SQLException {
         String error = null;
         Route route = null;
-        final String query = "SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.default_response, j.required_params, j.optional_params, external_api_url FROM routes j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = ? AND j.name = ? AND p.is_active = 1 AND j.is_active = 1 LIMIT 1";
-        System.out.println(String.format("SELECT j.id,j.updated_at_in_millis,j.description, j.is_secure, j.delay, j.default_response, j.required_params, j.optional_params, external_api_url FROM routes j INNER JOIN projects p ON p.id = j.project_id WHERE p.name = '%s' AND j.name = '%s' AND p.is_active = 1 AND j.is_active = 1 LIMIT 1", projectName, route));
+        final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, GROUP_CONCAT(rp.name) AS required_params, GROUP_CONCAT(op.name) AS optional_params, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id LEFT JOIN params rp ON rp.route_id = r.id AND rp.type = 'REQUIRED' LEFT JOIN params op ON op.route_id = r.id AND op.type = 'OPTIONAL' WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
