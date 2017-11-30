@@ -8,4 +8,8 @@ A Web Application to build Mock API
 
 
 ### TODOs
-- Build compare with.
+
+#### Param wise response
+jsons.response -> jsons.default_response
+jsons -> routes
+
