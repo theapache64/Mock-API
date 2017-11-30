@@ -7,7 +7,14 @@ import org.json.JSONObject;
  * Created by theapache64 on 14/5/17.
  */
 public class Route {
-    private final String id, projectId, name, defaultResponse, requiredParams, optionalParams, description, externalApiUrl;
+    private String id;
+    private final String projectId;
+    private final String name;
+    private final String defaultResponse;
+    private final String requiredParams;
+    private final String optionalParams;
+    private final String description;
+    private final String externalApiUrl;
     private boolean isSecure;
     private final long delay;
     private final long updatedInMillis;
@@ -68,5 +75,9 @@ public class Route {
 
     public String getDefaultResponse() {
         return defaultResponse;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

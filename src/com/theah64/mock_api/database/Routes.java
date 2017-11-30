@@ -37,28 +37,31 @@ public class Routes extends BaseTable<Route> {
     public String addv3(Route route) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO routes (project_id, route, response, required_params, optional_params, description, is_secure, delay,external_api_url,updated_at_in_millis) VALUES (?,?,?,?,?,?,?,?,?,?);";
+        final String query = "INSERT INTO routes (project_id, name, default_response, description, is_secure, delay,external_api_url,updated_at_in_millis) VALUES (?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
-            final PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, route.getProjectId());
-            ps.setString(2, route.getName());
-            ps.setString(3, route.getDefaultResponse());
-            ps.setString(4, route.getRequiredParams());
-            ps.setString(5, route.getOptionalParams());
-            ps.setString(6, route.getDescription());
-            ps.setBoolean(7, route.isSecure());
-            ps.setLong(8, route.getDelay());
-            ps.setString(9, route.getExternalApiUrl());
-            ps.setLong(10, System.currentTimeMillis());
+            final PreparedStatement ps0 = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            ps0.setString(1, route.getProjectId());
+            ps0.setString(2, route.getName());
+            ps0.setString(3, route.getDefaultResponse());
+            ps0.setString(4, route.getDescription());
+            ps0.setBoolean(5, route.isSecure());
+            ps0.setLong(6, route.getDelay());
+            ps0.setString(7, route.getExternalApiUrl());
+            ps0.setLong(8, System.currentTimeMillis());
 
-            ps.executeUpdate();
-            final ResultSet rs = ps.getGeneratedKeys();
+            ps0.executeUpdate();
+            final ResultSet rs = ps0.getGeneratedKeys();
             if (rs.first()) {
                 id = rs.getString(1);
             }
             rs.close();
-            ps.close();
+            ps0.close();
+
+            //TODO: Add req/opt params
+            route.setId(id);
+            Params.getInstance().addParamsFromRoute(route);
+
         } catch (SQLException e) {
             e.printStackTrace();
             error = e.getMessage();
@@ -163,22 +166,22 @@ public class Routes extends BaseTable<Route> {
     @Override
     public boolean update(Route route) {
         boolean isUpdated = false;
-        final String query = "UPDATE routes SET default_response = ?, required_params = ? , optional_params = ? , description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?  WHERE name = ? AND project_id = ?;";
+        final String query = "UPDATE routes SET default_response = ?, description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?  WHERE name = ? AND project_id = ?;";
         java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
 
             ps.setString(1, route.getDefaultResponse());
-            ps.setString(2, route.getRequiredParams());
-            ps.setString(3, route.getOptionalParams());
-            ps.setString(4, route.getDescription());
-            ps.setBoolean(5, route.isSecure());
-            ps.setLong(6, route.getDelay());
-            ps.setString(7, route.getExternalApiUrl());
-            ps.setLong(8, System.currentTimeMillis());
-            ps.setString(9, route.getName());
-            ps.setString(10, route.getProjectId());
+            ps.setString(2, route.getDescription());
+            ps.setBoolean(3, route.isSecure());
+            ps.setLong(4, route.getDelay());
+            ps.setString(5, route.getExternalApiUrl());
+            ps.setLong(6, System.currentTimeMillis());
+            ps.setString(7, route.getName());
+            ps.setString(8, route.getProjectId());
 
+            //TODO: Update required params and optional params here
+            Params.getInstance().updateParam\FromRoute(route);
 
             isUpdated = ps.executeUpdate() == 1;
             ps.close();

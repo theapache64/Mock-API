@@ -891,6 +891,7 @@
                     <p><code>Control + Alt + S </code>To insert a string object at selected position</p>
                     <p><code>Control + Alt + I </code>To insert random image urls at selected position</p>
                     <p><code>F1 </code>To search for a route</p>
+                    <p><code>F4 </code>To generate API interface method</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

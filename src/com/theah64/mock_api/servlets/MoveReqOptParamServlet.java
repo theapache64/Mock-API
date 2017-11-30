@@ -1,5 +1,6 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.database.Params;
 import com.theah64.mock_api.models.Route;
 import org.json.JSONException;
 
@@ -9,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,32 +51,11 @@ public class MoveReqOptParamServlet extends HttpServlet {
             for (final Route route : routes) {
 
                 if (route.getRequiredParams() != null) {
-                    //Move required params
-                    final String[] reqParams = route.getRequiredParams().split(",");
-                    for (final String reqParam : reqParams) {
-                        String reqInsQuery = "INSERT INTO params (name, route_id, type) VALUES (?,?,?);";
-                        final PreparedStatement ps = con.prepareStatement(reqInsQuery);
-                        ps.setString(1, reqParam);
-                        ps.setString(2, route.getId());
-                        ps.setString(3, "REQUIRED");
-                        ps.executeUpdate();
-                        ps.close();
-                    }
+                    Params.getInstance().addParams(con, route, Params.TYPE_REQUIRED);
                 }
 
-
                 if (route.getOptionalParams() != null) {
-                    //Move required params
-                    final String[] optParams = route.getOptionalParams().split(",");
-                    for (final String optParam : optParams) {
-                        String reqInsQuery = "INSERT INTO params (name, route_id, type) VALUES (?,?,?);";
-                        final PreparedStatement ps = con.prepareStatement(reqInsQuery);
-                        ps.setString(1, optParam);
-                        ps.setString(2, route.getId());
-                        ps.setString(3, "OPTIONAL");
-                        ps.executeUpdate();
-                        ps.close();
-                    }
+                    Params.getInstance().addParams(con, route, Params.TYPE_OPTIONAL);
                 }
             }
 
@@ -88,4 +67,5 @@ public class MoveReqOptParamServlet extends HttpServlet {
         }
 
     }
+
 }
