@@ -117,29 +117,55 @@ public class Params extends BaseTable<Param> {
 
         //Get all params
         final List<Param> oldParams = getAll(COLUMN_ROUTE_ID, route.getId());
+        final List<Param> deletedParams = new ArrayList<>();
+        final List<Param> addedParams = new ArrayList<>();
 
-        if (oldParams.isEmpty()) {
-            //No old param
-            addParamsFromRoute(route);
+        if (oldParams.isEmpty() && !newParams.isEmpty()) {
+            addedParams.addAll(newParams);
+        } else if (newParams.isEmpty() && !oldParams.isEmpty()) {
+            deletedParams.addAll(oldParams);
         } else {
-            //find deleted params
-            final List<Param> deletedParams = new ArrayList<>();
-
-            //find added params
-            final List<Param> addedParams = new ArrayList<>();
-
-            for (final Param newParam : newParams) {
-                for (final Param oldParam : oldParams) {
-                    if (oldParam.getName().equals(newParam.getName())) {
-                        
-                    }
+            //finding deleted params
+            for (Param oldParam : oldParams) {
+                if (!newParams.contains(oldParam)) {
+                    deletedParams.add(oldParam);
                 }
             }
 
-            //delete deleted params
-            //add added params
+            //finding addedParmas
+            for (final Param newParam : newParams) {
+                if (!oldParams.contains(newParam)) {
+                    addedParams.add(newParam);
+                }
+            }
         }
 
+        java.sql.Connection con = Connection.getConnection();
+
+        if (!deletedParams.isEmpty()) {
+            //Delete params
+            final String delQuery = "DELETE FROM params WHERE route_id = ? AND name = ?;";
+            final PreparedStatement ps = con.prepareStatement(delQuery);
+            for (Param delParam : deletedParams) {
+                ps.setString(1, route.getId());
+                ps.setString(2, delParam.getName());
+                ps.executeUpdate();
+            }
+            ps.close();
+        }
+
+        if (!addedParams.isEmpty()) {
+            //added params
+            String reqInsQuery = "INSERT INTO params (name, route_id, type) VALUES (?,?,?);";
+            final PreparedStatement ps1 = con.prepareStatement(reqInsQuery);
+            for (final Param addedParam : addedParams) {
+                ps1.setString(1, addedParam.getName());
+                ps1.setString(2, route.getId());
+                ps1.setString(3, addedParam.getType());
+                ps1.executeUpdate();
+            }
+            ps1.close();
+        }
 
     }
 

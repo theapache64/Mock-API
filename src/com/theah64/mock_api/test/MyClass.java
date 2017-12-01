@@ -27,7 +27,7 @@ public class MyClass {
         //deletedParams should be D,E
         //addedParams should be A,C
 
-        final List<Param> deletedParams = new ArrayList<>();
+        /*final List<Param> deletedParams = new ArrayList<>();
         final List<Param> addedParams = new ArrayList<>();
 
         if (oldParams.isEmpty() && !newParams.isEmpty()) {
@@ -52,7 +52,7 @@ public class MyClass {
 
 
         System.out.println("Deleted params: " + deletedParams);
-        System.out.println("Added params: " + addedParams);
+        System.out.println("Added params: " + addedParams);*/
     }
 
 

@@ -35,7 +35,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
         final String projectId = getHeaderSecurity().getProjectId();
 
-        final boolean isRouteExist = Routes.getInstance().isExist(Routes.COLUMN_NAME, routeName, Routes.COLUMN_PROJECT_ID, projectId);
+        final String routeId = Routes.getInstance().get(Routes.COLUMN_NAME, routeName, Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_ID);
 
         final String response = getStringParameter(Routes.COLUMN_DEFAULT_RESPONSE);
         String requiredParams = getStringParameter(Routes.COLUMN_REQUIRED_PARAMS);
@@ -63,12 +63,13 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
         final Route route = new Route(null, projectId, routeName, response, requiredParams, optionalParams, description, externalApiUrl, isSecure, delay, -1);
 
-        if (!isRouteExist) {
+        if (routeId == null) {
             //Route doesn't exist
             final String jsonId = Routes.getInstance().addv3(route);
             getWriter().write(new APIResponse("Route established ", Routes.COLUMN_ID, jsonId).getResponse());
         } else {
             //Update the existing route
+            route.setId(routeId);
             Routes.getInstance().update(route);
             getWriter().write(new APIResponse("Route updated", null).getResponse());
         }
