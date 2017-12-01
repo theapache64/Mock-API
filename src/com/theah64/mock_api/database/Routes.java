@@ -181,7 +181,7 @@ public class Routes extends BaseTable<Route> {
             ps.setString(8, route.getProjectId());
 
             //TODO: Update required params and optional params here
-            Params.getInstance().updateParam\FromRoute(route);
+            Params.getInstance().updateParamFromRoute(route);
 
             isUpdated = ps.executeUpdate() == 1;
             ps.close();

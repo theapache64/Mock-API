@@ -108,7 +108,7 @@ public class Params extends BaseTable<Param> {
         return params;
     }
 
-    public void updateParamFromRoute(Route route, String type) throws SQLException {
+    public void updateParamFromRoute(Route route) throws SQLException {
 
         //Get new params
         final List<Param> newParams = new ArrayList<>();

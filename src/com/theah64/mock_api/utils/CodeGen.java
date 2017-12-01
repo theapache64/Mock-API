@@ -1,6 +1,5 @@
-package com.theah64.mock_api.test;
+package com.theah64.mock_api.utils;
 
-import com.theah64.mock_api.utils.Inflector;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

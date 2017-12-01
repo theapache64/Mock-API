@@ -1,80 +1,37 @@
 package com.theah64.mock_api.test;
 
+import com.theah64.mock_api.models.Param;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyClass {
 
-    public static void main(String[] args) throws JSONException, IOException {
+    public static void main(String[] args) {
 
-        //Reading sample file
-        final File sampleFile = new File(System.getProperty("user.dir") + File.separator + "sample.json");
-        final StringBuilder jsonData = new StringBuilder();
-        try {
-            final BufferedReader br = new BufferedReader(new FileReader(sampleFile));
-            String line;
-            while ((line = br.readLine()) != null) {
-                jsonData.append(line).append("\n");
-            }
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final List<Param> newParams = new ArrayList<>();
+        newParams.add(new Param(null, "A", null, null));
+        newParams.add(new Param(null, "B", null, null));
+        newParams.add(new Param(null, "C", null, null));
 
-        File file = new File(System.getProperty("user.dir") + File.separator + "output.html");
-        if (file.exists()) {
-            file.delete();
-        }
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        bw.write(com.theah64.mock_api.test.CodeGen.getFinalCode(jsonData.toString(), "MyModel", true));
-        bw.close();
-    }
+        final List<Param> oldParams = new ArrayList<>();
+        oldParams.add(new Param(null, "B", null, null));
+        oldParams.add(new Param(null, "D", null, null));
+        oldParams.add(new Param(null, "E", null, null));
 
-    static class CodeGen {
+        //deletedParams should be D,E
+        //addedParams should be A,C
 
-        public static String getCode(JSONObject joResponse) {
-
-            final List<Class> classes = getClasses(joResponse);
-
-            return null;
-        }
-
-        private static List<Class> getClasses(JSONObject joResponse) {
-
-            return null;
-        }
-    }
+        final List<Param> deletedParams = new ArrayList<>();
+        final List<Param> addedParams = new ArrayList<>();
 
 
-    static class Class {
 
-        private final List<Variable> variables;
-
-        Class(List<Variable> variables) {
-            this.variables = variables;
-        }
-
-    }
-
-    static class Variable {
-
-        private final String dataType, variableName;
-
-        Variable(String dataType, String variableName) {
-            this.dataType = dataType;
-            this.variableName = variableName;
-        }
-
-        public String getDataType() {
-            return dataType;
-        }
-
-        public String getVariableName() {
-            return variableName;
-        }
+        System.out.println("Deleted params: " + deletedParams);
+        System.out.println("Added params: " + addedParams);
     }
 
 

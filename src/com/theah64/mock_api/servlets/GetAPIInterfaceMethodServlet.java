@@ -3,7 +3,7 @@ package com.theah64.mock_api.servlets;
 import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.models.Route;
-import com.theah64.mock_api.test.CodeGen;
+import com.theah64.mock_api.utils.CodeGen;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
