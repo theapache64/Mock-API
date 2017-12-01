@@ -30,8 +30,21 @@ public class Param {
     }
 
     @Override
+    public boolean equals(Object object) {
+        boolean result = false;
+        if (object == null || object.getClass() != getClass()) {
+            result = false;
+        } else {
+            Param param = (Param) object;
+            if (this.name.equals(param.getName())) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return
-                name;
+        return name;
     }
 }
