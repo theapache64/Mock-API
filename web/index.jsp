@@ -540,6 +540,9 @@
 
                             console.log(data.data);
                             if ('id' in data.data) {
+
+                                
+
                                 //Adding added route to select list
                                 $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
                                 //alert("selecting : " + data.data.id);
@@ -887,11 +890,11 @@
             <br>
 
 
-            <div class="row" id="response_panel" style="display: none;">
+            <div class="row">
 
-                <div class="col-md-6">
+                <div class="col-md-6" id="response_panel" style="visibility: hidden" >
+
                     <div class="pull-left">
-
                         <form class="form-inline">
                             <div class="form-group">
                                 <select id="responses" class="form-control">
@@ -905,13 +908,14 @@
                                 <a id="aDeleteResponse" class="btn btn-default"><b>x</b></a>
                             </div>
                         </form>
-
                     </div>
+
+
                 </div>
 
                 <div class="col-md-6">
-                    <div class="pull-right">
 
+                    <div class="pull-right">
                         <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
                                 class="glyphicon glyphicon-trash"></span> DELETE
                         </button>
@@ -926,6 +930,7 @@
                             SAVE
                         </button>
                     </div>
+
                 </div>
 
 
