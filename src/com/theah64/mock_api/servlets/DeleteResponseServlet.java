@@ -1,5 +1,6 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
@@ -23,11 +24,12 @@ public class DeleteResponseServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() throws Request.RequestException {
-        return new String[0];
+        return new String[]{Responses.COLUMN_ID};
     }
 
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException, QueryBuilderException {
-
+        final String respId = getStringParameter()
+        Responses.getInstance().delete()
     }
 }
