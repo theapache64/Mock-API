@@ -180,7 +180,6 @@ public class Routes extends BaseTable<Route> {
             ps.setString(7, route.getName());
             ps.setString(8, route.getProjectId());
 
-            //TODO: Update required params and optional params here
             Params.getInstance().updateParamFromRoute(route);
 
             isUpdated = ps.executeUpdate() == 1;
@@ -202,8 +201,6 @@ public class Routes extends BaseTable<Route> {
 
     public void updateBaseOGAPIURL(String projectId, String oldBaseUrl, String newBaseUrl) throws SQLException {
         final String query = String.format("UPDATE routes SET %s = REPLACE(%s, ?, ?) WHERE INSTR(%s, ?) > 0 AND project_id = ?;", COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL);
-        final String query2 = String.format("UPDATE routes SET %s = REPLACE(%s, '%s', '%s') WHERE INSTR(%s, '%s') > 0 AND project_id = '%s';", COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL, oldBaseUrl, newBaseUrl, COLUMN_EXTERNAL_API_URL, oldBaseUrl, projectId);
-        System.out.println("Query is " + query2);
         final java.sql.Connection con = Connection.getConnection();
         String error = null;
         try {
