@@ -349,12 +349,42 @@
             //Delete response
             $("a#aDeleteResponse").on('click', function () {
 
+                $.ajax({
+                    type: "POST",
+                    beforeSend: function (request) {
+                        startLoading(true);
+                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
+                    },
+                    url: "v1/delete_response",
+                    data: {
+                        id: $('select#responses :selected').val()
+                    },
+                    success: function (data) {
+                        stopLoading(true);
+                        console.log(data);
+
+                        if (!data.error) {
+                            //Deleted response from db
+                            $('select#responses option:selected').remove();
+                        } else {
+                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                            $(resultDiv).html("<strong>Error! </strong> " + data.message);
+                            $(resultDiv).show();
+                        }
+                    },
+                    error: function () {
+                        stopLoading(true);
+                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                        $(resultDiv).show();
+                    }
+                });
             });
 
             $("select#routes").on('change', function () {
 
                 var selIndex = $(this).prop('selectedIndex');
-                alert(selIndex);
+
                 if (selIndex != 0) {
 
                     var selOption = $(this).find(":selected");
