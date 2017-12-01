@@ -774,6 +774,13 @@
 
 
             <div class="row">
+
+                <div class="pull-left">
+                    <select class="form-control">
+                        <option value="default_response">Default Response</option>
+                    </select>
+                </div>
+
                 <div class="pull-right">
 
                     <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span

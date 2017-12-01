@@ -76,6 +76,26 @@ public class GetJSONServlet extends AdvancedBaseServlet {
             }
         }
 
-        getWriter().write(new JSONObject(route.getDefaultResponse()).toString());
+        String jsonResp = route.getDefaultResponse();
+
+        if (route.getRequiredParams() != null) {
+            final String[] reqParams = route.getRequiredParams().split(",");
+            for (final String reqParam : reqParams) {
+                final String value = getStringParameter(reqParam);
+                jsonResp = jsonResp.replace("{" + reqParam + "}", value);
+            }
+        }
+
+        if (route.getOptionalParams() != null) {
+            final String[] optParams = route.getOptionalParams().split(",");
+            for (final String optParam : optParams) {
+                final String value = getStringParameter(optParam);
+                if (value != null && !value.trim().isEmpty()) {
+                    jsonResp = jsonResp.replace("{" + optParam + "}", value);
+                }
+            }
+        }
+
+        getWriter().write(new JSONObject(jsonResp).toString());
     }
 }
