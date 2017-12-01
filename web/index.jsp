@@ -293,6 +293,13 @@
 
             });
 
+            //Response listener
+            $("select#responses").on('change', function () {
+                var selIndex = $(this).prop('selectedIndex');
+                if (selIndex != 0) {
+
+                }
+            });
 
             $("select#routes").on('change', function () {
 
@@ -327,6 +334,7 @@
 
                                 $("input#route").val(route);
                                 $("button#bDelete").show();
+                                $("div#response_panel").show();
 
                                 $("input#required_params").val(data.data.required_params);
                                 $("input#optional_params").val(data.data.optional_params);
@@ -355,6 +363,7 @@
                                 $("p#pLastModified").html("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
+                                $("div#response_panel").hide();
 
                                 editor.getDoc().setValue("");
                             }
@@ -371,6 +380,7 @@
 
                 } else {
                     $("button#bDelete").hide();
+                    $("div#response_panel").hide();
                 }
             });
 
@@ -385,6 +395,7 @@
                 $("p#pLastModified").html("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
+                $("div#response_panel").hide();
             });
 
             $("button#bSubmit").on('click', function () {
@@ -458,6 +469,7 @@
             function startLoading(isSubmit) {
                 $("button#bDelete").prop('disabled', true);
                 $("button#bSubmit").prop('disabled', true);
+                $("div#response_panel").prop('disabled', true);
                 $("input#required_params").prop('disabled', true);
                 $("input#optional_params").prop('disabled', true);
                 $("input#external_api_url").prop('disabled', true);
@@ -480,6 +492,7 @@
                 $("div#resultDiv").show();
                 $("button#bDelete").prop('disabled', false);
                 $("button#bSubmit").prop('disabled', false);
+                $("div#response_panel").prop('disabled', false);
                 $("button#bClear").prop('disabled', false);
                 $("select#routes").prop('disabled', false);
                 $("input#route").prop('disabled', false);
@@ -773,28 +786,49 @@
             <br>
 
 
-            <div class="row">
+            <div class="row" id="response_panel">
 
-                <div class="pull-left">
-                    <select class="form-control">
-                        <option value="default_response">Default Response</option>
-                    </select>
+                <div class="col-md-6">
+                    <div class="pull-left" style="display: inline-block">
+
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <select id="responses" class="form-control">
+                                    <option value="default_response">Default Response</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <a id="aAddResponse" class="btn btn-default"><b>+</b></a>
+                            </div>
+
+                            <div class="form-group">
+                                <a id="aDeleteResponse" class="btn btn-default"><b>x</b></a>
+                            </div>
+                        </form>
+
+                    </div>
                 </div>
 
-                <div class="pull-right">
+                <div class="col-md-6">
+                    <div class="pull-right">
 
-                    <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
-                            class="glyphicon glyphicon-trash"></span> DELETE
-                    </button>
+                        <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
+                                class="glyphicon glyphicon-trash"></span> DELETE
+                        </button>
 
-                    <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#shortcuts">SHORTCUTS</button>
-                    <button id="bClear" class="btn btn-info  btn-sm"><span class="glyphicon glyphicon-flash"></span>
-                        CLEAR
-                    </button>
-                    <button id="bSubmit" class="btn btn-primary  btn-sm"><span class="glyphicon glyphicon-save"></span>
-                        SAVE
-                    </button>
+                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#shortcuts">SHORTCUTS
+                        </button>
+                        <button id="bClear" class="btn btn-info  btn-sm"><span class="glyphicon glyphicon-flash"></span>
+                            CLEAR
+                        </button>
+                        <button id="bSubmit" class="btn btn-primary  btn-sm"><span
+                                class="glyphicon glyphicon-save"></span>
+                            SAVE
+                        </button>
+                    </div>
                 </div>
+
+
             </div>
 
             <br>
