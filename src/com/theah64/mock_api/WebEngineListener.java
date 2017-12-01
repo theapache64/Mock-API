@@ -1,6 +1,6 @@
 package com.theah64.mock_api;
 
-import com.theah64.mock_api.utils.Inflector;
+import com.theah64.webengine.utils.WebEngineConfig;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -14,7 +14,9 @@ public class WebEngineListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        System.out.println("OK");
+        System.out.println("WebEngine configured");
+        WebEngineConfig.init("jdbc/mock_api", "jdbc/mock_api", false, "http://localhost:8080/mock_api",
+                "http://theapache64.cf:8080/mock_api");
     }
 
     @Override

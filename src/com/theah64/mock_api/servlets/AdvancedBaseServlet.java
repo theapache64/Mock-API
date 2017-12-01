@@ -5,8 +5,10 @@ import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
+import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import org.json.JSONException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -99,7 +101,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
             doAdvancedPost();
 
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             out.write(new APIResponse(e.getMessage()).toString());
         }
@@ -113,7 +115,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
     protected abstract String[] getRequiredParameters() throws Request.RequestException;
 
-    protected abstract void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException;
+    protected abstract void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException, QueryBuilderException;
 
     HeaderSecurity getHeaderSecurity() {
         if (!isSecureServlet()) {

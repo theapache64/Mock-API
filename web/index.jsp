@@ -58,6 +58,47 @@
                 }
             });
 
+            $("a#aAddResponse").on('click', function () {
+
+                var responseName = prompt("Enter response name?");
+                var response = editor.getDoc().getValue();
+
+                $.ajax({
+                    type: "POST",
+                    beforeSend: function () {
+                        startLoading(true);
+                    },
+                    data: {
+                        name: responseName,
+                        response: response,
+                        project_id: <%=project.getId()%>,
+                        route: $("input#route").val()
+                    },
+                    url: "v1/add_response",
+                    headers: {"Authorization": "<%=project.getApiKey()%>"},
+                    success: function (data) {
+
+                        stopLoading(true);
+
+                        if (!data.error) {
+                            console.log(data.data);
+                            $("select#responses option").eq(1).before($("<option></option>").val(data.data.id).text(responseName));
+                            $("select#responses").val(data.data.id).trigger('change');
+                        } else {
+                            alert(data.message);
+                        }
+
+
+                    },
+                    error: function () {
+                        stopLoading(true);
+                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                        $(resultDiv).show();
+                    }
+                });
+
+            });
 
             $(window).keydown(function (event) {
 
@@ -295,16 +336,25 @@
 
             //Response listener
             $("select#responses").on('change', function () {
-                var selIndex = $(this).prop('selectedIndex');
-                if (selIndex != 0) {
 
+                var selOpt = $(this).find(":selected");
+                if (selOpt.val() == 'default_response') {
+                    $("a#aDeleteResponse").hide();
+                } else {
+                    $("a#aDeleteResponse").show();
                 }
+            });
+
+
+            //Delete response
+            $("a#aDeleteResponse").on('click', function () {
+
             });
 
             $("select#routes").on('change', function () {
 
-
                 var selIndex = $(this).prop('selectedIndex');
+                alert(selIndex);
                 if (selIndex != 0) {
 
                     var selOption = $(this).find(":selected");
@@ -327,6 +377,19 @@
                             var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "?" + data.data.dummy_params + "'>/" + route + "</a>";
 
                             if (!data.error) {
+
+                                //Clearing responses select box
+                                $("select#responses")
+                                    .find("option")
+                                    .remove()
+                                    .end()
+                                    .append('<option value="default_response">Default response</option>')
+                                    .val('default_response')
+                                    .trigger('change');
+
+                                $.each(data.data.responses, function (i, item) {
+                                    $("select#responses").append('<option value="' + item.id + '">' + item.name + '</option>');
+                                });
 
                                 $(resultDiv).removeClass('alert-danger').addClass('alert-success');
                                 $(resultDiv).html("<strong>Success! </strong> " + data.message + " : " + link);
@@ -445,9 +508,17 @@
                             $(resultDiv).html("<strong>Success! </strong> " + data.message + ": " + link);
                             $(resultDiv).show();
 
+                            console.log(data.data);
                             if ('id' in data.data) {
                                 //Adding added route to select list
                                 $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
+                                //alert("selecting : " + data.data.id);
+                                $("select#routes").val(data.data.id).trigger('change');
+
+                                history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + route);
+                            } else {
+                                //alert("selecting update : " + $('select#routes :selected').text());
+                                $("select#routes").val($('select#routes :selected').val()).trigger('change');
                             }
 
 
@@ -786,15 +857,14 @@
             <br>
 
 
-            <div class="row" id="response_panel">
+            <div class="row" id="response_panel" style="display: none;">
 
                 <div class="col-md-6">
-                    <div class="pull-left" style="display: inline-block">
+                    <div class="pull-left">
 
                         <form class="form-inline">
                             <div class="form-group">
                                 <select id="responses" class="form-control">
-                                    <option value="default_response">Default Response</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -857,6 +927,7 @@
         </div>
     </div>
 
+    <%--Random panel--%>
     <div class="modal fade" id="random" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -914,6 +985,8 @@
         </div>
     </div>
 
+
+    <%----%>
     <div class="modal fade" id="shortcuts" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

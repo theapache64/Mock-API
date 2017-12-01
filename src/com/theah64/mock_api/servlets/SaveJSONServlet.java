@@ -6,6 +6,7 @@ import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             //Update the existing route
             route.setId(routeId);
             Routes.getInstance().update(route);
-            getWriter().write(new APIResponse("Route updated", null).getResponse());
+            getWriter().write(new APIResponse("Route updated", new JSONObject()).getResponse());
         }
     }
 }
