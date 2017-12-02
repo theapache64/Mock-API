@@ -69,7 +69,6 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         }
 
         joJson.put("responses", jaResponses);
-        joJson.put(Routes.COLUMN_DEFAULT_RESPONSE, route.getDefaultResponse());
         joJson.put(Routes.COLUMN_REQUIRED_PARAMS, route.getRequiredParams());
         joJson.put(Routes.COLUMN_OPTIONAL_PARAMS, route.getOptionalParams());
         joJson.put(Routes.COLUMN_EXTERNAL_API_URL, route.getExternalApiUrl());

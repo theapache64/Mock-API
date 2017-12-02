@@ -345,6 +345,36 @@
                 }
 
                 //load response here
+                $.ajax({
+                    type: "POST",
+                    beforeSend: function (request) {
+                        startLoading(true);
+                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
+                    },
+                    url: "v1/get_response",
+                    data: {
+                        id: $('select#responses :selected').val()
+                    },
+                    success: function (data) {
+                        stopLoading(true);
+                        console.log(data);
+
+                        if (!data.error) {
+                            //Deleted response from db
+                            editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
+                        } else {
+                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                            $(resultDiv).html("<strong>Error! </strong> " + data.message);
+                            $(resultDiv).show();
+                        }
+                    },
+                    error: function () {
+                        stopLoading(true);
+                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                        $(resultDiv).show();
+                    }
+                });
 
             });
 

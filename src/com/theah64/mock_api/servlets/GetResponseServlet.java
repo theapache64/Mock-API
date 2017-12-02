@@ -29,17 +29,24 @@ public class GetResponseServlet extends AdvancedBaseServlet {
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException, QueryBuilderException {
 
-        final String resp = Responses.getInstance().get(
-                Responses.COLUMN_ID,
-                getStringParameter(Responses.COLUMN_ID),
-                Responses.COLUMN_RESPONSE,
-                true
-        );
+        final String responseId = getStringParameter(Responses.COLUMN_ID);
+        String resp = null;
 
-        if(resp!=null){
+        if (responseId.equals("default_response")) {
 
-            getWriter().write(new APIResponse("OK",Responses.COLUMN_RESPONSE,resp).getResponse());
-        }else{
+        } else {
+            resp = Responses.getInstance().get(
+                    Responses.COLUMN_ID,
+                    responseId,
+                    Responses.COLUMN_RESPONSE,
+                    true
+            );
+        }
+        
+        if (resp != null) {
+
+            getWriter().write(new APIResponse("OK", Responses.COLUMN_RESPONSE, resp).getResponse());
+        } else {
             getWriter().write(new APIResponse("Invalid response id").getResponse());
         }
 
