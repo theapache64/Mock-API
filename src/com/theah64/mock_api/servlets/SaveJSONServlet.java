@@ -18,6 +18,9 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/save_json"})
 public class SaveJSONServlet extends AdvancedBaseServlet {
 
+    private static final String KEY_RESPONSE = "response";
+    private static final String KEY_RESPONSE_ID = "response_id";
+
     @Override
     protected boolean isSecureServlet() {
         return true;
@@ -27,7 +30,8 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     protected String[] getRequiredParameters() {
         return new String[]{
                 Routes.COLUMN_NAME,
-                Routes.COLUMN_DEFAULT_RESPONSE};
+                KEY_RESPONSE_ID,
+                KEY_RESPONSE};
     }
 
     @Override
@@ -38,7 +42,15 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
         final String routeId = Routes.getInstance().get(Routes.COLUMN_NAME, routeName, Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_ID);
 
-        final String response = getStringParameter(Routes.COLUMN_DEFAULT_RESPONSE);
+        final String responseId = getStringParameter(KEY_RESPONSE_ID);
+        final String response = getStringParameter(KEY_RESPONSE);
+        String defaultResponse = null;
+        if (responseId.equals(Routes.COLUMN_DEFAULT_RESPONSE)) {
+            defaultResponse = response;
+        } else {
+
+        }
+
         String requiredParams = getStringParameter(Routes.COLUMN_REQUIRED_PARAMS);
         String optionalParams = getStringParameter(Routes.COLUMN_OPTIONAL_PARAMS);
         final String description = getStringParameter(Routes.COLUMN_DESCRIPTION);
@@ -62,7 +74,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             optionalParams = optionalParams.replaceAll("\\s+", "_");
         }
 
-        final Route route = new Route(null, projectId, routeName, response, requiredParams, optionalParams, description, externalApiUrl, isSecure, delay, -1);
+        final Route route = new Route(null, projectId, routeName, defaultResponse, requiredParams, optionalParams, description, externalApiUrl, isSecure, delay, -1);
 
         if (routeId == null) {
             //Route doesn't exist

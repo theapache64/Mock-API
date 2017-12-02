@@ -2,6 +2,7 @@ package com.theah64.mock_api.servlets;
 
 
 import com.theah64.mock_api.database.Responses;
+import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.PathInfo;
@@ -16,6 +17,9 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/get_response"})
 public class GetResponseServlet extends AdvancedBaseServlet {
 
+    private static final String KEY_ROUTE_NAME = "route_name";
+    private static final String KEY_PROJECT_NAME = "project_name";
+
     @Override
     protected boolean isSecureServlet() {
         return true;
@@ -23,7 +27,7 @@ public class GetResponseServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() throws Request.RequestException {
-        return new String[]{Responses.COLUMN_ID};
+        return new String[]{Responses.COLUMN_ID, KEY_ROUTE_NAME, KEY_PROJECT_NAME};
     }
 
     @Override
@@ -33,7 +37,9 @@ public class GetResponseServlet extends AdvancedBaseServlet {
         String resp = null;
 
         if (responseId.equals("default_response")) {
-
+            final String routeName = getStringParameter(KEY_ROUTE_NAME);
+            final String projectName = getStringParameter(KEY_PROJECT_NAME);
+            resp = Routes.getInstance().get(projectName, routeName).getDefaultResponse();
         } else {
             resp = Responses.getInstance().get(
                     Responses.COLUMN_ID,
@@ -42,7 +48,7 @@ public class GetResponseServlet extends AdvancedBaseServlet {
                     true
             );
         }
-        
+
         if (resp != null) {
 
             getWriter().write(new APIResponse("OK", Responses.COLUMN_RESPONSE, resp).getResponse());

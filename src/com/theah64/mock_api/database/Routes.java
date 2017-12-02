@@ -171,7 +171,7 @@ public class Routes extends BaseTable<Route> {
         try {
             final PreparedStatement ps = con.prepareStatement(query);
 
-            ps.setString(1, route.getDefaultResponse());
+            ps.setString(1, route.getDefaultResponse() == null ? get(COLUMN_ID, route.getId(), COLUMN_DEFAULT_RESPONSE, true) : route.getDefaultResponse());
             ps.setString(2, route.getDescription());
             ps.setBoolean(3, route.isSecure());
             ps.setLong(4, route.getDelay());

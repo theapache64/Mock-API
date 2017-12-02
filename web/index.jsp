@@ -382,7 +382,7 @@
             //Delete response
             $("a#aDeleteResponse").on('click', function () {
 
-                if(confirm("Do you really want to delete the response?")){
+                if (confirm("Do you really want to delete the response?")) {
                     $.ajax({
                         type: "POST",
                         beforeSend: function (request) {
@@ -464,7 +464,7 @@
 
                                 $("input#route").val(route);
                                 $("button#bDelete").show();
-                                $("div#response_panel").css('visibility','visible');
+                                $("div#response_panel").css('visibility', 'visible');
 
                                 $("input#required_params").val(data.data.required_params);
                                 $("input#optional_params").val(data.data.optional_params);
@@ -479,7 +479,7 @@
                                 $("input#description").val(data.data.description);
                                 $("input#is_secure").prop('checked', data.data.is_secure);
 
-                                editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.default_response), undefined, 4));
+                                //editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.default_response), undefined, 4));
 
                             } else {
 
@@ -493,7 +493,7 @@
                                 $("p#pLastModified").html("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
-                                $("div#response_panel").css('visibility','hidden');
+                                $("div#response_panel").css('visibility', 'hidden');
 
                                 editor.getDoc().setValue("");
                             }
@@ -510,7 +510,7 @@
 
                 } else {
                     $("button#bDelete").hide();
-                    $("div#response_panel").css('visibility','hidden');
+                    $("div#response_panel").css('visibility', 'hidden');
                 }
             });
 
@@ -525,7 +525,7 @@
                 $("p#pLastModified").html("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
-                $("div#response_panel").css('visibility','hidden');
+                $("div#response_panel").css('visibility', 'hidden');
             });
 
             $("button#bSubmit").on('click', function () {
@@ -553,7 +553,8 @@
                     url: "v1/save_json",
                     data: {
                         name: route,
-                        default_response: response,
+                        response_id: $('select#responses :selected').val(),
+                        response: response,
                         required_params: reqParams,
                         optional_params: opParams,
                         external_api_url: external_api_url,
@@ -929,7 +930,7 @@
 
             <div class="row">
 
-                <div class="col-md-6" id="response_panel" style="visibility: hidden" >
+                <div class="col-md-6" id="response_panel" style="visibility: hidden">
 
                     <div class="pull-left">
                         <form class="form-inline">
