@@ -1,5 +1,6 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.models.Route;
@@ -29,7 +30,6 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     @Override
     protected String[] getRequiredParameters() {
         return new String[]{
-                Routes.COLUMN_NAME,
                 KEY_RESPONSE_ID,
                 KEY_RESPONSE};
     }
@@ -48,7 +48,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         if (responseId.equals(Routes.COLUMN_DEFAULT_RESPONSE)) {
             defaultResponse = response;
         } else {
-
+            Responses.getInstance().update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response);
         }
 
         String requiredParams = getStringParameter(Routes.COLUMN_REQUIRED_PARAMS);

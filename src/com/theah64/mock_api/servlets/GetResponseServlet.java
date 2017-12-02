@@ -34,9 +34,9 @@ public class GetResponseServlet extends AdvancedBaseServlet {
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException, QueryBuilderException {
 
         final String responseId = getStringParameter(Responses.COLUMN_ID);
-        String resp = null;
+        String resp;
 
-        if (responseId.equals("default_response")) {
+        if (responseId.equals(Routes.COLUMN_DEFAULT_RESPONSE)) {
             final String routeName = getStringParameter(KEY_ROUTE_NAME);
             final String projectName = getStringParameter(KEY_PROJECT_NAME);
             resp = Routes.getInstance().get(projectName, routeName).getDefaultResponse();
@@ -45,12 +45,11 @@ public class GetResponseServlet extends AdvancedBaseServlet {
                     Responses.COLUMN_ID,
                     responseId,
                     Responses.COLUMN_RESPONSE,
-                    true
+                    false
             );
         }
 
         if (resp != null) {
-
             getWriter().write(new APIResponse("OK", Responses.COLUMN_RESPONSE, resp).getResponse());
         } else {
             getWriter().write(new APIResponse("Invalid response id").getResponse());

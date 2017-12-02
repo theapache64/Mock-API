@@ -23,7 +23,25 @@
             $("p#pLastModified").attr("title", date);
         }
 
+        function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        }
+        ;
+
         $(document).ready(function () {
+
+            var preSelRespId = '<%=request.getParameter("response_id")!=null ? request.getParameter("response_id") : Routes.COLUMN_DEFAULT_RESPONSE%>';
 
             function formatJSON() {
                 editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
@@ -61,42 +79,46 @@
             $("a#aAddResponse").on('click', function () {
 
                 var responseName = prompt("Enter response name?");
-                var response = editor.getDoc().getValue();
+                if (responseName != null) {
 
-                $.ajax({
-                    type: "POST",
-                    beforeSend: function () {
-                        startLoading(true);
-                    },
-                    data: {
-                        name: responseName,
-                        response: response,
-                        project_id: <%=project.getId()%>,
-                        route: $("input#route").val()
-                    },
-                    url: "v1/add_response",
-                    headers: {"Authorization": "<%=project.getApiKey()%>"},
-                    success: function (data) {
+                    var response = editor.getDoc().getValue();
 
-                        stopLoading(true);
+                    $.ajax({
+                        type: "POST",
+                        beforeSend: function () {
+                            startLoading(true);
+                        },
+                        data: {
+                            name: responseName,
+                            response: response,
+                            project_id: <%=project.getId()%>,
+                            route: $("input#route").val()
+                        },
+                        url: "v1/add_response",
+                        headers: {"Authorization": "<%=project.getApiKey()%>"},
+                        success: function (data) {
 
-                        if (!data.error) {
-                            console.log(data.data);
-                            $("select#responses option").before($("<option></option>").val(data.data.id).text(responseName));
-                            $("select#responses").val(data.data.id).trigger('change');
-                        } else {
-                            alert(data.message);
+                            stopLoading(true);
+
+                            if (!data.error) {
+                                console.log(data.data);
+                                $("select#responses option").before($("<option></option>").val(data.data.id).text(responseName));
+                                $("select#responses").val(data.data.id).trigger('change');
+                            } else {
+                                alert(data.message);
+                            }
+
+
+                        },
+                        error: function () {
+                            stopLoading(true);
+                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                            $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                            $(resultDiv).show();
                         }
+                    });
+                }
 
-
-                    },
-                    error: function () {
-                        stopLoading(true);
-                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
-                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
-                        $(resultDiv).show();
-                    }
-                });
 
             });
 
@@ -178,7 +200,7 @@
 
                     var route = $("input#route").val();
                     var responseClassName = prompt("Response class name ? ", "GetProductResponse");
-                    window.open('v1/get_api_interface_method?route=' + route + "&project_name=<%=project.getName()%>&response_class=" + responseClassName);
+                    window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>&response_class=" + responseClassName);
 
                 }
 
@@ -334,15 +356,24 @@
 
             });
 
+
             //Response listener
             $("select#responses").on('change', function () {
 
                 var selOpt = $(this).find(":selected");
+                if (true) {
+                    console.log("Selected response: " + selOpt.text() + " :" + selOpt.val());
+                    return;
+                }
+
+                console.log("Selected response is " + selOpt.text());
+
                 if (selOpt.val() === 'default_response') {
                     $("a#aDeleteResponse").hide();
                 } else {
                     $("a#aDeleteResponse").show();
                 }
+
 
                 //load response here
                 $.ajax({
@@ -353,11 +384,15 @@
                     },
                     url: "v1/get_response",
                     data: {
-                        id: $('select#responses :selected').val()
+                        id: urlRespId,
+                        route_name: $('input#route').val(),
+                        project_name: '<%=project.getName()%>'
                     },
                     success: function (data) {
                         stopLoading(true);
                         console.log(data);
+
+                        history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + $('input#route').val() + '&response_id=' + selOpt.val());
 
                         if (!data.error) {
                             //Deleted response from db
@@ -400,6 +435,7 @@
                             if (!data.error) {
                                 //Deleted response from db
                                 $('select#responses option:selected').remove();
+                                $('select#responses').trigger('change');
                             } else {
                                 $(resultDiv).addClass('alert-danger').removeClass('alert-success');
                                 $(resultDiv).html("<strong>Error! </strong> " + data.message);
@@ -418,6 +454,7 @@
 
             });
 
+
             $("select#routes").on('change', function () {
 
                 var selIndex = $(this).prop('selectedIndex');
@@ -426,7 +463,6 @@
 
                     var selOption = $(this).find(":selected");
                     var route = $.trim(selOption.text());
-
 
                     $.ajax({
                         type: "GET",
@@ -437,7 +473,7 @@
                         success: function (data) {
 
                             //Changing browser url without reloading the page
-                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + route);
+                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + route + '&response_id=<%=Routes.COLUMN_DEFAULT_RESPONSE%>');
 
 
                             stopLoading(true);
@@ -445,13 +481,15 @@
 
                             if (!data.error) {
 
+                                $("input#route").val(route);
+
                                 //Clearing responses select box
                                 $("select#responses")
                                     .find("option")
                                     .remove()
                                     .end()
                                     .append('<option value="default_response">Default response</option>')
-                                    .val('default_response')
+                                    .val(preSelRespId)
                                     .trigger('change');
 
                                 $.each(data.data.responses, function (i, item) {
@@ -462,7 +500,7 @@
                                 $(resultDiv).html("<strong>Success! </strong> " + data.message + " : " + link);
                                 $(resultDiv).show();
 
-                                $("input#route").val(route);
+
                                 $("button#bDelete").show();
                                 $("div#response_panel").css('visibility', 'visible');
 
@@ -577,12 +615,12 @@
                             $(resultDiv).show();
 
                             console.log(data.data);
+                            preSelRespId = $('select#responses :selected').val();
                             if ('id' in data.data) {
-
-
 
                                 //Adding added route to select list
                                 $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
+
                                 //alert("selecting : " + data.data.id);
                                 $("select#routes").val(data.data.id).trigger('change');
 
@@ -936,6 +974,7 @@
                         <form class="form-inline">
                             <div class="form-group">
                                 <select id="responses" class="form-control">
+                                    <option value="<%=Routes.COLUMN_DEFAULT_RESPONSE%>">Default response</option>
                                 </select>
                             </div>
                             <div class="form-group">

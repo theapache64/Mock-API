@@ -140,6 +140,12 @@ public class Params extends BaseTable<Param> {
             }
         }
 
+        System.out.println("---------------------------------");
+        System.out.println("OLDPARAMS: " + oldParams);
+        System.out.println("NEWPARAMS: " + newParams);
+
+        System.out.println("---------------------------------");
+
         java.sql.Connection con = Connection.getConnection();
 
         if (!deletedParams.isEmpty()) {

@@ -87,12 +87,17 @@ public class Routes extends BaseTable<Route> {
             final ResultSet rs = ps.executeQuery();
 
             if (rs.first()) {
+
                 jsonList = new ArrayList<>();
+
                 do {
+
                     final String id = rs.getString(COLUMN_ID);
                     final String route = rs.getString(COLUMN_NAME);
                     final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
+
                     jsonList.add(new Route(id, null, route, null, null, null, null, externalApiUrl, false, 0, -1));
+
                 } while (rs.next());
             }
             rs.close();
@@ -123,7 +128,7 @@ public class Routes extends BaseTable<Route> {
     public Route get(String projectName, String routeName) throws SQLException {
         String error = null;
         Route route = null;
-        final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, GROUP_CONCAT(rp.name) AS required_params, GROUP_CONCAT(op.name) AS optional_params, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id LEFT JOIN params rp ON rp.route_id = r.id AND rp.type = 'REQUIRED' LEFT JOIN params op ON op.route_id = r.id AND op.type = 'OPTIONAL' WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
+        final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, (SELECT GROUP_CONCAT(name) FROM params WHERE route_id = r.id AND type='REQUIRED' ) AS required_params, (SELECT GROUP_CONCAT(name) FROM params WHERE route_id = r.id AND type='OPTIONAL') AS optional_params, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
