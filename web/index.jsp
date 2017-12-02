@@ -82,7 +82,7 @@
 
                         if (!data.error) {
                             console.log(data.data);
-                            $("select#responses option").eq(1).before($("<option></option>").val(data.data.id).text(responseName));
+                            $("select#responses option").before($("<option></option>").val(data.data.id).text(responseName));
                             $("select#responses").val(data.data.id).trigger('change');
                         } else {
                             alert(data.message);
@@ -338,47 +338,54 @@
             $("select#responses").on('change', function () {
 
                 var selOpt = $(this).find(":selected");
-                if (selOpt.val() == 'default_response') {
+                if (selOpt.val() === 'default_response') {
                     $("a#aDeleteResponse").hide();
                 } else {
                     $("a#aDeleteResponse").show();
                 }
+
+                //load response here
+
             });
 
 
             //Delete response
             $("a#aDeleteResponse").on('click', function () {
 
-                $.ajax({
-                    type: "POST",
-                    beforeSend: function (request) {
-                        startLoading(true);
-                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
-                    },
-                    url: "v1/delete_response",
-                    data: {
-                        id: $('select#responses :selected').val()
-                    },
-                    success: function (data) {
-                        stopLoading(true);
-                        console.log(data);
+                if(confirm("Do you really want to delete the response?")){
+                    $.ajax({
+                        type: "POST",
+                        beforeSend: function (request) {
+                            startLoading(true);
+                            request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
+                        },
+                        url: "v1/delete_response",
+                        data: {
+                            id: $('select#responses :selected').val()
+                        },
+                        success: function (data) {
+                            stopLoading(true);
+                            console.log(data);
 
-                        if (!data.error) {
-                            //Deleted response from db
-                            $('select#responses option:selected').remove();
-                        } else {
+                            if (!data.error) {
+                                //Deleted response from db
+                                $('select#responses option:selected').remove();
+                            } else {
+                                $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                                $(resultDiv).html("<strong>Error! </strong> " + data.message);
+                                $(resultDiv).show();
+                            }
+                        },
+                        error: function () {
+                            stopLoading(true);
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
-                            $(resultDiv).html("<strong>Error! </strong> " + data.message);
+                            $(resultDiv).html("<strong>Error! </strong> Please check your connection");
                             $(resultDiv).show();
                         }
-                    },
-                    error: function () {
-                        stopLoading(true);
-                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
-                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
-                        $(resultDiv).show();
-                    }
-                });
+                    });
+                }
+
+
             });
 
             $("select#routes").on('change', function () {
@@ -427,7 +434,7 @@
 
                                 $("input#route").val(route);
                                 $("button#bDelete").show();
-                                $("div#response_panel").show();
+                                $("div#response_panel").css('visibility','visible');
 
                                 $("input#required_params").val(data.data.required_params);
                                 $("input#optional_params").val(data.data.optional_params);
@@ -456,7 +463,7 @@
                                 $("p#pLastModified").html("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
-                                $("div#response_panel").hide();
+                                $("div#response_panel").css('visibility','hidden');
 
                                 editor.getDoc().setValue("");
                             }
@@ -473,7 +480,7 @@
 
                 } else {
                     $("button#bDelete").hide();
-                    $("div#response_panel").hide();
+                    $("div#response_panel").css('visibility','hidden');
                 }
             });
 
@@ -488,7 +495,7 @@
                 $("p#pLastModified").html("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
-                $("div#response_panel").hide();
+                $("div#response_panel").css('visibility','hidden');
             });
 
             $("button#bSubmit").on('click', function () {
@@ -541,7 +548,7 @@
                             console.log(data.data);
                             if ('id' in data.data) {
 
-                                
+
 
                                 //Adding added route to select list
                                 $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
