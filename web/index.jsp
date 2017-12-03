@@ -41,7 +41,6 @@
 
         $(document).ready(function () {
 
-            var preSelRespId = '<%=request.getParameter("response_id")!=null ? request.getParameter("response_id") : Routes.COLUMN_DEFAULT_RESPONSE%>';
 
             function formatJSON() {
                 editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
@@ -79,7 +78,7 @@
             $("a#aAddResponse").on('click', function () {
 
                 var responseName = prompt("Enter response name?");
-                if (responseName != null) {
+                if (responseName !== null) {
 
                     var response = editor.getDoc().getValue();
 
@@ -101,9 +100,13 @@
                             stopLoading(true);
 
                             if (!data.error) {
-                                console.log(data.data);
-                                $("select#responses option").before($("<option></option>").val(data.data.id).text(responseName));
-                                $("select#responses").val(data.data.id).trigger('change');
+                                console.log("Adding new response to response select box");
+                                $('select#responses').append($('<option>', {
+                                    value: data.data.id,
+                                    text: responseName,
+                                    selected: true
+                                }));
+                                //$("select#responses").val(data.data.id).trigger('change');
                             } else {
                                 alert(data.message);
                             }
@@ -360,15 +363,11 @@
             //Response listener
             $("select#responses").on('change', function () {
 
-                var selOpt = $(this).find(":selected");
-                if (true) {
-                    console.log("Selected response: " + selOpt.text() + " :" + selOpt.val());
-                    return;
-                }
+                var selResp = $("select#responses").find(":selected");
+                console.log("Selected response:");
+                console.log(selResp);
 
-                console.log("Selected response is " + selOpt.text());
-
-                if (selOpt.val() === 'default_response') {
+                if (selResp.val() === 'default_response') {
                     $("a#aDeleteResponse").hide();
                 } else {
                     $("a#aDeleteResponse").show();
@@ -384,15 +383,13 @@
                     },
                     url: "v1/get_response",
                     data: {
-                        id: urlRespId,
+                        id: selResp.val(),
                         route_name: $('input#route').val(),
                         project_name: '<%=project.getName()%>'
                     },
                     success: function (data) {
                         stopLoading(true);
                         console.log(data);
-
-                        history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + $('input#route').val() + '&response_id=' + selOpt.val());
 
                         if (!data.error) {
                             //Deleted response from db
@@ -473,7 +470,7 @@
                         success: function (data) {
 
                             //Changing browser url without reloading the page
-                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + route + '&response_id=<%=Routes.COLUMN_DEFAULT_RESPONSE%>');
+                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + route);
 
 
                             stopLoading(true);
@@ -489,7 +486,6 @@
                                     .remove()
                                     .end()
                                     .append('<option value="default_response">Default response</option>')
-                                    .val(preSelRespId)
                                     .trigger('change');
 
                                 $.each(data.data.responses, function (i, item) {
@@ -782,9 +778,9 @@
             });
 
             var selectedRoute = "<%=request.getParameter("route")%>";
-            if (selectedRoute != "null") {
+            if (selectedRoute !== "null") {
                 $("select#routes option").filter(function () {
-                    return this.text == selectedRoute;
+                    return this.text === selectedRoute;
                 }).attr('selected', true).trigger("change");
             }
 
