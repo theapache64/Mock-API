@@ -2,6 +2,8 @@
 <%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.theah64.mock_api.models.Param" %>
+<%@ page import="com.theah64.mock_api.database.Params" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -106,7 +108,7 @@
                                     text: responseName,
                                     selected: true
                                 }));
-                                //$("select#responses").val(data.data.id).trigger('change');
+                                $("a#aDeleteResponse").show();
                             } else {
                                 alert(data.message);
                             }
@@ -493,7 +495,11 @@
                                 });
 
                                 var respoId = '<%=request.getParameter("response_id")==null ? Routes.COLUMN_DEFAULT_RESPONSE : request.getParameter("response_id")%>';
-                                $("select#responses").val(respoId).trigger('change');
+
+                                var isExist = $("select#responses option[value='" + respoId + "']").length > 0;
+                                if (isExist) {
+                                    $("select#responses").val(respoId).trigger('change');
+                                }
 
 
                                 $(resultDiv).removeClass('alert-danger').addClass('alert-success');
@@ -502,6 +508,8 @@
 
 
                                 $("button#bDelete").show();
+                                $("a#aParamResp").show();
+                                $("a#aParamResp").attr('href', 'param_resp.jsp?api_key=<%=project.getApiKey()%>&route_name=' + route);
                                 $("div#response_panel").css('visibility', 'visible');
 
                                 $("input#required_params").val(data.data.required_params);
@@ -532,6 +540,7 @@
                                 $("p#pLastModified").html("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
+                                $("a#aParamResp").hide();
                                 $("div#response_panel").css('visibility', 'hidden');
 
                                 editor.getDoc().setValue("");
@@ -549,6 +558,7 @@
 
                 } else {
                     $("button#bDelete").hide();
+                    $("a#aParamResp").hide();
                     $("div#response_panel").css('visibility', 'hidden');
                 }
             });
@@ -564,6 +574,7 @@
                 $("p#pLastModified").html("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
+                $("a#aParamResp").hide();
                 $("div#response_panel").css('visibility', 'hidden');
             });
 
@@ -646,6 +657,7 @@
 
             function startLoading(isSubmit) {
                 $("button#bDelete").prop('disabled', true);
+                $("a#aParamResp").prop('disabled', true);
                 $("button#bSubmit").prop('disabled', true);
                 $("div#response_panel").prop('disabled', true);
                 $("input#required_params").prop('disabled', true);
@@ -669,6 +681,7 @@
             function stopLoading(isSubmit) {
                 $("div#resultDiv").show();
                 $("button#bDelete").prop('disabled', false);
+                $("a#aParamResp").prop('disabled', false);
                 $("button#bSubmit").prop('disabled', false);
                 $("div#response_panel").prop('disabled', false);
                 $("button#bClear").prop('disabled', false);
@@ -966,7 +979,7 @@
 
             <div class="row">
 
-                <div class="col-md-6" id="response_panel" style="visibility: hidden">
+                <div class="col-md-5" id="response_panel" style="visibility: hidden">
 
                     <div class="pull-left">
                         <form class="form-inline">
@@ -990,12 +1003,19 @@
 
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-7">
 
                     <div class="pull-right">
+
+                        <a target="_blank" id="aParamResp" href="param_resp.jsp" style="display: none"
+                           class="btn btn-info btn-sm"><span
+                                class="glyphicon glyphicon-th-list"></span> PARAM-RESP
+                        </a>
+
                         <button id="bDelete" style="display: none" class="btn btn-danger btn-sm"><span
                                 class="glyphicon glyphicon-trash"></span> DELETE
                         </button>
+
 
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#shortcuts">SHORTCUTS
                         </button>
@@ -1096,7 +1116,6 @@
             </div>
         </div>
     </div>
-
 
     <%----%>
     <div class="modal fade" id="shortcuts" role="dialog">

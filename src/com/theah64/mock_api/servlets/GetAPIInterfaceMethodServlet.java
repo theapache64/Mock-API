@@ -66,10 +66,10 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
             StringBuilder codeBuilder = new StringBuilder();
 
             //@POST("add_address") Call<BaseAPIResponse<AddAddressResponse>> editAddress(
-            codeBuilder.append(String.format("@POST(\"%s\") Call<BaseAPIResponse<%s>> %s(", route.getName(), responseClass, CodeGen.toCamelCase(route.getName())));
+            codeBuilder.append(String.format("@POST(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", route.getName(), responseClass, CodeGen.toCamelCase(route.getName())));
 
             if (route.isSecure()) {
-                codeBuilder.append("\n\t\t\t\t\t\t\t\t@Header(KEY_AUTHORIZATION) String apiKey,");
+                codeBuilder.append("\n@Header(KEY_AUTHORIZATION) String apiKey,");
             }
 
             boolean hasParams = false;
@@ -77,7 +77,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                 hasParams = true;
                 final String[] reqParams = route.getRequiredParams().split(",");
                 for (final String reqParam : reqParams) {
-                    codeBuilder.append(String.format("\n\t\t\t\t\t\t\t\t@Query(\"%s\") String %s,", reqParam, CodeGen.toCamelCase(reqParam)));
+                    codeBuilder.append(String.format("\n@Query(\"%s\") String %s,", reqParam, CodeGen.toCamelCase(reqParam)));
                 }
             }
 

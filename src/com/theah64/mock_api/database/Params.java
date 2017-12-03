@@ -17,7 +17,7 @@ public class Params extends BaseTable<Param> {
     private static final Params instance = new Params();
     public static final String TYPE_REQUIRED = "REQUIRED";
     public static final String TYPE_OPTIONAL = "OPTIONAL";
-    private static final String COLUMN_ROUTE_ID = "route_id";
+    public static final String COLUMN_ROUTE_ID = "route_id";
     private static final String COLUMN_TYPE = "type";
 
     private Params() {
