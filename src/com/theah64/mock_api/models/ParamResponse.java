@@ -1,6 +1,12 @@
 package com.theah64.mock_api.models;
 
 public class ParamResponse {
+    public static final String EQUALS = "==";
+    public static final String NOT_EQUALS = "!=";
+    public static final String GREATER_THAN = ">";
+    public static final String GREATER_THAN_OR_EQUALS = ">=";
+    public static final String LESS_THAN = "<";
+    public static final String LESS_THAN_OR_EQUALS = "<=";
     private final String id, routeId, paramId, paramValue, responseId, relOpt;
 
     public ParamResponse(String id, String routeId, String paramId, String paramValue, String responseId, String relOpt) {

@@ -22,6 +22,7 @@
     %>
     <jsp:include page="common_headers.jsp"/>
     <%
+
         Form form = new Form(request, new String[]{KEY_ROUTE_NAME});
         Route route = null;
         try {
@@ -40,11 +41,55 @@
             return;
         }
 
-//        Data needed
 
-        List<Param> params = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, route.getId());
-        List<Response> responses = null;
-        List<ParamResponse> paramResponses = null;
+        final Form saveParamRespForm = new Form(request);
+        if (saveParamRespForm.isSubmitted()) {
+
+            //First delete all current responses
+            ParamResponses.getInstance().delete(ParamResponses.COLUMN_ROUTE_ID, route.getId());
+
+            final String[] fParams = request.getParameterValues("params[]");
+            final String[] fOps = request.getParameterValues("ops[]");
+            final String[] fIValues = request.getParameterValues("ivalues[]");
+            final String[] fResponses = request.getParameterValues("responses[]");
+
+            if (fParams != null && fOps != null && fIValues != null && fResponses != null) {
+
+                //Add these values
+                for (int i = 0; i < fParams.length; i++) {
+
+                    final String fParam = fParams[i];
+                    final String fOp = fOps[i];
+                    final String fIValue = fIValues[i];
+                    final String fResponse = fResponses[i];
+
+                    try {
+                        ParamResponses.getInstance().add(new ParamResponse(
+                                null, route.getId(),
+                                fParam, fIValue, fResponse, fOp
+                        ));
+                    } catch (SQLException | QueryBuilderException e) {
+                        e.printStackTrace();
+                        StatusResponse.redirect(response, "Error", e.getMessage());
+                    }
+
+                }
+
+            }
+
+
+        }
+
+
+        // Data needed
+
+        List
+                <Param>
+                params = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, route.getId());
+        List
+                <Response> responses = null;
+        List
+                <ParamResponse> paramResponses = null;
         try {
             responses = Responses.getInstance().getAll(Responses.COLUMN_ROUTE_ID, route.getId());
             paramResponses = ParamResponses.getInstance().getAll(ParamResponses.COLUMN_ROUTE_ID, route.getId());
@@ -75,18 +120,35 @@
                 $("form#fParamResp").prepend(formRow);
             });
 
-            $("a.delParamResp").on('click', function () {
-                $(this).parent().parent().remove();
-            });
 
             <%
                  for (ParamResponse paramResponse : paramResponses) {
-                %>
-            $("select#sOpt<%=paramResponse.getId()%>").val('<%=paramResponse.getRelOpt()%>');
+               %>
+
+
+            var formRow = $("div#empty_form_row");
+
+            //Param
+            $(formRow).find("select.sParams").attr('id', 'sParams<%=paramResponse.getId()%>');
+            $(formRow).find("select.sOps").attr('id', 'sOps<%=paramResponse.getId()%>');
+            $(formRow).find("input.iValue").attr('id', 'iValue<%=paramResponse.getId()%>');
+            $(formRow).find("select.sResps").attr('id', 'sResps<%=paramResponse.getId()%>');
+            $("form#fParamResp").prepend(formRow.html());
+
+            $("select#sParams<%=paramResponse.getId()%>").val('<%=paramResponse.getParamId()%>');
+            $("select#sOps<%=paramResponse.getId()%>").val('<%=paramResponse.getRelOpt()%>');
+            $("input#iValue<%=paramResponse.getId()%>").val('<%=paramResponse.getParamValue()%>');
+            $("select#sResps<%=paramResponse.getId()%>").val('<%=paramResponse.getResponseId()%>');
+
+            //Set form values here
+
             <%
             }
             %>
 
+            $("#fParamResp").on('click', 'a.delParamResp', function () {
+                $(this).parent().parent().remove();
+            });
 
         });
     </script>
@@ -116,7 +178,7 @@
 
                 <%--Params--%>
                 <div class="col-md-3">
-                    <select class="form-control">
+                    <select name="params[]" class="sParams form-control" required>
                         <option value="">Select param</option>
                         <%
                             for (final Param param : params) {
@@ -131,7 +193,7 @@
 
                 <%--Operators--%>
                 <div class="col-md-2">
-                    <select class="form-control">
+                    <select name="ops[]" class="sOps form-control" required>
                         <option value="">Select operator</option>
                         <option value="==">==</option>
                         <option value="!=">!=</option>
@@ -144,12 +206,12 @@
 
                 <%--Value--%>
                 <div class="col-md-3">
-                    <input class="form-control" type="text" placeholder="Value">
+                    <input name="ivalues[]" class="form-control iValue" type="text" placeholder="Value" required>
                 </div>
 
                 <%--Responses--%>
                 <div class="col-md-3">
-                    <select class="form-control">
+                    <select name="responses[]" class="sResps form-control" required>
                         <option value="">Select response</option>
                         <%
                             for (final Response respons : responses) {
@@ -172,82 +234,14 @@
         </div>
     </div>
 
+
     <div class="row">
         <div class="col-md-12">
 
-            <form id="fParamResp">
-
-
-                <%
-                    for (ParamResponse paramResponse : paramResponses) {
-                %>
-                <div class="form-group">
-
-                    <div class="row">
-
-                        <%--Params--%>
-                        <div class="col-md-3">
-                            <select id="sParam<%=paramResponse.getId()%>" class="form-control">
-                                <option value="">Select param</option>
-                                <%
-                                    for (final Param param : params) {
-                                %>
-                                <option value="<%=param.getId()%>" <%=paramResponse.getParamId().equals(param.getId()) ? "selected" : ""%> ><%=param.getName()%>
-                                </option>
-                                <%
-                                    }
-                                %>
-                            </select>
-                        </div>
-
-                        <%--Operators--%>
-                        <div class="col-md-2">
-                            <select id="sOpt<%=paramResponse.getId()%>" class="form-control">
-                                <option value="">Select operator</option>
-                                <option value="==">==</option>
-                                <option value="!=">!=</option>
-                                <option value=">"> ></option>
-                                <option value="<"> <</option>
-                                <option value=">="> >=</option>
-                                <option value="<="> <=</option>
-                            </select>
-                        </div>
-
-                        <%--Value--%>
-                        <div class="col-md-3">
-                            <input class="form-control" type="text" placeholder="Value">
-                        </div>
-
-                        <%--Responses--%>
-                        <div class="col-md-3">
-                            <select id="sResp<%=paramResponse.getId()%>" class="form-control">
-                                <option value="">Select response</option>
-                                <%
-                                    for (final Response respons : responses) {
-                                %>
-                                <option value="<%=respons.getId()%>" <%=paramResponse.getResponseId().equals(respons.getId()) ? "selected" : ""%> ><%=respons.getName()%>
-                                </option>
-                                <%
-                                    }
-                                %>
-                            </select>
-                        </div>
-
-                        <div class="col-md-1">
-                            <a class="delParamResp btn btn-danger"> <b>&times;</b> </a>
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-                <%
-                    }
-                %>
-
-                <button type="submit" class="btn btn-primary">SAVE</button>
+            <form id="fParamResp" method="POST" action="param_resp.jsp?<%=request.getQueryString()%>">
+                <input value="SAVE" name="<%=Form.KEY_IS_SUBMITTED%>" type="submit" class="btn btn-primary"/>
             </form>
+
 
         </div>
     </div>

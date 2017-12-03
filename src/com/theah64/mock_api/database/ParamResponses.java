@@ -2,6 +2,7 @@ package com.theah64.mock_api.database;
 
 import com.theah64.mock_api.models.ParamResponse;
 import com.theah64.webengine.database.BaseTable;
+import com.theah64.webengine.database.querybuilders.AddQueryBuilder;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.database.querybuilders.SelectQueryBuilder;
 
@@ -48,5 +49,23 @@ public class ParamResponses extends BaseTable<ParamResponse> {
                 COLUMN_RESPONSE_ID,
                 COLUMN_REL_OPT
         }, new String[]{whereColumn}, new String[]{whereColumnValue}, -1, COLUMN_ID + " DESC").getAll();
+    }
+
+    /**
+     * route_id,param_id,param_value, response_id, rel_opt
+     *
+     * @return
+     * @throws SQLException
+     * @throws QueryBuilderException
+     */
+    @Override
+    public boolean add(ParamResponse p) throws SQLException, QueryBuilderException {
+        return new AddQueryBuilder.Builder(getTableName())
+                .add(COLUMN_ROUTE_ID, p.getRouteId())
+                .add(COLUMN_PARAM_ID, p.getParamId())
+                .add(COLUMN_PARAM_VALUE, p.getParamValue())
+                .add(COLUMN_RESPONSE_ID, p.getResponseId())
+                .add(COLUMN_REL_OPT, p.getRelOpt())
+                .done();
     }
 }
