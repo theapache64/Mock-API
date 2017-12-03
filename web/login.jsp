@@ -92,7 +92,7 @@
 
                                     //Project doesn't exist
                                     final String apiKey = RandomString.getNewApiKey(10);
-                                    project = new Project(null, name, passHash, apiKey, null);
+                                    project = new Project(null, name, passHash, apiKey, "http://baseapiurlgoeshere.com");
 
                                     try {
 

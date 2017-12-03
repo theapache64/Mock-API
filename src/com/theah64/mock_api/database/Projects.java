@@ -83,7 +83,7 @@ public class Projects extends BaseTable<Project> {
     public String addv3(Project project) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO projects (name, pass_hash,api_key) VALUES (?,?,?);";
+        final String query = "INSERT INTO projects (name, pass_hash,api_key,base_og_api_url) VALUES (?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
 
         try {
@@ -91,6 +91,7 @@ public class Projects extends BaseTable<Project> {
             ps.setString(1, project.getName().replaceAll("\\s+", "").trim().toLowerCase());
             ps.setString(2, project.getPassHash());
             ps.setString(3, project.getApiKey());
+            ps.setString(4, project.getBaseOgApiUrl());
             ps.executeUpdate();
             final ResultSet rs = ps.getGeneratedKeys();
 
