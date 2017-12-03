@@ -35,13 +35,20 @@ public class AddResponseServlet extends AdvancedBaseServlet {
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException, QueryBuilderException {
 
-
         final String name = getStringParameter(Responses.COLUMN_NAME);
         final String routeName = getStringParameter(KEY_ROUTE);
-        final String response = getStringParameter(Responses.COLUMN_RESPONSE);
         final String projectId = getStringParameter(Routes.COLUMN_PROJECT_ID);
         final String routeId = Routes.getInstance().get(Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_NAME, routeName, Routes.COLUMN_ID);
-        final String respId = Responses.getInstance().addv3(new Response(null, name, routeId, response));
-        getWriter().write(new APIResponse("Response added", "id", respId).getResponse());
+
+        //Checking duplicate responseName
+        final boolean isExist = Responses.getInstance().isExist(Responses.COLUMN_NAME, name, Responses.COLUMN_ROUTE_ID, routeId);
+
+        if (!isExist) {
+            final String response = getStringParameter(Responses.COLUMN_RESPONSE);
+            final String respId = Responses.getInstance().addv3(new Response(null, name, routeId, response));
+            getWriter().write(new APIResponse("Response added", "id", respId).getResponse());
+        } else {
+            getWriter().write(new APIResponse("ERROR: Duplicate response -" + name).getResponse());
+        }
     }
 }
