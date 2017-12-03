@@ -30,7 +30,6 @@ public class TimeUtils {
         }
 
         StringBuffer res = new StringBuffer();
-        System.out.println("Duration:" + duration);
         duration = System.currentTimeMillis() - duration;
         long temp = 0;
         if (duration >= ONE_SECOND) {

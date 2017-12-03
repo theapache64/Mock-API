@@ -4,11 +4,13 @@ package com.theah64.mock_api.servlets;
 import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.exceptions.RequestException;
+import com.theah64.mock_api.models.Response;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
@@ -36,6 +38,7 @@ public class GetResponseServlet extends AdvancedBaseServlet {
         final String responseId = getStringParameter(Responses.COLUMN_ID);
         String resp;
 
+
         if (responseId.equals(Routes.COLUMN_DEFAULT_RESPONSE)) {
             final String routeName = getStringParameter(KEY_ROUTE_NAME);
             final String projectName = getStringParameter(KEY_PROJECT_NAME);
@@ -49,8 +52,14 @@ public class GetResponseServlet extends AdvancedBaseServlet {
             );
         }
 
+
         if (resp != null) {
-            getWriter().write(new APIResponse("OK", Responses.COLUMN_RESPONSE, resp).getResponse());
+
+            final JSONObject joData = new JSONObject();
+            joData.put(Responses.COLUMN_ID, responseId);
+            joData.put(Responses.COLUMN_RESPONSE, resp);
+
+            getWriter().write(new APIResponse("OK", joData).getResponse());
         } else {
             getWriter().write(new APIResponse("Invalid response id").getResponse());
         }

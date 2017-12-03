@@ -147,6 +147,7 @@
                             stopLoading(true);
 
                             if (!data.error) {
+
                                 console.log(data.data.routes);
 
                                 //Clearing old data
@@ -389,9 +390,11 @@
                     },
                     success: function (data) {
                         stopLoading(true);
-                        console.log(data);
 
                         if (!data.error) {
+
+                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + $('input#route').val() + "&response_id=" + data.data.id);
+
                             //Deleted response from db
                             editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
                         } else {
@@ -470,8 +473,6 @@
                         success: function (data) {
 
                             //Changing browser url without reloading the page
-                            history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + route);
-
 
                             stopLoading(true);
                             var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "?" + data.data.dummy_params + "'>/" + route + "</a>";
@@ -485,12 +486,15 @@
                                     .find("option")
                                     .remove()
                                     .end()
-                                    .append('<option value="default_response">Default response</option>')
-                                    .trigger('change');
+                                    .append('<option value="default_response">Default response</option>');
 
                                 $.each(data.data.responses, function (i, item) {
                                     $("select#responses").append('<option value="' + item.id + '">' + item.name + '</option>');
                                 });
+
+                                var respoId = '<%=request.getParameter("response_id")==null ? Routes.COLUMN_DEFAULT_RESPONSE : request.getParameter("response_id")%>';
+                                $("select#responses").val(respoId).trigger('change');
+
 
                                 $(resultDiv).removeClass('alert-danger').addClass('alert-success');
                                 $(resultDiv).html("<strong>Success! </strong> " + data.message + " : " + link);
@@ -514,6 +518,7 @@
                                 $("input#is_secure").prop('checked', data.data.is_secure);
 
                                 //editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.default_response), undefined, 4));
+
 
                             } else {
 
@@ -621,11 +626,8 @@
                                 $("select#routes").val(data.data.id).trigger('change');
 
                                 history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + route);
-                            } else {
-                                //alert("selecting update : " + $('select#routes :selected').text());
-                                $("select#routes").val($('select#routes :selected').val()).trigger('change');
-                            }
 
+                            }
 
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
@@ -974,11 +976,13 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <a id="aAddResponse" class="btn btn-default"><b>+</b></a>
+                                <a id="aAddResponse" class="btn btn-default"><span
+                                        class="glyphicon glyphicon-floppy-disk"></span></a>
                             </div>
 
                             <div class="form-group">
-                                <a id="aDeleteResponse" class="btn btn-default"><b>x</b></a>
+                                <a id="aDeleteResponse" class="btn btn-default"><span
+                                        class="glyphicon glyphicon-trash"></span></a>
                             </div>
                         </form>
                     </div>
