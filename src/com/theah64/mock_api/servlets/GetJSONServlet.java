@@ -8,6 +8,7 @@ import com.theah64.mock_api.models.ParamResponse;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.PathInfo;
+import com.theah64.mock_api.utils.RandomResponseGenerator;
 import com.theah64.mock_api.utils.Request;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.thedeanda.lorem.LoremIpsum;
@@ -155,21 +156,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
                 }
             }
 
-            //First name throw back
-            final LoremIpsum loremIpsum = LoremIpsum.getInstance();
-
-            //random name
-            if (jsonResp.contains("{randomName}")) {
-                final String[] jsonRespArr = jsonResp.split(KEY_RANDOM_NAME);
-                System.out.println(jsonRespArr.length);
-                final StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < jsonRespArr.length; i++) {
-                    sb.append(jsonRespArr[i]).append(loremIpsum.getName());
-                }
-                jsonResp = sb.toString();
-            }
-
-
+            jsonResp = RandomResponseGenerator.generate(jsonResp);
 
             getWriter().write(new JSONObject(jsonResp).toString());
 
