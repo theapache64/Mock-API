@@ -3,7 +3,6 @@ package com.theah64.mock_api.servlets;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.PathInfo;
-import com.theah64.mock_api.utils.Request;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 import org.json.JSONException;

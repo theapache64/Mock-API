@@ -9,9 +9,8 @@ import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.RandomResponseGenerator;
-import com.theah64.mock_api.utils.Request;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
-import com.thedeanda.lorem.LoremIpsum;
+import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Created by theapache64 on 14/5/17.

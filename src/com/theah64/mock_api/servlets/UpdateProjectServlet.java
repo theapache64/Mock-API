@@ -5,7 +5,6 @@ import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.PathInfo;
-import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
 
 import javax.servlet.annotation.WebServlet;

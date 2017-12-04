@@ -4,11 +4,10 @@ import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.PathInfo;
-import com.theah64.mock_api.utils.Request;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
+import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -2,7 +2,7 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.PathInfo;
-import com.theah64.mock_api.utils.Request;
+import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 
 import javax.servlet.annotation.WebServlet;

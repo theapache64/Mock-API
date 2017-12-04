@@ -5,7 +5,6 @@ import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.APIResponse;
-import com.theah64.mock_api.utils.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 
