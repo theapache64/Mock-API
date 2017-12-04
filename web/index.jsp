@@ -61,6 +61,20 @@
                 }
             });
 
+            $("span.randomItems").on('click', function () {
+
+                var x = $(this).text();
+                if (x.indexOf("(\\d+)") !== -1) {
+                    var count = prompt("How many?");
+                    if (count != null) {
+                        x = x.replace("(\\d+)", count);
+                    }else{
+                        x = "";
+                    }
+                }
+                editor.replaceSelection(x);
+            });
+
             $("input#route, input#required_params, input#optional_params").on('keyup', function () {
                 if (!event.ctrlKey && !event.altKey) {
                     var oldVal = $(this).val();
@@ -1049,7 +1063,7 @@
                 <%
                     for (final RandomResponseGenerator.RandomResponse randomResponse : RandomResponseGenerator.randomResponses) {
                 %>
-                <span class="label label-primary"><%=randomResponse.getKey()%></span>
+                <span class="randomItems label label-primary"><%=randomResponse.getKey()%></span>
                 <%
                     }
                 %>
