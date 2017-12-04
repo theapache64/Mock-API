@@ -2,6 +2,7 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Params;
 import com.theah64.mock_api.models.Route;
+import com.theah64.webengine.database.Connection;
 import org.json.JSONException;
 
 import javax.servlet.ServletException;
@@ -23,7 +24,7 @@ public class MoveReqOptParamServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        final java.sql.Connection con = com.theah64.mock_api.database.Connection.getConnection();
+        final java.sql.Connection con = Connection.getConnection();
         final String query = "SELECT id, required_params, optional_params FROM routes;";
         try {
             final java.sql.Statement stmt = con.createStatement();

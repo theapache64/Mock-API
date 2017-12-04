@@ -1,4 +1,4 @@
-<%@ page import="com.theah64.mock_api.database.Connection" %>
+<%@ page import="com.theah64.webengine.database.Connection" %>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" href="/mock_api/favicon.ico" type="image/x-icon">

@@ -38,7 +38,8 @@
                 }
             }
         }
-        ;
+
+
 
         $(document).ready(function () {
 
@@ -68,11 +69,13 @@
                     var count = prompt("How many?");
                     if (count != null) {
                         x = x.replace("(\\d+)", count);
-                    }else{
+                    } else {
                         x = "";
                     }
                 }
+
                 editor.replaceSelection(x);
+                editor.focus();
             });
 
             $("input#route, input#required_params, input#optional_params").on('keyup', function () {

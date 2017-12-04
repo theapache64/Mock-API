@@ -1,5 +1,6 @@
 <%@ page import="com.theah64.mock_api.database.Routes" %>
 <%@ page import="com.theah64.mock_api.models.Route" %>
+<%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
@@ -69,8 +70,10 @@
 
                 <tbody>
                 <%
-                    final List<Route> routes = Routes.getInstance().getAll(project.getId());
-                    for (final Route route : routes) {
+                    final List<Route> routes;
+                    try {
+                        routes = Routes.getInstance().getAll(project.getId());
+                        for (final Route route : routes) {
                 %>
                 <tr>
                     <td width="30%"><a target="blank"
@@ -85,6 +88,9 @@
                     </td>
                 </tr>
                 <%
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
                 %>
                 </tbody>

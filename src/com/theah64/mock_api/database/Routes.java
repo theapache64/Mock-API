@@ -1,6 +1,8 @@
 package com.theah64.mock_api.database;
 
 import com.theah64.mock_api.models.Route;
+import com.theah64.webengine.database.BaseTable;
+import com.theah64.webengine.database.Connection;
 import org.json.JSONException;
 
 import java.sql.PreparedStatement;
