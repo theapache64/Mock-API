@@ -348,18 +348,24 @@
                             var builder = "";
                             var temp = selection;
 
+                            var isIntFound = false;
+
                             for (var i = 1; i < n; i++) {
-                                temp = temp.replace(/\.*\{(\d+)\}\.*/g, function (fullMatch, n) {
-                                    return "{"+(Number(n) + 1)+"}";
+                                temp = temp.replace(/\.*\[(\d+)\]\.*/g, function (fullMatch, n) {
+                                    isIntFound = true;
+                                    return "[" + (Number(n) + 1) + "]";
                                 });
                                 builder += temp + "\n";
                             }
 
-                            selection = selection.replace(/{/g,"");
-                            selection = selection.replace(/}/g,"");
 
-                            builder = builder.replace(/{/g,"");
-                            builder = builder.replace(/}/g,"");
+                            if (isIntFound) {
+                                selection = selection.replace(/\[/g, "");
+                                selection = selection.replace(/\]/g, "");
+
+                                builder = builder.replace(/\[/g, "");
+                                builder = builder.replace(/\]/g, "");
+                            }
 
                             editor.replaceSelection(selection + "\n" + builder);
                         }

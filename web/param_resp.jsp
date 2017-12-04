@@ -1,11 +1,17 @@
+<%@ page import="com.theah64.mock_api.database.ParamResponses" %>
+<%@ page import="com.theah64.mock_api.database.Params" %>
+<%@ page import="com.theah64.mock_api.database.Responses" %>
+<%@ page import="com.theah64.mock_api.database.Routes" %>
+<%@ page import="com.theah64.mock_api.models.Param" %>
+<%@ page import="com.theah64.mock_api.models.ParamResponse" %>
+<%@ page import="com.theah64.mock_api.models.Response" %>
+<%@ page import="com.theah64.mock_api.models.Route" %>
+<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.webengine.utils.RequestException" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
 <%@ page import="java.sql.SQLException" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
-<%@ page import="com.theah64.mock_api.models.*" %>
-<%@ page import="com.theah64.mock_api.database.*" %><%--
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: theapache64
   Date: 3/12/17
@@ -117,7 +123,7 @@
         $(document).ready(function () {
             $("a#aAddNewRule").on('click', function () {
                 var formRow = $("div#empty_form_row").html();
-                $("form#fParamResp").prepend(formRow);
+                $(formRow).insertBefore("input#iSubmitParamResp");
             });
 
 
@@ -133,7 +139,7 @@
             $(formRow).find("select.sOps").attr('id', 'sOps<%=paramResponse.getId()%>');
             $(formRow).find("input.iValue").attr('id', 'iValue<%=paramResponse.getId()%>');
             $(formRow).find("select.sResps").attr('id', 'sResps<%=paramResponse.getId()%>');
-            $("form#fParamResp").prepend(formRow.html());
+            $(formRow.html()).insertBefore("input#iSubmitParamResp");
 
             $("select#sParams<%=paramResponse.getId()%>").val('<%=paramResponse.getParamId()%>');
             $("select#sOps<%=paramResponse.getId()%>").val('<%=paramResponse.getRelOpt()%>');
@@ -239,7 +245,8 @@
         <div class="col-md-12">
 
             <form id="fParamResp" method="POST" action="param_resp.jsp?<%=request.getQueryString()%>">
-                <input value="SAVE" name="<%=Form.KEY_IS_SUBMITTED%>" type="submit" class="btn btn-primary"/>
+                <input id="iSubmitParamResp" value="SAVE" name="<%=Form.KEY_IS_SUBMITTED%>" type="submit"
+                       class="btn btn-primary"/>
             </form>
 
 
