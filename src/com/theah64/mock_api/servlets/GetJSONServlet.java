@@ -10,6 +10,7 @@ import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.PathInfo;
 import com.theah64.mock_api.utils.Request;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
+import com.thedeanda.lorem.LoremIpsum;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by theapache64 on 14/5/17.
@@ -154,7 +156,20 @@ public class GetJSONServlet extends AdvancedBaseServlet {
             }
 
             //First name throw back
-            
+            final LoremIpsum loremIpsum = LoremIpsum.getInstance();
+
+            //random name
+            if (jsonResp.contains("{randomName}")) {
+                final String[] jsonRespArr = jsonResp.split(KEY_RANDOM_NAME);
+                System.out.println(jsonRespArr.length);
+                final StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < jsonRespArr.length; i++) {
+                    sb.append(jsonRespArr[i]).append(loremIpsum.getName());
+                }
+                jsonResp = sb.toString();
+            }
+
+
 
             getWriter().write(new JSONObject(jsonResp).toString());
 
@@ -163,4 +178,6 @@ public class GetJSONServlet extends AdvancedBaseServlet {
             throw new Request.RequestException(e.getMessage());
         }
     }
+
+    private static final String KEY_RANDOM_NAME = "\\{randomName\\}";
 }
