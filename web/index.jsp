@@ -1,9 +1,8 @@
 <%@ page import="com.theah64.mock_api.database.Routes" %>
 <%@ page import="com.theah64.mock_api.models.Route" %>
+<%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.theah64.mock_api.models.Param" %>
-<%@ page import="com.theah64.mock_api.database.Params" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -1033,7 +1032,19 @@
 
             </div>
 
+            <div class="row text-center">
+                <%
+                    for (final RandomResponseGenerator.RandomResponse randomResponse : RandomResponseGenerator.randomResponses) {
+                %>
+                <span class="label label-primary"><%=randomResponse.getKey()%></span>
+                <%
+                    }
+                %>
+            </div>
+
+
             <br>
+
 
             <textarea class="form-control" id="response" name="response"
                       placeholder="Response" title="JSON"></textarea>
