@@ -343,16 +343,23 @@
                     if (selection.length > 0) {
 
                         var n = prompt("Number of nodes? ", 1);
+
                         if (n) {
                             var builder = "";
                             var temp = selection;
 
                             for (var i = 1; i < n; i++) {
-                                temp = temp.replace(/\.*(\d+)\.*/g, function (fullMatch, n) {
-                                    return (Number(n) + 1);
+                                temp = temp.replace(/\.*\{(\d+)\}\.*/g, function (fullMatch, n) {
+                                    return "{"+(Number(n) + 1)+"}";
                                 });
                                 builder += temp + "\n";
                             }
+
+                            selection = selection.replace(/{/g,"");
+                            selection = selection.replace(/}/g,"");
+
+                            builder = builder.replace(/{/g,"");
+                            builder = builder.replace(/}/g,"");
 
                             editor.replaceSelection(selection + "\n" + builder);
                         }
