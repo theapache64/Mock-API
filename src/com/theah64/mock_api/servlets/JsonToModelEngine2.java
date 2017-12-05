@@ -1,7 +1,6 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.exceptions.RequestException;
-import com.theah64.mock_api.utils.PathInfo;
+import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 
@@ -34,7 +33,7 @@ public class JsonToModelEngine2 extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException {
 
     }
 }

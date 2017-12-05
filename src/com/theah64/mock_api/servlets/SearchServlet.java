@@ -1,9 +1,9 @@
 package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Routes;
-import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
-import com.theah64.mock_api.utils.PathInfo;
+import com.theah64.webengine.utils.PathInfo;
+import com.theah64.webengine.utils.Request;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +40,7 @@ public class SearchServlet extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, Request.RequestException, PathInfo.PathInfoException {
 
 
         final String projectId = getHeaderSecurity().getProjectId();
@@ -56,7 +56,7 @@ public class SearchServlet extends AdvancedBaseServlet {
             joData.put("routes", jaRoutes);
             getWriter().write(new APIResponse(routes.size() + " route(s) found", joData).getResponse());
         } else {
-            throw new RequestException("No match found");
+            throw new Request.RequestException("No match found");
         }
 
 

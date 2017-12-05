@@ -1,8 +1,8 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
-import com.theah64.mock_api.utils.PathInfo;
+import com.theah64.webengine.utils.PathInfo;
+import com.theah64.webengine.utils.Request;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 import org.json.JSONException;
@@ -43,7 +43,7 @@ public class GetRandomServlet extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException {
         final String randomWhat = getStringParameter(KEY_RANDOM_WHAT);
         final int count = getIntParameter(KEY_COUNT, 1);
         final String output;
@@ -85,7 +85,7 @@ public class GetRandomServlet extends AdvancedBaseServlet {
                 output = lorem.getLastName();
                 break;
             default:
-                throw new RequestException("Invalid randomWhat: " + randomWhat);
+                throw new Request.RequestException("Invalid randomWhat: " + randomWhat);
         }
 
         getWriter().write(new APIResponse("Done", "random_output", output).getResponse());

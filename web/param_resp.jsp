@@ -8,7 +8,7 @@
 <%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
-<%@ page import="com.theah64.webengine.utils.RequestException" %>
+<%@ page import="com.theah64.webengine.utils.Request" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %><%--
@@ -36,7 +36,7 @@
                 final String routeName = form.getString(KEY_ROUTE_NAME);
                 route = Routes.getInstance().get(project.getName(), routeName);
             }
-        } catch (RequestException | SQLException e) {
+        } catch (Request.RequestException | SQLException e) {
             e.printStackTrace();
             StatusResponse.redirect(response, "Error", e.getMessage());
             return;

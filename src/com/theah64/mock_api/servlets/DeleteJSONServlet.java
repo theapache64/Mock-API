@@ -1,7 +1,6 @@
 package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Routes;
-import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
@@ -26,7 +25,7 @@ public class DeleteJSONServlet extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, Request.RequestException {
         final String jsonId = getStringParameter(Routes.COLUMN_ID);
         Routes.getInstance().delete(Routes.COLUMN_ID, jsonId, Routes.COLUMN_PROJECT_ID, getHeaderSecurity().getProjectId());
         getWriter().write(new APIResponse("Route deleted", null).getResponse());

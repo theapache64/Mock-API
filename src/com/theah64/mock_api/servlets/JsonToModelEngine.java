@@ -1,9 +1,9 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.exceptions.RequestException;
-import com.theah64.mock_api.utils.CodeGen;
 import com.theah64.mock_api.utils.APIResponse;
-import com.theah64.mock_api.utils.PathInfo;
+import com.theah64.mock_api.utils.CodeGen;
+import com.theah64.webengine.utils.PathInfo;
+import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +37,7 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException {
 
         final String modelName = getStringParameter(KEY_MODEL_NAME);
         final String joString = getStringParameter(KEY_JO_STRING);

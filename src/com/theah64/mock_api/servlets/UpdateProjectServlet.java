@@ -1,10 +1,10 @@
 package com.theah64.mock_api.servlets;
 
-import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.database.Projects;
-import com.theah64.mock_api.exceptions.RequestException;
+import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.utils.APIResponse;
-import com.theah64.mock_api.utils.PathInfo;
+import com.theah64.webengine.utils.PathInfo;
+import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 
 import javax.servlet.annotation.WebServlet;
@@ -38,12 +38,12 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException, PathInfo.PathInfoException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException,  PathInfo.PathInfoException {
         final String column = getStringParameter(KEY_COLUMN);
         final String value = getStringParameter(KEY_VALUE);
 
         if (column.equals(Projects.COLUMN_BASE_OG_API_URL) && !value.matches(URL_REGEX)) {
-            throw new RequestException("Invalid URL");
+            throw new Request.RequestException("Invalid URL");
         }
 
         System.out.println("Updating project");

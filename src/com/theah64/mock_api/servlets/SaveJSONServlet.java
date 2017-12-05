@@ -2,9 +2,9 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.Routes;
-import com.theah64.mock_api.exceptions.RequestException;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.APIResponse;
+import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,7 +34,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, RequestException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException{
 
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
         final String projectId = getHeaderSecurity().getProjectId();
@@ -58,7 +58,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL);
 
         if (externalApiUrl != null && !externalApiUrl.matches(URL_REGEX)) {
-            throw new RequestException("Invalid external api url :" + externalApiUrl);
+            throw new Request.RequestException("Invalid external api url :" + externalApiUrl);
         }
 
         if (requiredParams.trim().isEmpty()) {

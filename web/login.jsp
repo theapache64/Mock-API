@@ -1,9 +1,9 @@
 <%@ page import="com.theah64.mock_api.database.Projects" %>
-<%@ page import="com.theah64.mock_api.exceptions.RequestException" %>
 <%@ page import="com.theah64.mock_api.models.Project" %>
-<%@ page import="com.theah64.mock_api.utils.DarKnight" %>
-<%@ page import="com.theah64.mock_api.utils.Form" %>
-<%@ page import="com.theah64.mock_api.utils.RandomString" %>
+<%@ page import="com.theah64.webengine.utils.DarKnight" %>
+<%@ page import="com.theah64.webengine.utils.Form" %>
+<%@ page import="com.theah64.webengine.utils.RandomString" %>
+<%@ page import="com.theah64.webengine.utils.Request" %>
 <%@ page import="java.sql.SQLException" %>
 <%--
   Created by IntelliJ IDEA.
@@ -91,7 +91,7 @@
                                 } else {
 
                                     //Project doesn't exist
-                                    final String apiKey = RandomString.getNewApiKey(10);
+                                    final String apiKey = RandomString.get(10);
                                     project = new Project(null, name, passHash, apiKey, "http://baseapiurlgoeshere.com");
 
                                     try {
@@ -104,10 +104,10 @@
                                             project.setId(projectId);
                                             response.sendRedirect("index.jsp?api_key=" + project.getApiKey());
                                         } else {
-                                            throw new RequestException("Failed to create project");
+                                            throw new Request.RequestException("Failed to create project");
                                         }
 
-                                    } catch (SQLException | RequestException e) {
+                                    } catch (SQLException | Request.RequestException e) {
                                         e.printStackTrace();
                         %>
                         <div class="text-danger pull-left">
