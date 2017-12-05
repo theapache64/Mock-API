@@ -7,9 +7,9 @@ import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.ParamResponse;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.HeaderSecurity;
-import com.theah64.webengine.utils.PathInfo;
 import com.theah64.mock_api.utils.RandomResponseGenerator;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
+import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,7 +77,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
         if (route.getDelay() > 0) {
             try {
                 System.out.println("Sleep for " + route.getDelay() + "ms");
-                Thread.sleep(route.getDelay());
+                Thread.sleep(route.getDelay() * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
