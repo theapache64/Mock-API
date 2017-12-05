@@ -18,6 +18,7 @@
     <title><%=project.getName()%> / MockAPI
     </title>
     <%@include file="common_headers.jsp" %>
+
     <script>
         function setLastModified(message, date) {
             $("p#pLastModified").html("Last modified: <b>" + message + "</b>");
@@ -51,14 +52,19 @@
                 lineNumbers: true,
                 mode: "application/json",
                 matchBrackets: true,
+                foldGutter: true,
                 extraKeys: {
+                    "Ctrl-Q": function (cm) {
+                        cm.foldCode(cm.getCursor());
+                    },
                     "F11": function (cm) {
                         cm.setOption("fullScreen", !cm.getOption("fullScreen"));
                     },
                     "Esc": function (cm) {
                         if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
                     }
-                }
+                },
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
             });
 
             $("span.randomItems").on('click', function () {
