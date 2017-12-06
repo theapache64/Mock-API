@@ -52,11 +52,11 @@ public class MoveReqOptParamServlet extends HttpServlet {
             for (final Route route : routes) {
 
                 if (route.getRequiredParams() != null) {
-                    Params.getInstance().addParams(con, route, Params.TYPE_REQUIRED);
+                    Params.getInstance().addParams(con, route, true);
                 }
 
                 if (route.getOptionalParams() != null) {
-                    Params.getInstance().addParams(con, route, Params.TYPE_OPTIONAL);
+                    Params.getInstance().addParams(con, route, false);
                 }
             }
 

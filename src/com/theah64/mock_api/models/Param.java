@@ -4,13 +4,16 @@ package com.theah64.mock_api.models;
  * Created by theapache64 on 30/11/17.
  */
 public class Param {
-    private final String id, name, routeId, type;
+    private final String id, name, routeId, defaultValue, description;
+    private final boolean isRequired;
 
-    public Param(String id, String name, String routeId, String type) {
+    public Param(String id, String name, String routeId, String defaultValue, String description, boolean isRequired) {
         this.id = id;
         this.name = name;
         this.routeId = routeId;
-        this.type = type;
+        this.defaultValue = defaultValue;
+        this.description = description;
+        this.isRequired = isRequired;
     }
 
     public String getId() {
@@ -25,8 +28,16 @@ public class Param {
         return routeId;
     }
 
-    public String getType() {
-        return type;
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isRequired() {
+        return isRequired;
     }
 
     @Override

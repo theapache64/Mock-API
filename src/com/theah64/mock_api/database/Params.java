@@ -17,10 +17,10 @@ import java.util.List;
 public class Params extends BaseTable<Param> {
 
     private static final Params instance = new Params();
-    public static final String TYPE_REQUIRED = "REQUIRED";
-    public static final String TYPE_OPTIONAL = "OPTIONAL";
     public static final String COLUMN_ROUTE_ID = "route_id";
-    private static final String COLUMN_TYPE = "type";
+    private static final String COLUMN_IS_REQUIRED = "is_required";
+    private static final String COLUMN_DEFAULT_VALUE = "default_value";
+    private static final String COLUMN_DESCRITION = "description";
 
     private Params() {
         super("params");
@@ -38,11 +38,11 @@ public class Params extends BaseTable<Param> {
         try {
 
             if (route.getRequiredParams() != null) {
-                addParams(con, route, TYPE_REQUIRED);
+                addParams(con, route, true);
             }
 
             if (route.getOptionalParams() != null) {
-                addParams(con, route, TYPE_OPTIONAL);
+                addParams(con, route, false);
             }
 
         } catch (SQLException e) {
@@ -59,15 +59,15 @@ public class Params extends BaseTable<Param> {
         manageError(error);
     }
 
-    public void addParams(final java.sql.Connection con, final Route route, final String type) throws SQLException {
+    public void addParams(final java.sql.Connection con, final Route route, boolean isRequired) throws SQLException {
         //Move required params
-        final String[] reqParams = (type.equals(TYPE_OPTIONAL) ? route.getOptionalParams() : route.getRequiredParams()).split(",");
-        String reqInsQuery = "INSERT INTO params (name, route_id, type) VALUES (?,?,?);";
+        final String[] reqParams = (!isRequired ? route.getOptionalParams() : route.getRequiredParams()).split(",");
+        String reqInsQuery = "INSERT INTO params (name, route_id, is_required) VALUES (?,?,?);";
         final PreparedStatement ps1 = con.prepareStatement(reqInsQuery);
         for (final String reqParam : reqParams) {
             ps1.setString(1, reqParam);
             ps1.setString(2, route.getId());
-            ps1.setString(3, type);
+            ps1.setBoolean(3, isRequired);
             ps1.executeUpdate();
         }
         ps1.close();
@@ -77,7 +77,7 @@ public class Params extends BaseTable<Param> {
     public List<Param> getAll(String whereColumn, String whereColumnValue) {
         java.sql.Connection con = Connection.getConnection();
         final List<Param> params = new ArrayList<>();
-        final String query = String.format("SELECT id, name ,route_id, type FROM params WHERE %s = ?", whereColumn);
+        final String query = String.format("SELECT id, name ,route_id, is_required, default_value, description FROM params WHERE %s = ?", whereColumn);
         try {
             final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, whereColumnValue);
@@ -89,9 +89,11 @@ public class Params extends BaseTable<Param> {
                     final String id = rs.getString(COLUMN_ID);
                     final String name = rs.getString(COLUMN_NAME);
                     final String routeId = rs.getString(COLUMN_ROUTE_ID);
-                    final String type = rs.getString(COLUMN_TYPE);
+                    final String defaultValue = rs.getString(COLUMN_DEFAULT_VALUE);
+                    final String description = rs.getString(COLUMN_DESCRITION);
+                    final boolean isRequired = rs.getBoolean(COLUMN_IS_REQUIRED);
 
-                    params.add(new Param(id, name, routeId, type));
+                    params.add(new Param(id, name, routeId, defaultValue, description, isRequired));
 
                 } while (rs.next());
             }
@@ -114,8 +116,8 @@ public class Params extends BaseTable<Param> {
 
         //Get new params
         final List<Param> newParams = new ArrayList<>();
-        addParams(newParams, route.getRequiredParams(), TYPE_REQUIRED);
-        addParams(newParams, route.getOptionalParams(), TYPE_OPTIONAL);
+        addParams(newParams, route.getRequiredParams(), true);
+        addParams(newParams, route.getOptionalParams(), false);
 
         //Get all params
         final List<Param> oldParams = getAll(COLUMN_ROUTE_ID, route.getId());
@@ -164,12 +166,12 @@ public class Params extends BaseTable<Param> {
 
         if (!addedParams.isEmpty()) {
             //added params
-            String reqInsQuery = "INSERT INTO params (name, route_id, type) VALUES (?,?,?);";
+            String reqInsQuery = "INSERT INTO params (name, route_id, is_required) VALUES (?,?,?);";
             final PreparedStatement ps1 = con.prepareStatement(reqInsQuery);
             for (final Param addedParam : addedParams) {
                 ps1.setString(1, addedParam.getName());
                 ps1.setString(2, route.getId());
-                ps1.setString(3, addedParam.getType());
+                ps1.setBoolean(3, addedParam.isRequired());
                 ps1.executeUpdate();
             }
             ps1.close();
@@ -177,11 +179,11 @@ public class Params extends BaseTable<Param> {
 
     }
 
-    private void addParams(List<Param> newParams, String params, String type) {
+    private void addParams(List<Param> newParams, String params, boolean isRequired) {
         if (params != null) {
             final String[] paramsArr = params.split(",");
             for (final String param : paramsArr) {
-                newParams.add(new Param(null, param, null, type));
+                newParams.add(new Param(null, param, null, null, null, isRequired));
             }
         }
     }

@@ -130,7 +130,7 @@ public class Routes extends BaseTable<Route> {
     public Route get(String projectName, String routeName) throws SQLException {
         String error = null;
         Route route = null;
-        final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, (SELECT GROUP_CONCAT(name) FROM params WHERE route_id = r.id AND type='REQUIRED' ) AS required_params, (SELECT GROUP_CONCAT(name) FROM params WHERE route_id = r.id AND type='OPTIONAL') AS optional_params, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
+        final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, (SELECT GROUP_CONCAT(name) FROM params WHERE route_id = r.id AND is_required = 1) AS required_params, (SELECT GROUP_CONCAT(name) FROM params WHERE route_id = r.id AND is_required = 0) AS optional_params, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
