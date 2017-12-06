@@ -41,6 +41,7 @@
         }
 
 
+        var isAlertResult = false;
         $(document).ready(function () {
 
 
@@ -58,6 +59,7 @@
                         cm.foldCode(cm.getCursor());
                     },
                     "F11": function (cm) {
+                        isAlertResult = !cm.getOption("fullScreen");
                         cm.setOption("fullScreen", !cm.getOption("fullScreen"));
                     },
                     "Esc": function (cm) {
@@ -148,8 +150,13 @@
 
             });
 
+
             $(window).keydown(function (event) {
 
+                //F7
+                if (event.keyCode == 118) {
+                    $("button#bSubmit").click();
+                }
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 70) {
 
@@ -679,6 +686,10 @@
                             $(resultDiv).html("<strong>Error! </strong> " + data.message);
                             $(resultDiv).show();
                         }
+
+                        if (isAlertResult) {
+                            alert(data.message);
+                        }
                     },
                     error: function () {
                         stopLoading(true);
@@ -1183,6 +1194,7 @@
                     <p><code>Control + Alt + I </code>To insert random image urls at selected position</p>
                     <p><code>F1 </code>To search for a route</p>
                     <p><code>F4 </code>To generate API interface method</p>
+                    <p><code>F7 </code>To save</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
