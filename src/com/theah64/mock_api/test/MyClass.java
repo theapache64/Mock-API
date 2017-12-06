@@ -1,25 +1,30 @@
 package com.theah64.mock_api.test;
 
+import com.theah64.mock_api.models.Param;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyClass {
 
     public static void main(String[] args) {
 
-       /* final List<Param> newParams = new ArrayList<>();
-        newParams.add(new Param(null, "A", null, defaultValue, description, null));
-        newParams.add(new Param(null, "B", null, defaultValue, description, null));
-        newParams.add(new Param(null, "C", null, defaultValue, description, null));
-        newParams.add(new Param(null, "F", null, defaultValue, description, null));
+        final List<Param> newParams = new ArrayList<>();
+        newParams.add(new Param(null, "A", null, null, null, null, false));
+        newParams.add(new Param(null, "B", null, null, null, null, false));
+        newParams.add(new Param(null, "C", null, null, null, null, false));
+        newParams.add(new Param(null, "F", null, null, null, null, false));
 
         final List<Param> oldParams = new ArrayList<>();
-        oldParams.add(new Param(null, "B", null, defaultValue, description, null));
-        oldParams.add(new Param(null, "D", null, defaultValue, description, null));
-        oldParams.add(new Param(null, "F", null, defaultValue, description, null));
-        oldParams.add(new Param(null, "E", null, defaultValue, description, null));*/
+        oldParams.add(new Param(null, "B", null, null, null, null, false));
+        oldParams.add(new Param(null, "D", null, null, null, null, false));
+        oldParams.add(new Param(null, "F", null, null, null, null, false));
+        oldParams.add(new Param(null, "E", null, null, null, null, false));
 
         //deletedParams should be D,E
         //addedParams should be A,C
 
-        /*final List<Param> deletedParams = new ArrayList<>();
+        final List<Param> deletedParams = new ArrayList<>();
         final List<Param> addedParams = new ArrayList<>();
 
         if (oldParams.isEmpty() && !newParams.isEmpty()) {
@@ -44,7 +49,7 @@ public class MyClass {
 
 
         System.out.println("Deleted params: " + deletedParams);
-        System.out.println("Added params: " + addedParams);*/
+        System.out.println("Added params: " + addedParams);
     }
 
 

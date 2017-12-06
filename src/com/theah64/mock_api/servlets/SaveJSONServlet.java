@@ -25,13 +25,15 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     private static final String KEY_RESPONSE = "response";
     private static final String KEY_RESPONSE_ID = "response_id";
 
-    public static final String KEY_REQ_DATA_TYPES = "req_data_types";
-    public static final String KEY_REQ_DEFAULT_VALUES = "req_default_values";
-    public static final String KEY_REQ_DESCRIPTIONS = "req_descriptions";
+    public static final String KEY_REQ_DATA_TYPES = "req_data_types[]";
+    public static final String KEY_REQ_DEFAULT_VALUES = "req_default_values[]";
+    public static final String KEY_REQ_DESCRIPTIONS = "req_descriptions[]";
 
-    private static final String KEY_OPT_DATA_TYPES = "opt_data_types";
-    private static final String KEY_OPT_DEFAULT_VALUES = "opt_default_values";
-    private static final String KEY_OPT_DESCRIPTIONS = "opt_descriptions";
+    private static final String KEY_OPT_DATA_TYPES = "opt_data_types[]";
+    private static final String KEY_OPT_DEFAULT_VALUES = "opt_default_values[]";
+    private static final String KEY_OPT_DESCRIPTIONS = "opt_descriptions[]";
+    public static final String KEY_REQUIRED_PARAMS = "required_params[]";
+    public static final String KEY_OPTIONAL_PARAMS = "optional_params[]";
 
     @Override
     protected boolean isSecureServlet() {
@@ -65,7 +67,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final List<Param> requiredParams = new ArrayList<>();
         final List<Param> optionalParams = new ArrayList<>();
 
-        final String reqParamNames[] = getStringParameterArray(Routes.KEY_REQUIRED_PARAMS);
+        final String reqParamNames[] = getStringParameterArray(KEY_REQUIRED_PARAMS);
         System.out.println("OK:" + Arrays.toString(reqParamNames));
         final String reqParamDataTypes[] = getStringParameterArray(KEY_REQ_DATA_TYPES);
         final String reqParamDefaultValues[] = getStringParameterArray(KEY_REQ_DEFAULT_VALUES);
@@ -89,7 +91,8 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String optParamDefaultValues[] = getStringParameterArray(KEY_OPT_DEFAULT_VALUES);
         final String optParamDescriptions[] = getStringParameterArray(KEY_OPT_DESCRIPTIONS);
 
-        if (optParamNames != null) {
+        if (optParamDataTypes != null) {
+
             for (int i = 0; i < optParamNames.length; i++) {
 
                 final String optParamName = optParamNames[i].replaceAll("\\s+", "_");

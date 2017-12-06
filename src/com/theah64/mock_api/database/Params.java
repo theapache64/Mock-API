@@ -57,14 +57,21 @@ public class Params extends BaseTable<Param> {
 
     public void addParams(final java.sql.Connection con, List<Param> params) throws SQLException {
         //Move required params
-        String reqInsQuery = "INSERT INTO params (name, route_id, is_required) VALUES (?,?,?);";
+        String reqInsQuery = "INSERT INTO params (name, route_id, is_required,data_type,default_value,description) VALUES (?,?,?,?,?,?);";
         final PreparedStatement ps1 = con.prepareStatement(reqInsQuery);
         for (final Param param : params) {
             ps1.setString(1, param.getName());
             ps1.setString(2, param.getRouteId());
             ps1.setBoolean(3, param.isRequired());
+            ps1.setString(4, param.getDataType());
+            ps1.setString(5, param.getDefaultValue());
+            ps1.setString(6, param.getDescription());
             ps1.executeUpdate();
+
+            System.out.println("Added: " + param.toStringAll());
         }
+
+
         ps1.close();
     }
 
@@ -109,7 +116,7 @@ public class Params extends BaseTable<Param> {
         return params;
     }
 
-    public void updateParamFromRoute(Route route) throws SQLException {
+    void updateParamFromRoute(Route route) {
 
         //Get new params
         final List<Param> newParams = new ArrayList<>();
@@ -121,6 +128,7 @@ public class Params extends BaseTable<Param> {
         final List<Param> oldParams = getAll(COLUMN_ROUTE_ID, route.getId());
         final List<Param> deletedParams = new ArrayList<>();
         final List<Param> addedParams = new ArrayList<>();
+        final List<Param> updatedParams = new ArrayList<>();
 
         if (oldParams.isEmpty() && !newParams.isEmpty()) {
             addedParams.addAll(newParams);
@@ -150,30 +158,37 @@ public class Params extends BaseTable<Param> {
 
         java.sql.Connection con = Connection.getConnection();
 
-        if (!deletedParams.isEmpty()) {
-            //Delete params
-            final String delQuery = "DELETE FROM params WHERE route_id = ? AND name = ?;";
-            final PreparedStatement ps = con.prepareStatement(delQuery);
-            for (Param delParam : deletedParams) {
-                ps.setString(1, route.getId());
-                ps.setString(2, delParam.getName());
-                ps.executeUpdate();
+        try {
+
+            if (!deletedParams.isEmpty()) {
+
+                //Delete params
+                final String delQuery = "DELETE FROM params WHERE route_id = ? AND name = ?;";
+                final PreparedStatement ps = con.prepareStatement(delQuery);
+                for (Param delParam : deletedParams) {
+                    ps.setString(1, route.getId());
+                    ps.setString(2, delParam.getName());
+                    ps.executeUpdate();
+                }
+                ps.close();
             }
-            ps.close();
+
+            if (!addedParams.isEmpty()) {
+                addParams(con, addedParams);
+            }
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
-        if (!addedParams.isEmpty()) {
-            //added params
-            String reqInsQuery = "INSERT INTO params (name, route_id, is_required) VALUES (?,?,?);";
-            final PreparedStatement ps1 = con.prepareStatement(reqInsQuery);
-            for (final Param addedParam : addedParams) {
-                ps1.setString(1, addedParam.getName());
-                ps1.setString(2, route.getId());
-                ps1.setBoolean(3, addedParam.isRequired());
-                ps1.executeUpdate();
-            }
-            ps1.close();
-        }
 
     }
 

@@ -60,8 +60,21 @@ public class Param {
         return result;
     }
 
+
     @Override
     public String toString() {
         return name;
+    }
+
+    public String toStringAll() {
+        return "Param{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", routeId='" + routeId + '\'' +
+                ", dataType='" + dataType + '\'' +
+                ", defaultValue='" + defaultValue + '\'' +
+                ", description='" + description + '\'' +
+                ", isRequired=" + isRequired +
+                '}';
     }
 }
