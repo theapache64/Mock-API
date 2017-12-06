@@ -4,6 +4,7 @@ import com.theah64.mock_api.database.ParamResponses;
 import com.theah64.mock_api.database.Params;
 import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.Routes;
+import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.ParamResponse;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.HeaderSecurity;
@@ -42,21 +43,12 @@ public class GetJSONServlet extends AdvancedBaseServlet {
             final String projectName = pathInfo.getPart(1);
             final String routeName = pathInfo.getPartFrom(2);
             route = Routes.getInstance().get(projectName, routeName);
-            System.out.println("Required param is " + route.getRequiredParams());
-            if (route.getRequiredParams() != null) {
-                final String[] reqParams = route.getRequiredParams().split(",");
-                for (final String reqParam : reqParams) {
-                    System.out.println(reqParam);
-                }
-                return reqParams;
-            }
+            return (String[]) route.getRequiredParams().toArray();
 
         } catch (PathInfo.PathInfoException | SQLException e) {
             e.printStackTrace();
             throw new Request.RequestException(e.getMessage());
         }
-
-        return null;
     }
 
     @Override
@@ -137,19 +129,19 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
             //Input throw back
             if (route.getRequiredParams() != null) {
-                final String[] reqParams = route.getRequiredParams().split(",");
-                for (final String reqParam : reqParams) {
-                    final String value = getStringParameter(reqParam);
-                    jsonResp = jsonResp.replace("{" + reqParam + "}", value);
+                final List<Param> reqParams = route.getRequiredParams();
+                for (final Param reqParam : reqParams) {
+                    final String value = getStringParameter(reqParam.getName());
+                    jsonResp = jsonResp.replace("{" + reqParam.getName() + "}", value);
                 }
             }
 
             if (route.getOptionalParams() != null) {
-                final String[] optParams = route.getOptionalParams().split(",");
-                for (final String optParam : optParams) {
-                    final String value = getStringParameter(optParam);
+                final List<Param> optParams = route.getOptionalParams();
+                for (final Param optParam : optParams) {
+                    final String value = getStringParameter(optParam.getName());
                     if (value != null && !value.trim().isEmpty()) {
-                        jsonResp = jsonResp.replace("{" + optParam + "}", value);
+                        jsonResp = jsonResp.replace("{" + optParam.getName() + "}", value);
                     }
                 }
             }
@@ -163,6 +155,4 @@ public class GetJSONServlet extends AdvancedBaseServlet {
             throw new Request.RequestException(e.getMessage());
         }
     }
-
-    private static final String KEY_RANDOM_NAME = "\\{randomName\\}";
 }

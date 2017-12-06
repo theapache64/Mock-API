@@ -4,16 +4,22 @@ package com.theah64.mock_api.models;
  * Created by theapache64 on 30/11/17.
  */
 public class Param {
-    private final String id, name, routeId, defaultValue, description;
+    private final String id, name, routeId, dataType, defaultValue, description;
     private final boolean isRequired;
 
-    public Param(String id, String name, String routeId, String defaultValue, String description, boolean isRequired) {
+    public Param(String id, String name, String routeId, String dataType, String defaultValue, String description, boolean isRequired) {
         this.id = id;
         this.name = name;
         this.routeId = routeId;
+        this.dataType = dataType;
         this.defaultValue = defaultValue;
         this.description = description;
         this.isRequired = isRequired;
+    }
+
+
+    public String getDataType() {
+        return dataType;
     }
 
     public String getId() {

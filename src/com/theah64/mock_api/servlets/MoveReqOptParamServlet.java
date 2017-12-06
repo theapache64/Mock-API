@@ -49,14 +49,15 @@ public class MoveReqOptParamServlet extends HttpServlet {
             stmt.close();
 
             System.out.println("Total routes: " + routes.size());
+
             for (final Route route : routes) {
 
                 if (route.getRequiredParams() != null) {
-                    Params.getInstance().addParams(con, route, true);
+                    Params.getInstance().addParams(con, route.getRequiredParams());
                 }
 
                 if (route.getOptionalParams() != null) {
-                    Params.getInstance().addParams(con, route, false);
+                    Params.getInstance().addParams(con, route.getOptionalParams());
                 }
             }
 

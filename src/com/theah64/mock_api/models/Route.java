@@ -1,7 +1,10 @@
 package com.theah64.mock_api.models;
 
+import com.sun.istack.internal.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by theapache64 on 14/5/17.
@@ -11,26 +14,36 @@ public class Route {
     private final String projectId;
     private final String name;
     private final String defaultResponse;
-    private final String requiredParams;
-    private final String optionalParams;
     private final String description;
     private final String externalApiUrl;
     private boolean isSecure;
     private final long delay;
     private final long updatedInMillis;
+    private final List<Param> requiredParams;
+    private final List<Param> optionalParams;
 
-    public Route(String id, String projectId, String route, String response, String requiredParams, String optionalParams, String description, String externalApiUrl, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
+    public Route(String id, String projectId, String route, String response, String description, String externalApiUrl, List<Param> requiredParams, List<Param> optionalParams, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
         this.id = id;
         this.projectId = projectId;
         this.name = route;
         this.defaultResponse = response != null ? new JSONObject(response).toString() : null;
-        this.requiredParams = requiredParams;
-        this.optionalParams = optionalParams;
         this.description = description;
         this.externalApiUrl = externalApiUrl;
+        this.requiredParams = requiredParams;
+        this.optionalParams = optionalParams;
         this.isSecure = isSecure;
         this.delay = delay;
         this.updatedInMillis = updatedInMillis;
+    }
+
+    @NotNull
+    public List<Param> getRequiredParams() {
+        return requiredParams;
+    }
+
+    @NotNull
+    public List<Param> getOptionalParams() {
+        return optionalParams;
     }
 
     public long getUpdatedInMillis() {
@@ -53,13 +66,6 @@ public class Route {
         return delay;
     }
 
-    public String getRequiredParams() {
-        return requiredParams;
-    }
-
-    public String getOptionalParams() {
-        return optionalParams;
-    }
 
     public String getId() {
         return id;

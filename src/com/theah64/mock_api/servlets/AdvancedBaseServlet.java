@@ -2,8 +2,8 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.HeaderSecurity;
-import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
+import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 
@@ -156,6 +156,11 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
     long getLongParameter(String key) {
         return request.getLongParameter(key);
     }
+
+    public String[] getStringParameterArray(String key) {
+        return request.getStringParameters(key);
+    }
+
 
     public class ServletException extends Exception {
         public ServletException(String message) {

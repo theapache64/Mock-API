@@ -1,5 +1,6 @@
 package com.theah64.mock_api.database;
 
+import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
 import com.theah64.webengine.database.BaseTable;
 import com.theah64.webengine.database.Connection;
@@ -19,13 +20,13 @@ public class Routes extends BaseTable<Route> {
     private static final Routes instance = new Routes();
     public static final String COLUMN_DEFAULT_RESPONSE = "default_response";
     public static final String COLUMN_PROJECT_ID = "project_id";
-    public static final String COLUMN_REQUIRED_PARAMS = "required_params";
-    public static final String COLUMN_OPTIONAL_PARAMS = "optional_params";
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_IS_SECURE = "is_secure";
     public static final String COLUMN_DELAY = "delay";
     public static final String COLUMN_EXTERNAL_API_URL = "external_api_url";
     public static final String COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis";
+    public static final String KEY_REQUIRED_PARAMS = "required_params";
+    public static final String KEY_OPTIONAL_PARAMS = "optional_params";
 
     private Routes() {
         super("routes");
@@ -60,7 +61,6 @@ public class Routes extends BaseTable<Route> {
             rs.close();
             ps0.close();
 
-            //TODO: Add req/opt params
             route.setId(id);
             Params.getInstance().addParamsFromRoute(route);
 
@@ -79,6 +79,7 @@ public class Routes extends BaseTable<Route> {
     }
 
     public List<Route> getAll(final String projectId) throws SQLException {
+
         List<Route> jsonList = null;
         final String query = "SELECT id, name, external_api_url FROM routes WHERE project_id = ? AND is_active = 1 ORDER BY updated_at_in_millis DESC";
         String error = null;
@@ -98,7 +99,7 @@ public class Routes extends BaseTable<Route> {
                     final String route = rs.getString(COLUMN_NAME);
                     final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
 
-                    jsonList.add(new Route(id, null, route, null, null, null, null, externalApiUrl, false, 0, -1));
+                    jsonList.add(new Route(id, projectId, route, null, null, externalApiUrl, null, null, false, 0, -1));
 
                 } while (rs.next());
             }
@@ -130,7 +131,7 @@ public class Routes extends BaseTable<Route> {
     public Route get(String projectName, String routeName) throws SQLException {
         String error = null;
         Route route = null;
-        final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, (SELECT GROUP_CONCAT(name) FROM params WHERE route_id = r.id AND is_required = 1) AS required_params, (SELECT GROUP_CONCAT(name) FROM params WHERE route_id = r.id AND is_required = 0) AS optional_params, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
+        final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -140,15 +141,25 @@ public class Routes extends BaseTable<Route> {
             if (rs.first()) {
                 final String id = rs.getString(COLUMN_ID);
                 final String response = rs.getString(COLUMN_DEFAULT_RESPONSE);
-                final String reqPar = rs.getString(COLUMN_REQUIRED_PARAMS);
-                final String opPar = rs.getString(COLUMN_OPTIONAL_PARAMS);
                 final String description = rs.getString(COLUMN_DESCRIPTION);
                 final boolean isSecure = rs.getBoolean(COLUMN_IS_SECURE);
                 final long delay = rs.getLong(COLUMN_DELAY);
                 final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
                 final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
 
-                route = new Route(id, null, routeName, response, reqPar, opPar, description, externalApiUrl, isSecure, delay, updatedInMillis);
+                final List<Param> allParams = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, id);
+                final List<Param> reqPars = new ArrayList<>();
+                final List<Param> optPars = new ArrayList<>();
+
+                for (final Param param : allParams) {
+                    if (param.isRequired()) {
+                        reqPars.add(param);
+                    } else {
+                        optPars.add(param);
+                    }
+                }
+
+                route = new Route(id, null, routeName, response, description, externalApiUrl, reqPars, optPars, isSecure, delay, updatedInMillis);
             }
             rs.close();
             ps.close();

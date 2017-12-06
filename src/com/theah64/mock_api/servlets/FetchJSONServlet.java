@@ -2,12 +2,13 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.Routes;
+import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Response;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.APIResponse;
-import com.theah64.webengine.utils.PathInfo;
 import com.theah64.mock_api.utils.TimeUtils;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
+import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,8 +70,23 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         }
 
         joJson.put("responses", jaResponses);
-        joJson.put(Routes.COLUMN_REQUIRED_PARAMS, route.getRequiredParams());
-        joJson.put(Routes.COLUMN_OPTIONAL_PARAMS, route.getOptionalParams());
+
+        final JSONArray jaReqParams = new JSONArray();
+        final JSONArray jaOptParams = new JSONArray();
+
+        //Adding required params
+        for (final Param reqParam : route.getRequiredParams()) {
+            addParam(jaReqParams, reqParam);
+        }
+
+        //Adding optional params
+        for (final Param optParam : route.getOptionalParams()) {
+            addParam(jaOptParams, optParam);
+        }
+
+
+        joJson.put(Routes.KEY_REQUIRED_PARAMS, jaReqParams);
+        joJson.put(Routes.KEY_OPTIONAL_PARAMS, jaOptParams);
         joJson.put(Routes.COLUMN_EXTERNAL_API_URL, route.getExternalApiUrl());
         joJson.put(Routes.COLUMN_IS_SECURE, route.isSecure());
         joJson.put(Routes.COLUMN_DELAY, route.getDelay());
@@ -83,11 +99,24 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
     }
 
-    public static String getDummyParams(String requiredParams) {
+    private void addParam(JSONArray jaParams, Param param) throws JSONException {
+        final JSONObject joParam = new JSONObject();
+        joParam.put("id", param.getId());
+        joParam.put("name", param.getName());
+        joParam.put("data_type", param.getDataType());
+        joParam.put("default_value", param.getDefaultValue());
+        joParam.put("description", param.getDescription());
+        jaParams.put(joParam);
+    }
+
+    public static String getDummyParams(List<Param> requiredParams) {
+        final StringBuilder dummyParamBuilder = new StringBuilder();
         if (requiredParams != null && !requiredParams.isEmpty()) {
-            return requiredParams.replaceAll(",", "=sampleParam&") + "=sampleParam";
+            for (final Param param : requiredParams) {
+                dummyParamBuilder.append(param.getName()).append("=sampleParam&");
+            }
         }
-        return "";
+        return dummyParamBuilder.toString();
     }
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");

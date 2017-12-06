@@ -1,5 +1,6 @@
 <%@ page import="com.theah64.mock_api.database.Routes" %>
 <%@ page import="com.theah64.mock_api.models.Route" %>
+<%@ page import="com.theah64.mock_api.servlets.SaveJSONServlet" %>
 <%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
@@ -515,6 +516,8 @@
                         url: "fetch_json/<%=project.getName()%>/" + route,
                         success: function (data) {
 
+                            console.log(data);
+
                             //Changing browser url without reloading the page
 
                             stopLoading(true);
@@ -553,8 +556,43 @@
                                 $("a#aParamResp").attr('href', 'param_resp.jsp?api_key=<%=project.getApiKey()%>&route_name=' + route);
                                 $("div#response_panel").css('visibility', 'visible');
 
-                                $("input#required_params").val(data.data.required_params);
-                                $("input#optional_params").val(data.data.optional_params);
+                                //$("input#required_params").val(data.data.required_params);
+                                //$("input#optional_params").val(data.data.optional_params);
+
+
+                                //Reseting req para
+                                $("form#fReqParam").html("");
+
+                                //Looping through required params
+                                $.each(data.data.required_params, function (i, item) {
+
+                                    var paramRow = $("div#dParamRow");
+
+                                    var sDataTypesId = "sDataTypes" + item.id;
+                                    $(paramRow).find("select.sDataTypes").attr('id', sDataTypesId);
+
+                                    var iNameId = "iName" + item.id;
+                                    $(paramRow).find("input.iNames").attr('id', iNameId);
+
+                                    var iDefauleValuesId = "iDefaultValue" + item.id;
+                                    $(paramRow).find("input.iDefaultValues").attr('id', iDefauleValuesId);
+
+                                    var taDescriptionsId = "taDescription" + item.id;
+                                    $("#" + taDescriptionsId).val(item.description);
+
+                                    $("form#fReqParam").append(paramRow.html());
+
+
+                                    $("input#" + iNameId).val(item.name).attr('name', '<%=Routes.KEY_REQUIRED_PARAMS%>[]');
+                                    $("select#" + sDataTypesId).val(item.data_type).attr('name', '<%=SaveJSONServlet.KEY_REQ_DATA_TYPES%>[]');
+                                    $("input#" + iDefauleValuesId).val(item.default_value).attr('name', '<%=SaveJSONServlet.KEY_REQ_DEFAULT_VALUES%>[]');
+                                    $("textarea#" + taDescriptionsId).val(item.descriptions).attr('name', '<%=SaveJSONServlet.KEY_REQ_DESCRIPTIONS%>[]');
+
+                                    //Setting names
+
+
+                                });
+
                                 $("input#external_api_url").val(data.data.external_api_url);
 
                                 //Setting last modified
@@ -625,7 +663,8 @@
                 resultDiv.hide();
                 var route = $("input#route").val();
                 var response = editor.getDoc().getValue();
-                var reqParams = $("input#required_params").val();
+                var reqParams = $("form#fReqParam").serialize();
+                console.log("OKOK:" + reqParams);
                 var opParams = $("input#optional_params").val();
                 var isSecure = $("input#is_secure").is(":checked") ? true : false;
                 var delay = $("input#delay").val();
@@ -646,13 +685,11 @@
                         name: route,
                         response_id: $('select#responses :selected').val(),
                         response: response,
-                        required_params: reqParams,
                         optional_params: opParams,
                         external_api_url: external_api_url,
                         is_secure: isSecure,
                         delay: delay,
                         description: description
-
                     },
                     success: function (data) {
                         stopLoading(true);
@@ -895,6 +932,17 @@
 
             });
 
+
+            $("a#aAddReqParam").on('click', function () {
+                var paramRow = $("div#dParamRow").html();
+
+                $("form#fReqParam").append(paramRow);
+            });
+
+            $(".fParam").on('click', 'a.aCloseParam', function () {
+                $(this).parent().parent().remove();
+            });
+
         });
     </script>
     <style>
@@ -975,12 +1023,49 @@
         </div>
 
 
+        <div id="dParamRow" style="display: none">
+
+            <div class="row" style="margin-bottom: 10px;">
+
+                <div class="col-md-3">
+                    <input class="iNames form-control" type="text" placeholder="Name"><br>
+                </div>
+
+                <div class="col-md-2">
+                    <select class="sDataTypes form-control">
+                        <option value="String">String</option>
+                        <option value="Integer">Integer</option>
+                        <option value="Long">Long</option>
+                        <option value="Float">Float</option>
+                        <option value="Double">Double</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <input class="iDefaultValues form-control" type="text" placeholder="Default value"><br>
+                </div>
+
+                <div class="col-md-3">
+                    <textarea class="taDescriptions form-control" placeholder="Description"></textarea>
+                </div>
+
+                <div class="col-md-1">
+                    <a class="btn aCloseParam btn-danger pull-right"> <b>&times;</b> </a>
+                </div>
+
+            </div>
+        </div>
+
         <%--Add new route panel--%>
         <div class="col-md-10">
             <label for="route">Route</label>
             <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route"><br>
-            <label for="required_params">Required params</label>
-            <input class="form-control" type="text" id="required_params" placeholder="Required params"><br>
+            <label for="fReqParam">Required params</label> <a id="aAddReqParam" href="#"> (Add param)</a>
+
+            <form id="fReqParam" class="fParam">
+
+            </form>
+
             <label for="optional_params">Optional params</label>
             <input class="form-control" type="text" id="optional_params" placeholder="Optional params"><br>
             <label for="external_api_url">External API URL</label>

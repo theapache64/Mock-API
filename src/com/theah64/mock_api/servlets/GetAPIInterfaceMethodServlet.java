@@ -1,6 +1,7 @@
 package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Routes;
+import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.CodeGen;
 import com.theah64.webengine.utils.PathInfo;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by theapache64 on 28/11/17.
@@ -74,18 +76,18 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
             boolean hasParams = false;
             if (route.getRequiredParams() != null) {
                 hasParams = true;
-                final String[] reqParams = route.getRequiredParams().split(",");
-                for (final String reqParam : reqParams) {
-                    codeBuilder.append(String.format("\n@Query(\"%s\") String %s,", reqParam, CodeGen.toCamelCase(reqParam)));
+                final List<Param> reqParams = route.getRequiredParams();
+                for (final Param reqParam : reqParams) {
+                    codeBuilder.append(String.format("\n@Query(\"%s\") String %s,", reqParam, CodeGen.toCamelCase(reqParam.getName())));
                 }
             }
 
 
-            if (route.getOptionalParams() != null) {
+            if (!route.getOptionalParams().isEmpty()) {
                 hasParams = true;
-                final String[] optParams = route.getOptionalParams().split(",");
-                for (final String optParam : optParams) {
-                    codeBuilder.append(String.format("\n\t\t\t\t\t\t\t\t@Query(\"%s\") String %s,", optParam, CodeGen.toCamelCase(optParam)));
+                final List<Param> optParams = route.getOptionalParams();
+                for (final Param optParam : optParams) {
+                    codeBuilder.append(String.format("\n\t\t\t\t\t\t\t\t@Query(\"%s\") String %s,", optParam, CodeGen.toCamelCase(optParam.getName())));
                 }
             }
 
