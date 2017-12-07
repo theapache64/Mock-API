@@ -1,5 +1,6 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.database.Params;
 import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.Param;
@@ -32,6 +33,11 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/fetch_json/*"})
 public class FetchJSONServlet extends AdvancedBaseServlet {
 
+
+    private static final String KEY_DUMMY_PARAMS = "dummy_params";
+    private static final String KEY_LAST_MODIFIED = "last_modified";
+    private static final String KEY_LAST_MODIFIED_DATE = "last_modified_date";
+    private static final String KEY_RESPONSES = "responses";
 
     @Override
     protected boolean isSecureServlet() {
@@ -69,52 +75,41 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
             jaResponses.put(joResponse);
         }
 
-        joJson.put("responses", jaResponses);
+        joJson.put(KEY_RESPONSES, jaResponses);
 
-        final JSONArray jaReqParams = new JSONArray();
-        final JSONArray jaOptParams = new JSONArray();
+        final JSONArray jaParams = new JSONArray();
 
         //Adding required params
-        for (final Param reqParam : route.getRequiredParams()) {
-            addParam(jaReqParams, reqParam);
+        for (final Param param : route.getParams()) {
+            final JSONObject joParam = new JSONObject();
+            joParam.put(Params.COLUMN_ID, param.getId());
+            joParam.put(Params.COLUMN_NAME, param.getName());
+            joParam.put(Params.COLUMN_DATA_TYPE, param.getDataType());
+            joParam.put(Params.COLUMN_DEFAULT_VALUE, param.getDefaultValue());
+            joParam.put(Params.COLUMN_DESCRIPTION, param.getDescription());
+            joParam.put(Params.COLUMN_IS_REQUIRED, param.isRequired());
+            jaParams.put(joParam);
         }
 
-        //Adding optional params
-        for (final Param optParam : route.getOptionalParams()) {
-            addParam(jaOptParams, optParam);
-        }
 
-
-        joJson.put(Routes.KEY_REQUIRED_PARAMS, jaReqParams);
-        joJson.put(Routes.KEY_OPTIONAL_PARAMS, jaOptParams);
+        joJson.put(Routes.KEY_PARAMS, jaParams);
         joJson.put(Routes.COLUMN_EXTERNAL_API_URL, route.getExternalApiUrl());
         joJson.put(Routes.COLUMN_IS_SECURE, route.isSecure());
         joJson.put(Routes.COLUMN_DELAY, route.getDelay());
         joJson.put(Routes.COLUMN_DESCRIPTION, route.getDescription());
 
-        joJson.put("dummy_params", getDummyParams(route.getRequiredParams()));
-        joJson.put("last_modified", TimeUtils.millisToLongDHMS(route.getUpdatedInMillis()) + " ago");
-        joJson.put("last_modified_date", getIndianDate(route.getUpdatedInMillis()));
+        joJson.put(KEY_DUMMY_PARAMS, getDummyParams(route.filterRequiredParams()));
+        joJson.put(KEY_LAST_MODIFIED, TimeUtils.millisToLongDHMS(route.getUpdatedInMillis()) + " ago");
+        joJson.put(KEY_LAST_MODIFIED_DATE, getIndianDate(route.getUpdatedInMillis()));
 
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
     }
 
-    private void addParam(JSONArray jaParams, Param param) throws JSONException {
-        final JSONObject joParam = new JSONObject();
-        joParam.put("id", param.getId());
-        joParam.put("name", param.getName());
-        joParam.put("data_type", param.getDataType());
-        joParam.put("default_value", param.getDefaultValue());
-        joParam.put("description", param.getDescription());
-        jaParams.put(joParam);
-    }
 
-    public static String getDummyParams(List<Param> requiredParams) {
+    public static String getDummyParams(String[] requiredParams) {
         final StringBuilder dummyParamBuilder = new StringBuilder();
-        if (requiredParams != null && !requiredParams.isEmpty()) {
-            for (final Param param : requiredParams) {
-                dummyParamBuilder.append(param.getName()).append("=sampleParam&");
-            }
+        for (final String param : requiredParams) {
+            dummyParamBuilder.append(param).append("=sampleParam&");
         }
         return dummyParamBuilder.toString();
     }

@@ -1,9 +1,9 @@
 package com.theah64.mock_api.models;
 
-import com.sun.istack.internal.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,31 +19,23 @@ public class Route {
     private boolean isSecure;
     private final long delay;
     private final long updatedInMillis;
-    private final List<Param> requiredParams;
-    private final List<Param> optionalParams;
+    private final List<Param> params;
 
-    public Route(String id, String projectId, String route, String response, String description, String externalApiUrl, List<Param> requiredParams, List<Param> optionalParams, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
+    public Route(String id, String projectId, String route, String response, String description, String externalApiUrl, List<Param> params, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
         this.id = id;
         this.projectId = projectId;
         this.name = route;
         this.defaultResponse = response != null ? new JSONObject(response).toString() : null;
         this.description = description;
         this.externalApiUrl = externalApiUrl;
-        this.requiredParams = requiredParams;
-        this.optionalParams = optionalParams;
+        this.params = params;
         this.isSecure = isSecure;
         this.delay = delay;
         this.updatedInMillis = updatedInMillis;
     }
 
-    @NotNull
-    public List<Param> getRequiredParams() {
-        return requiredParams;
-    }
-
-    @NotNull
-    public List<Param> getOptionalParams() {
-        return optionalParams;
+    public List<Param> getParams() {
+        return params;
     }
 
     public long getUpdatedInMillis() {
@@ -86,4 +78,16 @@ public class Route {
     public void setId(String id) {
         this.id = id;
     }
+
+    public String[] filterRequiredParams() {
+        final List<String> reqParams = new ArrayList<>();
+        for (final Param param : getParams()) {
+            if (param.isRequired()) {
+                reqParams.add(param.getName());
+            }
+        }
+        return reqParams.toArray(new String[]{});
+    }
+
+
 }

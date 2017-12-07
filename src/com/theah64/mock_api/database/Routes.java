@@ -25,8 +25,7 @@ public class Routes extends BaseTable<Route> {
     public static final String COLUMN_DELAY = "delay";
     public static final String COLUMN_EXTERNAL_API_URL = "external_api_url";
     public static final String COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis";
-    public static final String KEY_REQUIRED_PARAMS = "required_params";
-    public static final String KEY_OPTIONAL_PARAMS = "optional_params";
+    public static final String KEY_PARAMS = "params";
 
     private Routes() {
         super("routes");
@@ -99,7 +98,7 @@ public class Routes extends BaseTable<Route> {
                     final String route = rs.getString(COLUMN_NAME);
                     final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
 
-                    jsonList.add(new Route(id, projectId, route, null, null, externalApiUrl, null, null, false, 0, -1));
+                    jsonList.add(new Route(id, projectId, route, null, null, externalApiUrl, null, false, 0, -1));
 
                 } while (rs.next());
             }
@@ -148,18 +147,8 @@ public class Routes extends BaseTable<Route> {
                 final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
 
                 final List<Param> allParams = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, id);
-                final List<Param> reqPars = new ArrayList<>();
-                final List<Param> optPars = new ArrayList<>();
 
-                for (final Param param : allParams) {
-                    if (param.isRequired()) {
-                        reqPars.add(param);
-                    } else {
-                        optPars.add(param);
-                    }
-                }
-
-                route = new Route(id, null, routeName, response, description, externalApiUrl, reqPars, optPars, isSecure, delay, updatedInMillis);
+                route = new Route(id, null, routeName, response, description, externalApiUrl, allParams, isSecure, delay, updatedInMillis);
             }
             rs.close();
             ps.close();

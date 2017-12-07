@@ -43,7 +43,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
             final String projectName = pathInfo.getPart(1);
             final String routeName = pathInfo.getPartFrom(2);
             route = Routes.getInstance().get(projectName, routeName);
-            return (String[]) route.getRequiredParams().toArray();
+            return route.filterRequiredParams();
 
         } catch (PathInfo.PathInfoException | SQLException e) {
             e.printStackTrace();
@@ -128,23 +128,16 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
 
             //Input throw back
-            if (route.getRequiredParams() != null) {
-                final List<Param> reqParams = route.getRequiredParams();
-                for (final Param reqParam : reqParams) {
-                    final String value = getStringParameter(reqParam.getName());
-                    jsonResp = jsonResp.replace("{" + reqParam.getName() + "}", value);
-                }
-            }
-
-            if (route.getOptionalParams() != null) {
-                final List<Param> optParams = route.getOptionalParams();
-                for (final Param optParam : optParams) {
-                    final String value = getStringParameter(optParam.getName());
+            if (route.getParams() != null) {
+                final List<Param> reqParams = route.getParams();
+                for (final Param params : reqParams) {
+                    final String value = getStringParameter(params.getName());
                     if (value != null && !value.trim().isEmpty()) {
-                        jsonResp = jsonResp.replace("{" + optParam.getName() + "}", value);
+                        jsonResp = jsonResp.replace("{" + params.getName() + "}", value);
                     }
                 }
             }
+
 
             jsonResp = RandomResponseGenerator.generate(jsonResp);
             System.out.println(jsonResp);

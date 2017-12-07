@@ -13,7 +13,6 @@ import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,15 +24,12 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     private static final String KEY_RESPONSE = "response";
     private static final String KEY_RESPONSE_ID = "response_id";
 
-    public static final String KEY_REQ_DATA_TYPES = "req_data_types[]";
-    public static final String KEY_REQ_DEFAULT_VALUES = "req_default_values[]";
-    public static final String KEY_REQ_DESCRIPTIONS = "req_descriptions[]";
+    public static final String KEY_DATA_TYPES = "data_types[]";
+    public static final String KEY_DEFAULT_VALUES = "default_values[]";
+    public static final String KEY_DESCRIPTIONS = "descriptions[]";
+    public static final String KEY_IS_REQUIRED = "is_required[]";
 
-    private static final String KEY_OPT_DATA_TYPES = "opt_data_types[]";
-    private static final String KEY_OPT_DEFAULT_VALUES = "opt_default_values[]";
-    private static final String KEY_OPT_DESCRIPTIONS = "opt_descriptions[]";
-    public static final String KEY_REQUIRED_PARAMS = "required_params[]";
-    public static final String KEY_OPTIONAL_PARAMS = "optional_params[]";
+    public static final String KEY_PARAMS = "params[]";
 
     @Override
     protected boolean isSecureServlet() {
@@ -64,45 +60,31 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             Responses.getInstance().update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response);
         }
 
-        final List<Param> requiredParams = new ArrayList<>();
-        final List<Param> optionalParams = new ArrayList<>();
+        final List<Param> params = new ArrayList<>();
 
-        final String reqParamNames[] = getStringParameterArray(KEY_REQUIRED_PARAMS);
-        System.out.println("OK:" + Arrays.toString(reqParamNames));
-        final String reqParamDataTypes[] = getStringParameterArray(KEY_REQ_DATA_TYPES);
-        final String reqParamDefaultValues[] = getStringParameterArray(KEY_REQ_DEFAULT_VALUES);
-        final String reqParamDescriptions[] = getStringParameterArray(KEY_REQ_DESCRIPTIONS);
+        final String paramNames[] = getStringParameterArray(KEY_PARAMS);
+        final String paramDataTypes[] = getStringParameterArray(KEY_DATA_TYPES);
+        final String paramDefaultValues[] = getStringParameterArray(KEY_DEFAULT_VALUES);
+        final String paramDescriptions[] = getStringParameterArray(KEY_DESCRIPTIONS);
+        final String paramIsRequired[] = getStringParameterArray(KEY_IS_REQUIRED);
 
-        if (reqParamNames != null) {
 
-            for (int i = 0; i < reqParamNames.length; i++) {
+        if (paramNames != null) {
 
-                final String reqParamName = reqParamNames[i].replaceAll("\\s+", "_");
-                final String reqParamDataType = reqParamDataTypes[i];
-                final String reqParamDefaultValue = reqParamDefaultValues[i];
-                final String reqParamDescription = reqParamDescriptions[i];
+            for (int i = 0; i < paramNames.length; i++) {
 
-                requiredParams.add(new Param(null, reqParamName, routeId, reqParamDataType, reqParamDefaultValue, reqParamDescription, true));
+                final String paramName = paramNames[i].replaceAll("\\s+", "_");
+                final String paramDataType = paramDataTypes[i];
+                final String paramDefaultValue = paramDefaultValues[i];
+                final String paramDescription = paramDescriptions[i];
+                System.out.println("dESC IS : " + paramDescription);
+                boolean isRequired = paramIsRequired[i].equals("on");
+                System.out.println(paramIsRequired[i]);
+
+                params.add(new Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired));
             }
         }
 
-        final String optParamNames[] = getStringParameterArray(Routes.KEY_OPTIONAL_PARAMS);
-        final String optParamDataTypes[] = getStringParameterArray(KEY_OPT_DATA_TYPES);
-        final String optParamDefaultValues[] = getStringParameterArray(KEY_OPT_DEFAULT_VALUES);
-        final String optParamDescriptions[] = getStringParameterArray(KEY_OPT_DESCRIPTIONS);
-
-        if (optParamDataTypes != null) {
-
-            for (int i = 0; i < optParamNames.length; i++) {
-
-                final String optParamName = optParamNames[i].replaceAll("\\s+", "_");
-                final String optParamDataType = optParamDataTypes[i];
-                final String optParamDefaultValue = optParamDefaultValues[i];
-                final String optParamDescription = optParamDescriptions[i];
-
-                requiredParams.add(new Param(null, optParamName, routeId, optParamDataType, optParamDefaultValue, optParamDescription, false));
-            }
-        }
 
         final String description = getStringParameter(Routes.COLUMN_DESCRIPTION);
         final boolean isSecure = getBooleanParameter(Routes.COLUMN_IS_SECURE);
@@ -114,7 +96,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         }
 
 
-        final Route route = new Route(null, projectId, routeName, defaultResponse, description, externalApiUrl, requiredParams, optionalParams, isSecure, delay, -1);
+        final Route route = new Route(null, projectId, routeName, defaultResponse, description, externalApiUrl, params, isSecure, delay, -1);
 
         if (routeId == null) {
             //Route doesn't exist

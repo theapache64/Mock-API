@@ -21,26 +21,11 @@
     <%@include file="common_headers.jsp" %>
 
     <script>
+
         function setLastModified(message, date) {
             $("p#pLastModified").html("Last modified: <b>" + message + "</b>");
             $("p#pLastModified").attr("title", date);
         }
-
-        function getUrlParameter(sParam) {
-            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-                sURLVariables = sPageURL.split('&'),
-                sParameterName,
-                i;
-
-            for (i = 0; i < sURLVariables.length; i++) {
-                sParameterName = sURLVariables[i].split('=');
-
-                if (sParameterName[0] === sParam) {
-                    return sParameterName[1] === undefined ? true : sParameterName[1];
-                }
-            }
-        }
-
 
         var isAlertResult = false;
         $(document).ready(function () {
@@ -86,13 +71,15 @@
                 editor.focus();
             });
 
-            $("input#route, input#required_params, input#optional_params").on('keyup', function () {
+
+            $("body").on('keyup', "input#route, input.iNames", function () {
                 if (!event.ctrlKey && !event.altKey) {
                     var oldVal = $(this).val();
                     var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/, '_'));
                     $(this).val(newVal);
                 }
             });
+
 
             $("input#route").on('keyup', function () {
                 if (!event.ctrlKey && !event.altKey) {
@@ -556,15 +543,11 @@
                                 $("a#aParamResp").attr('href', 'param_resp.jsp?api_key=<%=project.getApiKey()%>&route_name=' + route);
                                 $("div#response_panel").css('visibility', 'visible');
 
-                                //$("input#required_params").val(data.data.required_params);
-                                //$("input#optional_params").val(data.data.optional_params);
-
-
                                 //Reseting req para
-                                $("form#fReqParam").html("");
+                                $("form#fParam").html("");
 
                                 //Looping through required params
-                                $.each(data.data.required_params, function (i, item) {
+                                $.each(data.data.params, function (i, item) {
 
                                     var paramRow = $("div#dParamRow");
 
@@ -578,15 +561,22 @@
                                     $(paramRow).find("input.iDefaultValues").attr('id', iDefauleValuesId);
 
                                     var taDescriptionsId = "taDescription" + item.id;
-                                    $("#" + taDescriptionsId).val(item.description);
+                                    $(paramRow).find("textarea.taDescriptions").attr('id', taDescriptionsId);
 
-                                    $("form#fReqParam").append(paramRow.html());
+                                    var iIsRequiredId = "iIsRequired" + item.id;
+                                    $(paramRow).find("input.iIsRequired").attr('id', iIsRequiredId);
+
+                                    var iIsRequiredHiddenId = iIsRequiredId + "Hidden";
+                                    $(paramRow).find("input.iIsRequiredHidden").attr('id', iIsRequiredHiddenId);
+
+                                    $("form#fParam").append(paramRow.html());
 
 
                                     $("input#" + iNameId).val(item.name);
                                     $("select#" + sDataTypesId).val(item.data_type);
                                     $("input#" + iDefauleValuesId).val(item.default_value);
-                                    $("textarea#" + taDescriptionsId).val(item.descriptions);
+                                    $("textarea#" + taDescriptionsId).val(item.description);
+                                    $("input#" + iIsRequiredId).prop('checked', item.is_required);
 
                                     //Setting names
 
@@ -613,8 +603,6 @@
                                 $(resultDiv).html("<strong>Failure! </strong> " + data.message + ":" + link);
                                 $(resultDiv).show();
 
-                                $("input#required_params").val("");
-                                $("input#optional_params").val("");
                                 $("input#external_api_url").val("");
                                 $("p#pLastModified").html("");
                                 $("input#route").val("");
@@ -645,8 +633,6 @@
             $("button#bClear").on('click', function () {
                 $("input#route").val("");
                 editor.getDoc().setValue("");
-                $("input#required_params").val("");
-                $("input#optional_params").val("");
                 $("input#external_api_url").val("");
                 $("input#delay").val("");
                 $("textarea#description").val("");
@@ -659,12 +645,31 @@
 
             $("button#bSubmit").on('click', function () {
 
+                $('#fParam *').filter(':input').each(function () {
+                    //your code here
+                    if ($(this).attr('name') === '<%=SaveJSONServlet.KEY_IS_REQUIRED%>') {
+                        var curId = $(this).attr('id');
+                        if (curId.indexOf("Hidden") == -1) {
+                            var hidId = "input#" + curId + "Hidden";
+                            if ($(this).is(":checked")) {
+                                console.log("Disabling hidden:" + hidId);
+                                $(hidId).attr('disabled', true);
+                            } else {
+                                console.log("Enabling hidden:" + hidId);
+                                $(hidId).attr('disabled', false);
+                            }
+                        }
+
+                    }
+                });
+
+                console.log("DONE!");
+
                 var resultDiv = $("div#resultDiv");
                 resultDiv.hide();
                 var route = $("input#route").val();
                 var response = editor.getDoc().getValue();
-                var reqParams = $("form#fReqParam").serialize();
-                console.log("OKOK:" + reqParams);
+                var params = $("form#fParam").serialize();
                 var opParams = $("input#optional_params").val();
                 var isSecure = $("input#is_secure").is(":checked") ? true : false;
                 var delay = $("input#delay").val();
@@ -681,7 +686,7 @@
                         request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
                     },
                     url: "v1/save_json",
-                    data: reqParams +
+                    data: params +
                     "&name=" + route +
                     "&response_id=" + $('select#responses :selected').val() +
                     "&response=" + response +
@@ -741,8 +746,6 @@
                 $("a#aParamResp").prop('disabled', true);
                 $("button#bSubmit").prop('disabled', true);
                 $("div#response_panel").prop('disabled', true);
-                $("input#required_params").prop('disabled', true);
-                $("input#optional_params").prop('disabled', true);
                 $("input#external_api_url").prop('disabled', true);
                 $("button#bClear").prop('disabled', true);
                 $("select#routes").prop('disabled', true);
@@ -768,8 +771,6 @@
                 $("button#bClear").prop('disabled', false);
                 $("select#routes").prop('disabled', false);
                 $("input#route").prop('disabled', false);
-                $("input#required_params").prop('disabled', false);
-                $("input#optional_params").prop('disabled', false);
                 $("input#external_api_url").prop('disabled', false);
                 $("input#delay").prop('disabled', false);
                 $("textarea#description").prop('disabled', false);
@@ -934,7 +935,7 @@
 
             $("a#aAddReqParam").on('click', function () {
                 var paramRow = $("div#dParamRow").html();
-                $("form#fReqParam").append(paramRow);
+                $("form#fParam").append(paramRow);
             });
 
             $(".fParam").on('click', 'a.aCloseParam', function () {
@@ -1025,15 +1026,18 @@
 
             <div class="row" style="margin-bottom: 10px;">
 
-                <div class="col-md-3">
-                    <input class="iNames form-control" type="text" name="<%=SaveJSONServlet.KEY_REQUIRED_PARAMS%>"
+
+                <div class="col-md-2">
+                    <input class="iNames form-control" type="text" name="<%=SaveJSONServlet.KEY_PARAMS%>"
                            placeholder="Name"><br>
                 </div>
 
+
                 <div class="col-md-2">
-                    <select name="<%=SaveJSONServlet.KEY_REQ_DATA_TYPES%>" class="sDataTypes form-control">
+                    <select name="<%=SaveJSONServlet.KEY_DATA_TYPES%>" class="sDataTypes form-control">
                         <option value="String">String</option>
                         <option value="Integer">Integer</option>
+                        <option value="Boolean">Boolean</option>
                         <option value="Long">Long</option>
                         <option value="Float">Float</option>
                         <option value="Double">Double</option>
@@ -1041,13 +1045,20 @@
                 </div>
 
                 <div class="col-md-3">
-                    <input class="iDefaultValues form-control" name="<%=SaveJSONServlet.KEY_REQ_DEFAULT_VALUES%>"
+                    <input class="iDefaultValues form-control" name="<%=SaveJSONServlet.KEY_DEFAULT_VALUES%>"
                            type="text" placeholder="Default value"><br>
                 </div>
 
                 <div class="col-md-3">
-                    <textarea class="taDescriptions form-control" name="<%=SaveJSONServlet.KEY_REQ_DESCRIPTIONS%>"
+                    <textarea class="taDescriptions form-control" name="<%=SaveJSONServlet.KEY_DESCRIPTIONS%>"
                               placeholder="Description"></textarea>
+                </div>
+
+                <div class="col-md-1 checkbox">
+                    <input class="iIsRequiredHidden" type="hidden" value="off"
+                           name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">
+                    <label><input class="iIsRequired" type="checkbox" value="on"
+                                  name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">Required</label>
                 </div>
 
                 <div class="col-md-1">
@@ -1061,14 +1072,12 @@
         <div class="col-md-10">
             <label for="route">Route</label>
             <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route"><br>
-            <label for="fReqParam">Required params</label> <a id="aAddReqParam"> (Add param)</a>
+            <label for="fParam">Param</label> <a id="aAddReqParam"> (Add param)</a>
 
-            <form id="fReqParam" class="fParam">
+            <form id="fParam" class="fParam">
 
             </form>
 
-            <label for="optional_params">Optional params</label>
-            <input class="form-control" type="text" id="optional_params" placeholder="Optional params"><br>
             <label for="external_api_url">External API URL</label>
             <input class="form-control" type="text" id="external_api_url" placeholder="External API URL"><br>
 

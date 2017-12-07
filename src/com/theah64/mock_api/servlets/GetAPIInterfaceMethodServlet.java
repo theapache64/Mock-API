@@ -73,28 +73,16 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                 codeBuilder.append("\n@Header(KEY_AUTHORIZATION) String apiKey,");
             }
 
-            boolean hasParams = false;
-            if (route.getRequiredParams() != null) {
-                hasParams = true;
-                final List<Param> reqParams = route.getRequiredParams();
-                for (final Param reqParam : reqParams) {
-                    codeBuilder.append(String.format("\n@Query(\"%s\") String %s,", reqParam, CodeGen.toCamelCase(reqParam.getName())));
+            if (!route.getParams().isEmpty()) {
+
+                final List<Param> params = route.getParams();
+                for (final Param param : params) {
+                    codeBuilder.append(String.format("\n@Query(\"%s\") String %s,", param, CodeGen.toCamelCase(param.getName())));
                 }
-            }
 
-
-            if (!route.getOptionalParams().isEmpty()) {
-                hasParams = true;
-                final List<Param> optParams = route.getOptionalParams();
-                for (final Param optParam : optParams) {
-                    codeBuilder.append(String.format("\n\t\t\t\t\t\t\t\t@Query(\"%s\") String %s,", optParam, CodeGen.toCamelCase(optParam.getName())));
-                }
-            }
-
-            if (hasParams) {
-                //Removing last comma
                 codeBuilder = new StringBuilder(codeBuilder.substring(0, codeBuilder.length() - 1));
             }
+
 
             codeBuilder.append(");");
 
