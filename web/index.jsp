@@ -978,33 +978,31 @@
     </style>
 </head>
 <body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#"><%=project.getName()%>
+            </a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li>
+                <a href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
+            </li>
+            <li><a href="#" data-toggle="modal" data-target="#shortcuts">Shortcuts</a></li>
+            <li><a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare</a></li>
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="logout.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
 <div class="container">
 
-    <div class="row ">
-
-        <div class="col-md-12 text-center">
-
-
-            <h1><%=project.getName()%>
-            </h1>
-            <%
-                if (project.getBaseOgApiUrl() != null) {
-            %>
-            <a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare with </a>
-            <%
-                }
-            %>
-            <p id="base_og_api_url">
-                <%=project.getBaseOgApiUrl() != null ? project.getBaseOgApiUrl() : "Tap here to set base og API URL"%>
-            </p>
-
-            <p>
-                <a href="logout.jsp"><i>(logout)</i></a>
-            </p>
-
-
-        </div>
-    </div>
 
     <br>
 
@@ -1177,15 +1175,6 @@
                                 class="glyphicon glyphicon-trash"></span> DELETE
                         </button>
 
-                        <a href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>"
-                           class="btn btn-sm btn-info">
-                            <span
-                                    class="glyphicon glyphicon-file"></span>
-                            DOCS
-                        </a>
-
-                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#shortcuts">SHORTCUTS
-                        </button>
                         <button id="bClear" class="btn btn-info  btn-sm"><span class="glyphicon glyphicon-flash"></span>
                             CLEAR
                         </button>
