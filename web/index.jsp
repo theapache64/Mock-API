@@ -75,7 +75,7 @@
             $("body").on('keyup', "input#route, input.iNames", function () {
                 if (!event.ctrlKey && !event.altKey) {
                     var oldVal = $(this).val();
-                    var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/, '_'));
+                    var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/g, '_'));
                     $(this).val(newVal);
                 }
             });
@@ -139,7 +139,22 @@
             });
 
 
+            //Global shortcut listener
             $(window).keydown(function (event) {
+
+
+                if (event.keyCode == 121) {
+                    var params = prompt("Type params comma sep", "param1, param2");
+                    var paramArr = params.split(",");
+                    for (var i = 0; i < paramArr.length; i++) {
+                        var paramRow = $("div#dParamRow");
+                        var oldVal = paramArr[i];
+                        var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/g, '_'));
+                        $(paramRow).find("input.iNames").attr('value', newVal);
+                        $("form#fParam").append(paramRow.html());
+                    }
+
+                }
 
                 //F7
                 if (event.keyCode == 118) {
@@ -229,8 +244,8 @@
             });
 
 
+            //Editor shortcuts
             editor.on('keyup', function () {
-
 
                 //Control + Alt + I
                 if (event.ctrlKey && event.altKey && event.keyCode == 73) {
@@ -877,6 +892,7 @@
             });
 
             var selectedRoute = "<%=request.getParameter("route")%>";
+
             if (selectedRoute !== "null") {
                 $("select#routes option").filter(function () {
                     return this.text === selectedRoute;
@@ -943,6 +959,7 @@
             $(".fParam").on('click', 'a.aCloseParam', function () {
                 $(this).parent().parent().remove();
             });
+
 
         });
     </script>
@@ -1292,6 +1309,7 @@
                     <p><code>F1 </code>To search for a route</p>
                     <p><code>F4 </code>To generate API interface method</p>
                     <p><code>F7 </code>To save</p>
+                    <p><code>F10 </code>Legacy param adding</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

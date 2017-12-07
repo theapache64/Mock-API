@@ -9,8 +9,7 @@ A Web Application to build Mock API
 
 ### TODOs
 
-#### Param wise response
-jsons.response -> jsons.default_response
-jsons -> routes
+- API Documentation generator
+- Double tap add param to add comma sep values
 
 
