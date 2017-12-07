@@ -36,7 +36,6 @@ public class GetResponseServlet extends AdvancedBaseServlet {
         final String responseId = getStringParameter(Responses.COLUMN_ID);
         String resp;
 
-
         if (responseId.equals(Routes.COLUMN_DEFAULT_RESPONSE)) {
             final String routeName = getStringParameter(KEY_ROUTE_NAME);
             final String projectName = getStringParameter(KEY_PROJECT_NAME);
