@@ -604,6 +604,7 @@
                                 $(resultDiv).show();
 
                                 $("input#external_api_url").val("");
+                                $("form#fParam").html("");
                                 $("p#pLastModified").html("");
                                 $("input#route").val("");
                                 $("button#bDelete").hide();
@@ -636,6 +637,7 @@
                 $("input#external_api_url").val("");
                 $("input#delay").val("");
                 $("textarea#description").val("");
+                $("form#fParam").html("");
                 $("p#pLastModified").html("");
                 $("select#routes").val($("select#routes option:first").val());
                 $("button#bDelete").hide();
@@ -649,7 +651,7 @@
                     //your code here
                     if ($(this).attr('name') === '<%=SaveJSONServlet.KEY_IS_REQUIRED%>') {
                         var curId = $(this).attr('id');
-                        if (curId.indexOf("Hidden") == -1) {
+                        if (curId != undefined && curId.indexOf("Hidden") == -1) {
                             var hidId = "input#" + curId + "Hidden";
                             if ($(this).is(":checked")) {
                                 console.log("Disabling hidden:" + hidId);
@@ -687,14 +689,14 @@
                     },
                     url: "v1/save_json",
                     data: params +
-                    "&name=" + route +
-                    "&response_id=" + $('select#responses :selected').val() +
-                    "&response=" + response +
-                    "&optional_params=" + opParams +
-                    "&external_api_url=" + external_api_url +
-                    "&is_secure=" + isSecure +
-                    "&delay=" + delay +
-                    "&description=" + description,
+                    "&name=" + encodeURIComponent(route) +
+                    "&response_id=" + encodeURIComponent($('select#responses :selected').val()) +
+                    "&response=" + encodeURIComponent(response) +
+                    "&optional_params=" + encodeURIComponent(opParams) +
+                    "&external_api_url=" + encodeURIComponent(external_api_url) +
+                    "&is_secure=" + encodeURIComponent(isSecure) +
+                    "&delay=" + encodeURIComponent(delay) +
+                    "&description=" + encodeURIComponent(description),
                     success: function (data) {
                         stopLoading(true);
                         console.log(data);
