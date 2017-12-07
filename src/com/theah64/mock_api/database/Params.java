@@ -75,6 +75,26 @@ public class Params extends BaseTable<Param> {
         ps1.close();
     }
 
+    public void updateParams(final java.sql.Connection con, List<Param> params) throws SQLException {
+        //Move required params
+        final String updateQuery = "UPDATE params SET is_required = ? , data_type = ? ,  default_value = ? , description = ? WHERE route_id = ? AND name = ?";
+        final PreparedStatement ps1 = con.prepareStatement(updateQuery);
+        for (final Param param : params) {
+            ps1.setBoolean(1, param.isRequired());
+            ps1.setString(2, param.getDataType());
+            ps1.setString(3, param.getDefaultValue());
+            ps1.setString(4, param.getDescription());
+            ps1.setString(5, param.getRouteId());
+            ps1.setString(6, param.getName());
+            ps1.executeUpdate();
+
+            System.out.println("Added: " + param.toStringAll());
+        }
+
+
+        ps1.close();
+    }
+
     @Override
     public List<Param> getAll(String whereColumn, String whereColumnValue) {
 
@@ -146,6 +166,8 @@ public class Params extends BaseTable<Param> {
             for (final Param newParam : newParams) {
                 if (!oldParams.contains(newParam)) {
                     addedParams.add(newParam);
+                } else {
+                    updatedParams.add(newParam);
                 }
             }
         }
@@ -177,6 +199,9 @@ public class Params extends BaseTable<Param> {
                 addParams(con, addedParams);
             }
 
+            if (!updatedParams.isEmpty()) {
+                updateParams(con, updatedParams);
+            }
 
 
         } catch (SQLException e) {
