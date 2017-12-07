@@ -1,6 +1,9 @@
+<%@ page import="com.theah64.mock_api.database.Projects" %>
 <%@ page import="com.theah64.mock_api.database.Routes" %>
 <%@ page import="com.theah64.mock_api.models.Param" %>
+<%@ page import="com.theah64.mock_api.models.Project" %>
 <%@ page import="com.theah64.mock_api.models.Route" %>
+<%@ page import="com.theah64.webengine.utils.DarKnight" %>
 <%@ page import="com.theah64.webengine.utils.WebEngineConfig" %>
 <%@ page import="java.util.List" %>
 <%--
@@ -11,7 +14,21 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@include file="login_check.jsp" %>
+<%
+
+    final String apiKey = DarKnight.getDecrypted(request.getParameter(Projects.COLUMN_API_KEY));
+    System.out.println("apiKey:" + apiKey);
+    Project project = null;
+
+    if (apiKey != null) {
+        project = Projects.getInstance().get(Projects.COLUMN_API_KEY, apiKey);
+    }
+
+    if (project == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <html>
 <head>
     <title>API Documentation - <%=project.getName()%>

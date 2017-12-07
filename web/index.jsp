@@ -2,6 +2,8 @@
 <%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="com.theah64.mock_api.servlets.SaveJSONServlet" %>
 <%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
+<%@ page import="com.theah64.webengine.utils.DarKnight" %>
+<%@ page import="java.net.URLEncoder" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
 <%--
@@ -1175,7 +1177,7 @@
                                 class="glyphicon glyphicon-trash"></span> DELETE
                         </button>
 
-                        <a target="_blank" href="documentation.jsp?api_key=<%=project.getApiKey()%>"
+                        <a href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>"
                            class="btn btn-sm btn-info">
                             <span
                                     class="glyphicon glyphicon-file"></span>
