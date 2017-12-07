@@ -102,8 +102,8 @@
         for (final Route route : routeList) {
     %>
 
-    <h2>/<%=route.getName()%>
-    </h2>
+    <h3>/<%=route.getName()%>
+    </h3>
     <br>
     <p>HTTP POST</p>
 
