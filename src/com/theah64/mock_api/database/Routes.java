@@ -104,9 +104,7 @@ public class Routes extends BaseTable<Route> {
             }
             rs.close();
             ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
             error = e.getMessage();
         } finally {
@@ -127,7 +125,61 @@ public class Routes extends BaseTable<Route> {
 
     }
 
+    public List<Route> getAllDetailed(final String projectId) throws SQLException {
+
+        List<Route> routeList = new ArrayList<>();
+
+        final String query = "SELECT r.id,r.name, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.id = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id;";
+        String error = null;
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, projectId);
+            final ResultSet rs = ps.executeQuery();
+
+            if (rs.first()) {
+
+                routeList = new ArrayList<>();
+
+                do {
+
+                    final String id = rs.getString(COLUMN_ID);
+                    final String routeName = rs.getString(COLUMN_NAME);
+                    final String response = rs.getString(COLUMN_DEFAULT_RESPONSE);
+                    final String description = rs.getString(COLUMN_DESCRIPTION);
+                    final boolean isSecure = rs.getBoolean(COLUMN_IS_SECURE);
+                    final long delay = rs.getLong(COLUMN_DELAY);
+                    final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
+                    final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
+
+                    final List<Param> allParams = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, id);
+
+                    routeList.add(new Route(id, projectId, routeName, response, description, externalApiUrl, allParams, isSecure, delay, updatedInMillis));
+                    ;
+
+                } while (rs.next());
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException | JSONException e) {
+            e.printStackTrace();
+            error = e.getMessage();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        manageError(error);
+
+        return routeList;
+
+    }
+
     public Route get(String projectName, String routeName) throws SQLException {
+
         String error = null;
         Route route = null;
         final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
@@ -138,6 +190,7 @@ public class Routes extends BaseTable<Route> {
             ps.setString(2, routeName);
             final ResultSet rs = ps.executeQuery();
             if (rs.first()) {
+
                 final String id = rs.getString(COLUMN_ID);
                 final String response = rs.getString(COLUMN_DEFAULT_RESPONSE);
                 final String description = rs.getString(COLUMN_DESCRIPTION);

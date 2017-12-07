@@ -90,4 +90,11 @@ public class Route {
     }
 
 
+    public String getDummyRequiredParams() {
+        final StringBuilder dummyParamBuilder = new StringBuilder();
+        for (final String param : filterRequiredParams()) {
+            dummyParamBuilder.append(param).append("=sampleParam&");
+        }
+        return dummyParamBuilder.toString();
+    }
 }

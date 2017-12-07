@@ -1138,7 +1138,7 @@
 
             <div class="row">
 
-                <div class="col-md-5" id="response_panel" style="visibility: hidden">
+                <div class="col-md-4" id="response_panel" style="visibility: hidden">
 
                     <div class="pull-left">
                         <form class="form-inline">
@@ -1162,7 +1162,7 @@
 
                 </div>
 
-                <div class="col-md-7">
+                <div class="col-md-8">
 
                     <div class="pull-right">
 
@@ -1175,6 +1175,12 @@
                                 class="glyphicon glyphicon-trash"></span> DELETE
                         </button>
 
+                        <a target="_blank" href="documentation.jsp?api_key=<%=project.getApiKey()%>"
+                           class="btn btn-sm btn-info">
+                            <span
+                                    class="glyphicon glyphicon-file"></span>
+                            DOCS
+                        </a>
 
                         <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#shortcuts">SHORTCUTS
                         </button>
