@@ -9,7 +9,6 @@ A Web Application to build Mock API
 
 ### TODOs
 
-- API Documentation generator
-- Double tap add param to add comma sep values
+- Add method to routes
 
 
