@@ -1032,7 +1032,9 @@
 
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a id="base_og_api_url" href="#"><%=project.getBaseOgApiUrl()==null ? "Set original base URL" : project.getBaseOgApiUrl()%></a></li>
+            <li><a id="base_og_api_url"
+                   href="#"><%=project.getBaseOgApiUrl() == null ? "Set original base URL" : project.getBaseOgApiUrl()%>
+            </a></li>
 
             <li><a href="logout.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>
