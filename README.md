@@ -10,5 +10,6 @@ A Web Application to build Mock API
 ### TODOs
 
 - Add method to routes
+- Image hosting
 
 

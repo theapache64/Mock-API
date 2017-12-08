@@ -28,6 +28,8 @@
         response.sendRedirect("login.jsp");
         return;
     }
+
+    final List<Route> routeList = Routes.getInstance().getAllDetailed(project.getId());
 %>
 <html>
 <head>
@@ -55,7 +57,9 @@
     <h2>API Documentation</h2>
     <p>This is a lightweight web service, (REST interface), which provides an easy way to access
         <b>`<%=project.getName()%>`</b> data. The
-        API works through simple commands, so there should not be a problem coding some nice applications.
+        API works through simple commands, so there should not be a problem coding some nice applications. This API
+        contains total <b><%=routeList.size()%>
+        </b> route(s)</b>
     </p>
 
     <br>
@@ -98,11 +102,16 @@
 
 
     <%
-        final List<Route> routeList = Routes.getInstance().getAllDetailed(project.getId());
+        int i = 0;
         for (final Route route : routeList) {
+            i++;
     %>
 
-    <h3>/<%=route.getName()%>
+
+    <h3>
+        <small><%=i%>
+            .</small>
+        /<%=route.getName()%>
     </h3>
     <br>
     <p>HTTP POST</p>

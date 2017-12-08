@@ -564,7 +564,11 @@
                                 $("form#fParam").html("");
 
                                 //Looping through required params
+                                var isParamsAdded = false;
                                 $.each(data.data.params, function (i, item) {
+
+                                    isParamsAdded = true;
+
 
                                     var paramRow = $("div#dParamRow");
 
@@ -596,9 +600,12 @@
                                     $("input#" + iIsRequiredId).prop('checked', item.is_required);
 
                                     //Setting names
-
-
                                 });
+
+                                if (!isParamsAdded) {
+                                    var paramRow = $("div#dParamRow").html();
+                                    $("form#fParam").append(paramRow);
+                                }
 
                                 $("input#external_api_url").val(data.data.external_api_url);
 
@@ -853,7 +860,8 @@
                 $(this).val(newVal);
             });
 
-            $("p#base_og_api_url").on('click', function () {
+            $("#base_og_api_url").on('click', function () {
+
                 var curVal = $.trim($(this).text());
                 if (!curVal.startsWith("http")) {
                     //It's not a url so no pre-text
@@ -878,7 +886,7 @@
                         success: function (data) {
                             stopLoading(true);
                             if (!data.error) {
-                                $("p#base_og_api_url").text(newUrl);
+                                $("#base_og_api_url").text(newUrl);
 
                             } else {
                                 alert(data.message);
@@ -953,15 +961,14 @@
             });
 
 
-            $("a#aAddReqParam").on('click', function () {
+            $("#fParam").on('click', 'a.aAddParam', function () {
                 var paramRow = $("div#dParamRow").html();
-                $("form#fParam").append(paramRow);
+                $(paramRow).insertAfter($(this).parent().parent());
             });
 
-            $(".fParam").on('click', 'a.aCloseParam', function () {
+            $("#fParam").on('click', 'a.aCloseParam', function () {
                 $(this).parent().parent().remove();
             });
-
 
         });
     </script>
@@ -1025,7 +1032,8 @@
 
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#" style="cursor: default">Total <%=jsonList.size()%> route(s)</a></li>
+            <li><a id="base_og_api_url" href="#"><%=project.getBaseOgApiUrl()==null ? "Set original base URL" : project.getBaseOgApiUrl()%></a></li>
+
             <li><a href="logout.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>
     </div>
@@ -1081,7 +1089,7 @@
             </div>
 
             <br>
-            <label for="fParam">Param</label> <a id="aAddReqParam"> (Add param)</a>
+            <label for="fParam">Param</label>
 
             <form id="fParam" class="fParam">
 
@@ -1234,7 +1242,7 @@
                 </select>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <input class="iDefaultValues form-control" name="<%=SaveJSONServlet.KEY_DEFAULT_VALUES%>"
                        type="text" placeholder="Default value"><br>
             </div>
@@ -1251,8 +1259,9 @@
                               name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">Required</label>
             </div>
 
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <a class="btn aCloseParam btn-danger pull-right"> <b>&times;</b> </a>
+                <a class="btn aAddParam btn-primary pull-right" style="margin-right: 5px"> <b>&plus;</b> </a>
             </div>
 
         </div>
