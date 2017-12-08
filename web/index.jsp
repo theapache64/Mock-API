@@ -987,6 +987,15 @@
         .CodeMirror pre.CodeMirror-placeholder {
             color: #999;
         }
+
+        .randomItems {
+            cursor: pointer;
+        }
+
+        .randomItems:hover {
+            background-color: #053d76;
+        }
+
     </style>
 </head>
 <body>
@@ -1035,89 +1044,54 @@
 
         <br><br>
 
-        <%--Available jsonList--%>
-        <div class=" col-md-2">
 
-            <label for="routes">Select route</label>
-            <select id="routes" class="form-control" title="Routes">
-                <option value="">Select a route</option>
-                <%
-                    if (jsonList != null) {
-                        for (final Route json : jsonList) {
-                %>
-                <option value="<%=json.getId()%>"><%=json.getName()%>
-                </option>
-                <%
-                        }
-                    }
-                %>
-            </select>
-        </div>
+        <%--Add new route panel--%>
+        <div class="col-md-12">
 
+            <div class="row">
 
-        <div id="dParamRow" style="display: none">
+                <%--Available jsonList--%>
+                <div class=" col-md-2">
 
-            <div class="row" style="margin-bottom: 10px;">
-
-
-                <div class="col-md-2">
-                    <input class="iNames form-control" type="text" name="<%=SaveJSONServlet.KEY_PARAMS%>"
-                           placeholder="Name"><br>
-                </div>
-
-
-                <div class="col-md-2">
-                    <select name="<%=SaveJSONServlet.KEY_DATA_TYPES%>" class="sDataTypes form-control">
-                        <option value="String">String</option>
-                        <option value="Integer">Integer</option>
-                        <option value="Boolean">Boolean</option>
-                        <option value="Long">Long</option>
-                        <option value="Float">Float</option>
-                        <option value="Double">Double</option>
+                    <label for="routes">Select route</label>
+                    <select id="routes" class="form-control" title="Routes">
+                        <option value="">Select a route</option>
+                        <%
+                            if (jsonList != null) {
+                                for (final Route json : jsonList) {
+                        %>
+                        <option value="<%=json.getId()%>"><%=json.getName()%>
+                        </option>
+                        <%
+                                }
+                            }
+                        %>
                     </select>
                 </div>
 
-                <div class="col-md-3">
-                    <input class="iDefaultValues form-control" name="<%=SaveJSONServlet.KEY_DEFAULT_VALUES%>"
-                           type="text" placeholder="Default value"><br>
+                <div class="col-md-6">
+                    <label for="route">Route</label>
+                    <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route">
                 </div>
 
-                <div class="col-md-3">
-                    <textarea class="taDescriptions form-control" name="<%=SaveJSONServlet.KEY_DESCRIPTIONS%>"
-                              placeholder="Description"></textarea>
-                </div>
-
-                <div class="col-md-1 checkbox">
-                    <input class="iIsRequiredHidden" type="hidden" value="off"
-                           name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">
-                    <label><input class="iIsRequired" type="checkbox" value="on"
-                                  name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">Required</label>
-                </div>
-
-                <div class="col-md-1">
-                    <a class="btn aCloseParam btn-danger pull-right"> <b>&times;</b> </a>
+                <div class="col-md-4" style="margin-top: 30px;">
+                    <label class="checkbox-inline"><input type="checkbox" id="is_secure">Authorization</label>
                 </div>
 
             </div>
-        </div>
 
-        <%--Add new route panel--%>
-        <div class="col-md-10">
-            <label for="route">Route</label>
-            <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route"><br>
+            <br>
             <label for="fParam">Param</label> <a id="aAddReqParam"> (Add param)</a>
 
             <form id="fParam" class="fParam">
 
             </form>
 
-            <label for="external_api_url">External API URL</label>
-            <input class="form-control" type="text" id="external_api_url" placeholder="External API URL"><br>
-
-
             <div class="row">
-
-
+                <div class="col-md-8">
+                    <label for="external_api_url">External API URL</label>
+                    <input class="form-control" type="text" id="external_api_url" placeholder="External API URL"><br>
+                </div>
                 <div class="col-md-4">
 
                     <label for="delay">Delay (in seconds)</label>
@@ -1125,22 +1099,18 @@
 
 
                 </div>
+            </div>
 
-                <div class="col-md-8">
+
+            <div class="row">
+
+                <div class="col-md-12">
                     <label for="description">Description</label>
                     <textarea class="form-control" type="text" placeholder="Description" id="description"></textarea>
                 </div>
             </div>
 
             <br>
-            <%--checkboxes--%>
-            <div class="row">
-
-                <div class="col-md-4">
-                    <label class="checkbox-inline"><input type="checkbox" id="is_secure">Authorization</label>
-                </div>
-
-            </div>
 
             <br>
 
@@ -1238,6 +1208,53 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <%--Param row--%>
+    <div id="dParamRow" style="display: none">
+
+        <div class="row" style="margin-bottom: 10px;">
+
+
+            <div class="col-md-2">
+                <input class="iNames form-control" type="text" name="<%=SaveJSONServlet.KEY_PARAMS%>"
+                       placeholder="Name"><br>
+            </div>
+
+
+            <div class="col-md-2">
+                <select name="<%=SaveJSONServlet.KEY_DATA_TYPES%>" class="sDataTypes form-control">
+                    <option value="String">String</option>
+                    <option value="Integer">Integer</option>
+                    <option value="Boolean">Boolean</option>
+                    <option value="Long">Long</option>
+                    <option value="Float">Float</option>
+                    <option value="Double">Double</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <input class="iDefaultValues form-control" name="<%=SaveJSONServlet.KEY_DEFAULT_VALUES%>"
+                       type="text" placeholder="Default value"><br>
+            </div>
+
+            <div class="col-md-3">
+                    <textarea class="taDescriptions form-control" name="<%=SaveJSONServlet.KEY_DESCRIPTIONS%>"
+                              placeholder="Description"></textarea>
+            </div>
+
+            <div class="col-md-1 checkbox">
+                <input class="iIsRequiredHidden" type="hidden" value="off"
+                       name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">
+                <label><input class="iIsRequired" type="checkbox" value="on"
+                              name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">Required</label>
+            </div>
+
+            <div class="col-md-1">
+                <a class="btn aCloseParam btn-danger pull-right"> <b>&times;</b> </a>
+            </div>
+
         </div>
     </div>
 

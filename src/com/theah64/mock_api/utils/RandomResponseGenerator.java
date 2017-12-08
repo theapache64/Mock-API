@@ -21,6 +21,14 @@ public class RandomResponseGenerator {
                 }
             },
 
+            new RandomResponse("{randomFirstName}") {
+                @Override
+                String getValue(int count) {
+                    return loremIpsum.getFirstName();
+                }
+            },
+
+
             new RandomResponse("{randomPhone}") {
                 @Override
                 String getValue(int count) {
@@ -47,38 +55,6 @@ public class RandomResponseGenerator {
                 @Override
                 String getValue(int count) {
                     return loremIpsum.getCountry();
-                }
-            },
-
-
-            new RandomResponse("{randomMaleName}") {
-                @Override
-                String getValue(int count) {
-                    return loremIpsum.getNameMale();
-                }
-            },
-
-
-            new RandomResponse("{randomFemaleName}") {
-                @Override
-                String getValue(int count) {
-                    return loremIpsum.getNameFemale();
-                }
-            },
-
-
-            new RandomResponse("{randomFirstName}") {
-                @Override
-                String getValue(int count) {
-                    return loremIpsum.getFirstName();
-                }
-            },
-
-
-            new RandomResponse("{randomLastName}") {
-                @Override
-                String getValue(int count) {
-                    return loremIpsum.getLastName();
                 }
             },
 
@@ -132,7 +108,7 @@ public class RandomResponseGenerator {
             return key;
         }
 
-        abstract String getValue(int count);
+        abstract String getValue(int param1);
     }
 
     public static String generate(String jsonResp) {
@@ -189,7 +165,6 @@ public class RandomResponseGenerator {
 
                         jsonResp = sb.toString();
                     } while (matcher.find());
-
 
                 }
             }
