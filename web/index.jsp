@@ -979,6 +979,14 @@
 </head>
 <body>
 
+<%
+    List<Route> jsonList = null;
+    try {
+        jsonList = Routes.getInstance().getAll(project.getId());
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+%>
 
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -987,7 +995,7 @@
             </a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
+            <li class="active"><a href="index.jsp?api_key=<%=project.getApiKey()%>">Home</a></li>
             <li>
                 <a href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
             </li>
@@ -996,6 +1004,7 @@
 
         </ul>
         <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" style="cursor: default">Total <%=jsonList.size()%> route(s)</a></li>
             <li><a href="logout.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>
     </div>
@@ -1016,14 +1025,7 @@
 
         <%--Available jsonList--%>
         <div class=" col-md-2">
-            <%
-                List<Route> jsonList = null;
-                try {
-                    jsonList = Routes.getInstance().getAll(project.getId());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            %>
+
             <label for="routes">Select route</label>
             <select id="routes" class="form-control" title="Routes">
                 <option value="">Select a route</option>

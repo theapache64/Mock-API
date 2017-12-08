@@ -79,7 +79,7 @@ public class Routes extends BaseTable<Route> {
 
     public List<Route> getAll(final String projectId) throws SQLException {
 
-        List<Route> jsonList = null;
+        final List<Route> jsonList = new ArrayList<>();
         final String query = "SELECT id, name, external_api_url FROM routes WHERE project_id = ? AND is_active = 1 ORDER BY updated_at_in_millis DESC";
         String error = null;
         final java.sql.Connection con = Connection.getConnection();
@@ -89,8 +89,6 @@ public class Routes extends BaseTable<Route> {
             final ResultSet rs = ps.executeQuery();
 
             if (rs.first()) {
-
-                jsonList = new ArrayList<>();
 
                 do {
 
@@ -113,10 +111,6 @@ public class Routes extends BaseTable<Route> {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-
-        if (jsonList == null) {
-            throw new SQLException("No route found");
         }
 
         manageError(error);

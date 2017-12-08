@@ -117,9 +117,8 @@ public class RandomResponseGenerator {
                     return loremIpsum.getParagraphs(count, count);
                 }
             }
-
-
     };
+
 
     public abstract static class RandomResponse {
         private final String key;
