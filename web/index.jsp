@@ -975,6 +975,18 @@
             height: auto;
             z-index: 9;
         }
+
+        .CodeMirror {
+            border: 1px solid silver;
+        }
+
+        .CodeMirror-empty.CodeMirror-focused {
+            outline: none;
+        }
+
+        .CodeMirror pre.CodeMirror-placeholder {
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -988,7 +1000,7 @@
     }
 %>
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse" style="border-radius: 0px">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#"><%=project.getName()%>
