@@ -36,6 +36,7 @@
         }
 
         var isAlertResult = false;
+        var isAutoUpload = false;
         $(document).ready(function () {
 
 
@@ -255,11 +256,17 @@
             //Editor shortcuts
             editor.on('keyup', function () {
 
+                //Control + Alt + U
+                if (event.ctrlKey && event.altKey && event.keyCode === 85) {
+                    isAutoUpload = true;
+                    $("input#iFile").trigger('click');
+                }
+
                 //Control + Alt + I
-                if (event.ctrlKey && event.altKey && event.keyCode == 73) {
+                if (event.ctrlKey && event.altKey && event.keyCode === 73) {
                     var dimen = prompt("Enter dimension", "500x500");
                     dimen = dimen.split("x");
-                    if (dimen.length == 2) {
+                    if (dimen.length === 2) {
 
                         var imgCount = prompt("Enter number of images", "1");
                         var imageUrls = "";
@@ -281,7 +288,7 @@
 
 
                 //Control + Alt + R
-                if (event.ctrlKey && event.altKey && event.keyCode == 82) {
+                if (event.ctrlKey && event.altKey && event.keyCode === 82) {
                     $("#random").modal("show");
                     setTimeout(function () {
                         $('input#iWords').focus();
@@ -293,7 +300,7 @@
 
 
                 //Control + Alt + M
-                if (event.ctrlKey && event.altKey && event.keyCode == 77) {
+                if (event.ctrlKey && event.altKey && event.keyCode === 77) {
 
                     var selection = editor.getSelection();
 
@@ -675,6 +682,8 @@
                 $("div#response_panel").css('visibility', 'hidden');
             });
 
+            var resultDiv = $("div#resultDiv");
+
             $("button#bSubmit").on('click', function () {
 
                 $('#fParam *').filter(':input').each(function () {
@@ -697,7 +706,7 @@
 
                 console.log("DONE!");
 
-                var resultDiv = $("div#resultDiv");
+
                 resultDiv.hide();
                 var route = $("input#route").val();
                 var response = editor.getDoc().getValue();
@@ -1002,6 +1011,11 @@
                             .attr('aria-valuenow', '100')
                             .css('width', '100%')
                             .text("Initializing upload...");
+
+                        startLoading(false);
+                        $(resultDiv).addClass('alert-success').removeClass('alert-danger');
+                        $(resultDiv).html("<strong>Uploading: </strong> Initializing upload...");
+                        $(resultDiv).show();
                     },
 
                     xhr: function () {
@@ -1011,9 +1025,9 @@
                             if (evt.lengthComputable) {
                                 var percentComplete = parseInt((evt.loaded / evt.total) * 100);
                                 //Do something with upload progress here
-                                //status.text("Uploading...(" + percentComplete + "%)");
 
                                 console.log(percentComplete);
+
 
                                 $(dInsertImageProgress)
                                     .attr('aria-valuenow', percentComplete)
@@ -1021,8 +1035,11 @@
                                     .text(percentComplete + "%");
 
 
+                                $(resultDiv).html("<strong>Uploading: </strong> " + percentComplete + "%");
+
                                 if (percentComplete === 100) {
                                     $(dInsertImageProgress).text("Processing image...");
+                                    $(resultDiv).html("<strong>Processing image...</strong> ");
                                 }
                             }
                         }, false);
@@ -1033,6 +1050,8 @@
                     success: function (data) {
                         console.log("success");
                         console.log(data);
+
+                        stopLoading(false);
 
                         dInsertImageProgressContainer.hide();
 
@@ -1046,7 +1065,17 @@
 
                             $("div#dGallery").prepend(galleryRow.html());
 
+                            if (isAutoUpload) {
+                                editor.replaceSelection(data.data.download_link);
+                                editor.focus();
+                            }
+
+                            $(resultDiv).html("<strong>Success!! </strong> <a target='_blank' href='" + data.data.download_link + "'>image</a> uploaded");
+
                         } else {
+                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                            $(resultDiv).html("<strong>Error! </strong> " + data.message);
+                            $(resultDiv).show();
                             alert(data.message);
                         }
 
@@ -1054,7 +1083,12 @@
                     error: function (data) {
                         console.log("error");
                         console.log(data);
-                        alert("Network error, please check your connection");
+                        if (!isAutoUpload) {
+                            alert("Network error, please check your connection");
+                        }
+                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                        $(resultDiv).show();
                     }
                 });
 
@@ -1062,6 +1096,7 @@
             });
 
             $("button#bUploadNewImage").on('click', function () {
+                isAutoUpload = false;
                 $("input#iFile").trigger('click');
             });
 
@@ -1515,7 +1550,7 @@
                     </div>
 
                     <form id="fInsertImage" style="width: 0px;height: 0px;overflow: hidden">
-                        <input id="iFile" type="file" name="<%=UploadImageServlet.KEY_IMAGE%>" required/>
+                        <input id="iFile" type="file" accept="image/*" name="<%=UploadImageServlet.KEY_IMAGE%>" required/>
                         <input type="submit" value="Upload"/>
                     </form>
 
