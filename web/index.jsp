@@ -1550,7 +1550,7 @@
                     </div>
 
                     <form id="fInsertImage" style="width: 0px;height: 0px;overflow: hidden">
-                        <input id="iFile" type="file" accept="image/*" name="<%=UploadImageServlet.KEY_IMAGE%>" required/>
+                        <input id="iFile" type="file" accept="image/*" name="<%=UploadImageServlet.KEY_IMAGE%>[]" required/>
                         <input type="submit" value="Upload"/>
                     </form>
 
