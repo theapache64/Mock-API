@@ -97,6 +97,7 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
         joJson.put(Routes.COLUMN_IS_SECURE, route.isSecure());
         joJson.put(Routes.COLUMN_DELAY, route.getDelay());
         joJson.put(Routes.COLUMN_DESCRIPTION, route.getDescription());
+        joJson.put(Routes.COLUMN_METHOD, route.getMethod());
 
         joJson.put(KEY_DUMMY_PARAMS, route.getDummyRequiredParams());
         joJson.put(KEY_LAST_MODIFIED, TimeUtils.millisToLongDHMS(route.getUpdatedInMillis()) + " ago");

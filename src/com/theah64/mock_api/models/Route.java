@@ -16,18 +16,20 @@ public class Route {
     private final String defaultResponse;
     private final String description;
     private final String externalApiUrl;
+    private final String method;
     private boolean isSecure;
     private final long delay;
     private final long updatedInMillis;
     private final List<Param> params;
 
-    public Route(String id, String projectId, String route, String response, String description, String externalApiUrl, List<Param> params, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
+    public Route(String id, String projectId, String route, String response, String description, String externalApiUrl, String method, List<Param> params, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
         this.id = id;
         this.projectId = projectId;
         this.name = route;
         this.defaultResponse = response != null ? new JSONObject(response).toString() : null;
         this.description = description;
         this.externalApiUrl = externalApiUrl;
+        this.method = method;
         this.params = params;
         this.isSecure = isSecure;
         this.delay = delay;
@@ -89,6 +91,10 @@ public class Route {
         return reqParams.toArray(new String[]{});
     }
 
+
+    public String getMethod() {
+        return method;
+    }
 
     public String getDummyRequiredParams() {
         final StringBuilder dummyParamBuilder = new StringBuilder();

@@ -53,6 +53,8 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
         final String responseId = getStringParameter(KEY_RESPONSE_ID);
         final String response = getStringParameter(KEY_RESPONSE);
+        final String method = getStringParameter(Routes.COLUMN_METHOD);
+
         String defaultResponse = null;
         if (responseId.equals(Routes.COLUMN_DEFAULT_RESPONSE)) {
             defaultResponse = response;
@@ -67,6 +69,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String paramDefaultValues[] = getStringParameterArray(KEY_DEFAULT_VALUES);
         final String paramDescriptions[] = getStringParameterArray(KEY_DESCRIPTIONS);
         final String paramIsRequired[] = getStringParameterArray(KEY_IS_REQUIRED);
+
 
 
         if (paramNames != null) {
@@ -98,7 +101,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         }
 
 
-        final Route route = new Route(null, projectId, routeName, defaultResponse, description, externalApiUrl, params, isSecure, delay, -1);
+        final Route route = new Route(null, projectId, routeName, defaultResponse, description, externalApiUrl, method, params, isSecure, delay, -1);
 
         if (routeId == null) {
             //Route doesn't exist

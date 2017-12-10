@@ -26,6 +26,7 @@ public class Routes extends BaseTable<Route> {
     public static final String COLUMN_EXTERNAL_API_URL = "external_api_url";
     public static final String COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis";
     public static final String KEY_PARAMS = "params";
+    public static final String COLUMN_METHOD = "method";
 
     private Routes() {
         super("routes");
@@ -39,7 +40,7 @@ public class Routes extends BaseTable<Route> {
     public String addv3(Route route) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO routes (project_id, name, default_response, description, is_secure, delay,external_api_url,updated_at_in_millis) VALUES (?,?,?,?,?,?,?,?);";
+        final String query = "INSERT INTO routes (project_id, name, default_response, description, is_secure, delay,external_api_url,updated_at_in_millis,method) VALUES (?,?,?,?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps0 = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -51,6 +52,7 @@ public class Routes extends BaseTable<Route> {
             ps0.setLong(6, route.getDelay());
             ps0.setString(7, route.getExternalApiUrl());
             ps0.setLong(8, System.currentTimeMillis());
+            ps0.setString(9, route.getMethod());
 
             ps0.executeUpdate();
             final ResultSet rs = ps0.getGeneratedKeys();
@@ -96,7 +98,7 @@ public class Routes extends BaseTable<Route> {
                     final String route = rs.getString(COLUMN_NAME);
                     final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
 
-                    jsonList.add(new Route(id, projectId, route, null, null, externalApiUrl, null, false, 0, -1));
+                    jsonList.add(new Route(id, projectId, route, null, null, externalApiUrl, null, null, false, 0, -1));
 
                 } while (rs.next());
             }
@@ -123,7 +125,7 @@ public class Routes extends BaseTable<Route> {
 
         List<Route> routeList = new ArrayList<>();
 
-        final String query = "SELECT r.id,r.name, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.id = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id;";
+        final String query = "SELECT r.id,r.name, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.id = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id;";
         String error = null;
         final java.sql.Connection con = Connection.getConnection();
         try {
@@ -145,10 +147,11 @@ public class Routes extends BaseTable<Route> {
                     final long delay = rs.getLong(COLUMN_DELAY);
                     final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
                     final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
+                    final String method = rs.getString(COLUMN_METHOD);
 
                     final List<Param> allParams = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, id);
 
-                    routeList.add(new Route(id, projectId, routeName, response, description, externalApiUrl, allParams, isSecure, delay, updatedInMillis));
+                    routeList.add(new Route(id, projectId, routeName, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis));
                     ;
 
                 } while (rs.next());
@@ -176,7 +179,7 @@ public class Routes extends BaseTable<Route> {
 
         String error = null;
         Route route = null;
-        final String query = "SELECT r.id, r.updated_at_in_millis, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
+        final String query = "SELECT r.id, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;";
         final java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -192,10 +195,11 @@ public class Routes extends BaseTable<Route> {
                 final long delay = rs.getLong(COLUMN_DELAY);
                 final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
                 final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
+                final String method = rs.getString(COLUMN_METHOD);
 
                 final List<Param> allParams = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, id);
 
-                route = new Route(id, null, routeName, response, description, externalApiUrl, allParams, isSecure, delay, updatedInMillis);
+                route = new Route(id, null, routeName, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis);
             }
             rs.close();
             ps.close();
@@ -220,7 +224,7 @@ public class Routes extends BaseTable<Route> {
     @Override
     public boolean update(Route route) {
         boolean isUpdated = false;
-        final String query = "UPDATE routes SET default_response = ?, description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?  WHERE name = ? AND project_id = ?;";
+        final String query = "UPDATE routes SET default_response = ?, description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?, method = ?  WHERE name = ? AND project_id = ?;";
         java.sql.Connection con = Connection.getConnection();
         try {
             final PreparedStatement ps = con.prepareStatement(query);
@@ -231,8 +235,9 @@ public class Routes extends BaseTable<Route> {
             ps.setLong(4, route.getDelay());
             ps.setString(5, route.getExternalApiUrl());
             ps.setLong(6, System.currentTimeMillis());
-            ps.setString(7, route.getName());
-            ps.setString(8, route.getProjectId());
+            ps.setString(7, route.getMethod());
+            ps.setString(8, route.getName());
+            ps.setString(9, route.getProjectId());
 
             Params.getInstance().updateParamFromRoute(route);
 

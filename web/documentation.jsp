@@ -110,11 +110,13 @@
 
     <h3>
         <small><%=i%>
-            .</small>
+            .
+        </small>
         /<%=route.getName()%>
     </h3>
     <br>
-    <p>HTTP POST</p>
+    <p>HTTP <%=route.getMethod()%>
+    </p>
 
     <%--End point--%>
     <div class="row">

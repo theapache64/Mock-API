@@ -576,6 +576,8 @@
                                 //Reseting req para
                                 $("form#fParam").html("");
 
+                                $("select#<%=Routes.COLUMN_METHOD%>").val(data.data.method);
+
                                 //Looping through required params
                                 var isParamsAdded = false;
                                 $.each(data.data.params, function (i, item) {
@@ -735,6 +737,7 @@
                     "&external_api_url=" + encodeURIComponent(external_api_url) +
                     "&is_secure=" + encodeURIComponent(isSecure) +
                     "&delay=" + encodeURIComponent(delay) +
+                    "&method=" + encodeURIComponent($("select#<%=Routes.COLUMN_METHOD%>").val()) +
                     "&description=" + encodeURIComponent(description),
                     success: function (data) {
                         stopLoading(true);
@@ -1236,12 +1239,24 @@
                     </select>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-2">
+                    <label for="<%=Routes.COLUMN_METHOD%>">Method</label>
+                    <%--<input class="form-control" type="text" maxlength="50" id="route" placeholder="Route">--%>
+                    <select id="<%=Routes.COLUMN_METHOD%>" class="form-control">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
                     <label for="route">Route</label>
                     <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route">
                 </div>
 
-                <div class="col-md-4" style="margin-top: 30px;">
+                <div class="col-md-2" style="margin-top: 30px;">
                     <label class="checkbox-inline"><input type="checkbox" id="is_secure">Authorization</label>
                 </div>
 
@@ -1550,7 +1565,8 @@
                     </div>
 
                     <form id="fInsertImage" style="width: 0px;height: 0px;overflow: hidden">
-                        <input id="iFile" type="file" accept="image/*" name="<%=UploadImageServlet.KEY_IMAGE%>[]" required/>
+                        <input id="iFile" type="file" accept="image/*" name="<%=UploadImageServlet.KEY_IMAGE%>[]"
+                               required/>
                         <input type="submit" value="Upload"/>
                     </form>
 
