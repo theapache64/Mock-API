@@ -28,7 +28,7 @@ public class UploadImageServlet extends AdvancedBaseServlet {
 
 
     public static final String KEY_IMAGE = "image";
-    private static final int MAX_FILE_SIZE_IN_KB = 900;
+    private static final int MAX_FILE_SIZE_IN_KB = 2000;
 
 
     @Override
@@ -74,6 +74,11 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                             throw new Request.RequestException("Invalid image : double check");
                         }
 
+                        final int fileSizeInKb = filePart.getInputStream().available() / 1024;
+                        if (fileSizeInKb > MAX_FILE_SIZE_IN_KB) {
+                            throw new Request.RequestException("File size should be less than " + MAX_FILE_SIZE_IN_KB + "kb");
+                        }
+
                         final File dataDir = new File("/var/www/html/mock_api_data");
 
                         if (!dataDir.exists()) {
@@ -114,6 +119,7 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                         //Compressing in another thread
                         try {
                             System.out.println("Download link : " + downloadLink);
+                            //Tinify.fromUrl("https://images-na.ssl-images-amazon.com/images/I/91-k8Ex-KCL._RI_SX200_.jpg").toFile(imageFile.getAbsolutePath());
                             Tinify.fromUrl(downloadLink).toFile(imageFile.getAbsolutePath());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -136,7 +142,7 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                                 }).start();
                             }
 
-                            throw new Request.RequestException("Compression failed, Please try again: " + e.getMessage() + ": DownloadLink : " + downloadLink);
+                            throw new Request.RequestException("Compression failed, Please try again: " + e.getMessage());
                         }
 
                         //Update usage

@@ -9,6 +9,9 @@
 <%@ page import="com.theah64.mock_api.utils.CodeGen" %>
 <%@ page import="com.theah64.mock_api.utils.GlobalVariables" %>
 <%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
+<%@ page import="com.theah64.mock_api.models.Image" %>
+<%@ page import="com.theah64.mock_api.database.Images" %>
+<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -976,7 +979,11 @@
 
             $("form#fInsertImage").on('submit', function (e) {
 
-                console.log("Uploading image...");
+                var dInsertImageProgressContainer = $("div#dInsertImageProgressContainer");
+                var dInsertImageProgress = $("div#dInsertImageProgress");
+
+                dInsertImageProgressContainer.show();
+
 
                 e.preventDefault();
                 var formData = new FormData(this);
@@ -991,7 +998,10 @@
                     processData: false,
 
                     beforeSend: function () {
-                        //status.text("Initializing upload...");
+                        $(dInsertImageProgress)
+                            .attr('aria-valuenow', '100')
+                            .css('width', '100%')
+                            .text("Initializing upload...");
                     },
 
                     xhr: function () {
@@ -999,12 +1009,20 @@
                         xhr.upload.addEventListener("progress", function (evt) {
 
                             if (evt.lengthComputable) {
-                                var percentComplete = (evt.loaded / evt.total) * 100;
+                                var percentComplete = parseInt((evt.loaded / evt.total) * 100);
                                 //Do something with upload progress here
                                 //status.text("Uploading...(" + percentComplete + "%)");
 
-                                if (percentComplete == 100) {
-                                    // status.text("Processing image...");
+                                console.log(percentComplete);
+
+                                $(dInsertImageProgress)
+                                    .attr('aria-valuenow', percentComplete)
+                                    .css('width', percentComplete + '%')
+                                    .text(percentComplete + "%");
+
+
+                                if (percentComplete === 100) {
+                                    $(dInsertImageProgress).text("Processing image...");
                                 }
                             }
                         }, false);
@@ -1015,14 +1033,50 @@
                     success: function (data) {
                         console.log("success");
                         console.log(data);
+
+                        dInsertImageProgressContainer.hide();
+
+                        if (!data.error) {
+
+                            var galleryRow = $("div#dGalleryRow");
+                            $(galleryRow)
+                                .find("div.dGalleryRow")
+                                .attr('data-image-url', data.data.download_link)
+                                .css('background-image', 'url(\'' + data.data.download_link + '\')');
+
+                            $("div#dGallery").prepend(galleryRow.html());
+
+                        } else {
+                            alert(data.message);
+                        }
+
                     },
                     error: function (data) {
                         console.log("error");
                         console.log(data);
+                        alert("Network error, please check your connection");
                     }
                 });
 
 
+            });
+
+            $("button#bUploadNewImage").on('click', function () {
+                $("input#iFile").trigger('click');
+            });
+
+            $("input#iFile").on('change', function () {
+                var filePath = $(this).val();
+                if (filePath !== "") {
+                    $("form#fInsertImage").submit();
+                }
+            });
+
+            $("div#dGallery").on('click', 'div.dGalleryRow', function () {
+                var imageUrl = $(this).data("image-url");
+                editor.replaceSelection(imageUrl);
+                editor.focus();
+                $("div#dInsertImage").modal("hide");
             });
 
         });
@@ -1056,6 +1110,21 @@
 
         .randomItems:hover {
             background-color: #053d76;
+        }
+
+        .center-cropped {
+            width: 200px;
+            height: 200px;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        div#dGallery div {
+            margin-bottom: 10px;
+        }
+
+        div.dGalleryRow {
+            cursor: pointer;
         }
 
     </style>
@@ -1092,6 +1161,12 @@
 
 
     <br>
+
+    <div id="dGalleryRow" style="display: none">
+        <div class="col-md-3">
+            <div class="center-cropped dGalleryRow"></div>
+        </div>
+    </div>
 
 
     <p id="pLastModified" title="" class="pull-right"></p>
@@ -1374,6 +1449,7 @@
                         <input type="submit" style="display: none">
                     </form>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -1417,27 +1493,63 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="btn close btn-default pull-right" data-dismiss="modal"
+                            style="margin-left: 10px;margin-top: 5px"> &times;
+                    </button>
+                    <button id="bUploadNewImage" class="btn btn-success pull-right" type="button"> Upload new &plus;
+
+                    </button>
+
+
                     <h4 class="modal-title">Insert Image
                         <small id="sInsertImageProgress"></small>
                     </h4>
                 </div>
                 <div class="modal-body">
 
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
-                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
-                            40%
+                    <div id="dInsertImageProgressContainer" style="display: none" class="progress">
+                        <div id="dInsertImageProgress"
+                             class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="0" style="width:0%">
                         </div>
                     </div>
 
-                    <form id="fInsertImage">
-                        <input type="file" name="<%=UploadImageServlet.KEY_IMAGE%>" required/>
+                    <form id="fInsertImage" style="width: 0px;height: 0px;overflow: hidden">
+                        <input id="iFile" type="file" name="<%=UploadImageServlet.KEY_IMAGE%>" required/>
                         <input type="submit" value="Upload"/>
                     </form>
+
+                    <div id="dGallery" style="max-height: 400px; overflow-y: auto;overflow-x: hidden">
+
+                        <%
+
+                            try {
+                                List<Image> images = Images.getInstance().getAll(Images.COLUMN_PROJECT_ID, project.getId());
+
+                                for (final Image image : images) {
+                        %>
+
+
+                        <div class="col-md-3">
+                            <div class="center-cropped dGalleryRow"
+                                 data-image-url="<%=image.getImageUrl()%>"
+                                 style="background-image: url('<%=image.getThumbUrl()%>')"></div>
+                        </div>
+
+
+                        <%
+                                }
+                            } catch (QueryBuilderException | SQLException e) {
+                                e.printStackTrace();
+                            }
+                        %>
+
+
+                    </div>
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
                 </div>
             </div>
         </div>
