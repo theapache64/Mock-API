@@ -27,7 +27,7 @@ import java.sql.SQLException;
 public class UploadImageServlet extends AdvancedBaseServlet {
 
 
-    private static final String KEY_IMAGE = "image";
+    public static final String KEY_IMAGE = "image";
     private static final int MAX_FILE_SIZE_IN_KB = 900;
 
 
@@ -62,7 +62,6 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                 //Saving file
                 final Part filePart = getHttpServletRequest().getPart(KEY_IMAGE);
 
-                String fileDownloadPath = null;
                 if (filePart != null) {
 
                     FilePart fp = new FilePart(filePart);
@@ -74,7 +73,6 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                         if (image == null) {
                             throw new Request.RequestException("Invalid image : double check");
                         }
-
 
                         final File dataDir = new File("/var/www/html/mock_api_data");
 
@@ -88,44 +86,65 @@ public class UploadImageServlet extends AdvancedBaseServlet {
 
                         final File imageFile = new File(dataDir.getAbsolutePath() + File.separator + fp.getRandomFileName());
 
-                        TinifyKeys tinifyTable = TinifyKeys.getInstance();
-                        final TinifyKey tinifyKey = tinifyTable.getLeastUsedKey();
-                        Tinify.setKey(tinifyKey.getKey());
-                        try {
-                            Tinify.fromBuffer(getByteArray(filePart.getInputStream())).toFile(imageFile.getAbsolutePath());
-                        } catch (AccountException e) {
+                        final InputStream is = filePart.getInputStream();
+                        final FileOutputStream fos = new FileOutputStream(imageFile);
+                        int read = 0;
+                        final byte[] buffer = new byte[1024];
 
-                            //Disabling key
-                            tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey.getId(), TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE);
-
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //Sending report
-                                    try {
-                                        MailHelper.sendMail("theapache64@gmail.com", "Tinify key failed", tinifyKey.toString(), "Mock-API");
-                                    } catch (MailException e1) {
-                                        e1.printStackTrace();
-                                    }
-
-                                }
-                            }).start();
-
-                            throw new Request.RequestException("Compression failed, Please try again");
+                        while ((read = is.read(buffer)) != -1) {
+                            fos.write(buffer, 0, read);
                         }
 
-                        //Update usage
-                        tinifyTable.update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, String.valueOf(Tinify.compressionCount()));
+                        fos.flush();
+                        fos.close();
+                        is.close();
+
 
                         imageFile.setReadable(true, false);
                         imageFile.setExecutable(true, false);
                         imageFile.setWritable(true, false);
 
-                        fileDownloadPath = imageFile.getAbsolutePath().split("/html")[1];
-                        final String downloadLink = (WebEngineConfig.getBaseURL().contains("http://localhost") ? "http://localhost:8090" : "http://theapache64.com:8090") + fileDownloadPath;
+                        String fileDownloadPath = imageFile.getAbsolutePath().split("/html")[1];
+                        String downloadLink = (WebEngineConfig.getBaseURL().contains("http://localhost") ? "http://localhost:8090" : "http://theapache64.com:8090") + fileDownloadPath;
+
+                        TinifyKeys tinifyTable = TinifyKeys.getInstance();
+                        final TinifyKey tinifyKey = tinifyTable.getLeastUsedKey();
+                        Tinify.setKey(tinifyKey.getKey());
+
+                        //Compressing in another thread
+                        try {
+                            System.out.println("Download link : " + downloadLink);
+                            Tinify.fromUrl(downloadLink).toFile(imageFile.getAbsolutePath());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+
+                            if (e instanceof AccountException) {
+                                //Disabling key
+                                tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey.getId(), TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE);
+
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Sending report
+                                        try {
+                                            MailHelper.sendMail("theapache64@gmail.com", "Tinify key failed", tinifyKey.toString(), "Mock-API");
+                                        } catch (MailException e1) {
+                                            e1.printStackTrace();
+                                        }
+
+                                    }
+                                }).start();
+                            }
+
+                            throw new Request.RequestException("Compression failed, Please try again: " + e.getMessage() + ": DownloadLink : " + downloadLink);
+                        }
+
+                        //Update usage
+                        tinifyTable.update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, String.valueOf(Tinify.compressionCount()));
 
                         //Adding to db
                         Images.getInstance().add(new Image(null, getHeaderSecurity().getProjectId(), tinifyKey.getId(), downloadLink, downloadLink));
+
                         getWriter().write(new Response("File uploaded", "download_link", downloadLink).getResponse());
 
                     } else {

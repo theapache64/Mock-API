@@ -8,6 +8,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.theah64.mock_api.utils.CodeGen" %>
 <%@ page import="com.theah64.mock_api.utils.GlobalVariables" %>
+<%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -972,6 +973,58 @@
                 $(this).parent().parent().remove();
             });
 
+
+            $("form#fInsertImage").on('submit', function (e) {
+
+                console.log("Uploading image...");
+
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "v1/upload_image",
+                    headers: {"Authorization": "<%=project.getApiKey()%>"},
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+
+                    beforeSend: function () {
+                        //status.text("Initializing upload...");
+                    },
+
+                    xhr: function () {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function (evt) {
+
+                            if (evt.lengthComputable) {
+                                var percentComplete = (evt.loaded / evt.total) * 100;
+                                //Do something with upload progress here
+                                //status.text("Uploading...(" + percentComplete + "%)");
+
+                                if (percentComplete == 100) {
+                                    // status.text("Processing image...");
+                                }
+                            }
+                        }, false);
+
+                        return xhr;
+                    },
+
+                    success: function (data) {
+                        console.log("success");
+                        console.log(data);
+                    },
+                    error: function (data) {
+                        console.log("error");
+                        console.log(data);
+                    }
+                });
+
+
+            });
+
         });
     </script>
     <style>
@@ -1020,6 +1073,20 @@
 %>
 
 <%@include file="nav_bar.jsp" %>
+<%--
+
+//TODO: Add menu like
+<li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Page 1-1</a></li>
+          <li><a href="#">Page 1-2</a></li>
+          <li><a href="#">Page 1-3</a></li>
+        </ul>
+      </li>
+
+--%>
 
 <div class="container">
 
@@ -1149,12 +1216,19 @@
                                 class="glyphicon glyphicon-trash"></span> DELETE
                         </button>
 
-                        <button id="bClear" class="btn btn-info  btn-sm"><span class="glyphicon glyphicon-flash"></span>
-                            CLEAR
+                        <button data-toggle="modal" data-target="#dInsertImage" id="bInsertImage"
+                                class="btn btn-default  btn-sm"><span
+                                class="glyphicon glyphicon-picture"></span>
+                            Insert Image
+                        </button>
+
+                        <button id="bClear" class="btn btn-default  btn-sm"><span
+                                class="glyphicon glyphicon-flash"></span>
+                            Clear
                         </button>
                         <button id="bSubmit" class="btn btn-primary  btn-sm"><span
                                 class="glyphicon glyphicon-save"></span>
-                            SAVE
+                            Save
                         </button>
                     </div>
 
@@ -1307,7 +1381,7 @@
         </div>
     </div>
 
-    <%----%>
+    <%--Shortcuts--%>
     <div class="modal fade" id="shortcuts" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -1325,10 +1399,42 @@
                     <p><code>Control + Alt + D </code>To duplicate selection (with numerical increment)</p>
                     <p><code>Control + Alt + S </code>To insert a string object at selected position</p>
                     <p><code>Control + Alt + I </code>To insert random image urls at selected position</p>
+                    <p><code>Control + Alt + F </code>To search in default response</p>
                     <p><code>F1 </code>To search for a route</p>
                     <p><code>F4 </code>To generate API interface method</p>
                     <p><code>F7 </code>To save</p>
                     <p><code>F10 </code>Legacy param adding</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%--Inset image--%>
+    <div class="modal fade" id="dInsertImage" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Insert Image
+                        <small id="sInsertImageProgress"></small>
+                    </h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                            40%
+                        </div>
+                    </div>
+
+                    <form id="fInsertImage">
+                        <input type="file" name="<%=UploadImageServlet.KEY_IMAGE%>" required/>
+                        <input type="submit" value="Upload"/>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

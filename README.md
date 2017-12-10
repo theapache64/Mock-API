@@ -11,6 +11,7 @@ A Web Application to build Mock API
 
 - Add method to routes
 - Image hosting
+- Add toolbar menu for shortcuts (Insert like)
 
 
 #
