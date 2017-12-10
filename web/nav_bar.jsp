@@ -13,7 +13,8 @@
             </li>
             <li><a href="#" data-toggle="modal" data-target="#shortcuts">Shortcuts</a></li>
             <li><a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare</a></li>
-            <li><a href="donate_tinify_key.jsp?api_key=<%=project.getApiKey()%>">Donate</a></li>
+            <li><a href="images.jsp?api_key=<%=project.getApiKey()%>">Images</a></li>
+            <li><a href="donate_tinify_key.jsp?api_key=<%=project.getApiKey()%>">Donate Key</a></li>
 
         </ul>
         <ul class="nav navbar-nav navbar-right">

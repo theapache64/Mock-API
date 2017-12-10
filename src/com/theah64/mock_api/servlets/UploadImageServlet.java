@@ -1,7 +1,9 @@
 package com.theah64.mock_api.servlets;
 
 
+import com.theah64.mock_api.database.Images;
 import com.theah64.mock_api.database.TinifyKeys;
+import com.theah64.mock_api.models.Image;
 import com.theah64.mock_api.models.TinifyKey;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.exceptions.MailException;
@@ -120,7 +122,11 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                         imageFile.setWritable(true, false);
 
                         fileDownloadPath = imageFile.getAbsolutePath().split("/html")[1];
-                        getWriter().write(new Response("File uploaded", "download_link", WebEngineConfig.getBaseURL() + fileDownloadPath).getResponse());
+                        final String downloadLink = (WebEngineConfig.getBaseURL().contains("http://localhost") ? "http://localhost:8090" : "http://theapache64.com:8090") + fileDownloadPath;
+
+                        //Adding to db
+                        Images.getInstance().add(new Image(null, getHeaderSecurity().getProjectId(), tinifyKey.getId(), downloadLink, downloadLink));
+                        getWriter().write(new Response("File uploaded", "download_link", downloadLink).getResponse());
 
                     } else {
                         throw new Request.RequestException("Invalid image type: " + filePart.getContentType() + ":" + ext);
