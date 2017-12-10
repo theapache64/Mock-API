@@ -1,26 +1,24 @@
 package com.theah64.mock_api.servlets;
 
 
-import com.theah64.mock_api.database.Projects;
+import com.theah64.mock_api.database.TinifyKeys;
+import com.theah64.mock_api.models.TinifyKey;
+import com.theah64.webengine.database.querybuilders.QueryBuilderException;
+import com.theah64.webengine.exceptions.MailException;
 import com.theah64.webengine.utils.*;
+import com.tinify.AccountException;
+import com.tinify.Tinify;
 import org.json.JSONException;
 
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Paths;
-import java.util.Iterator;
+import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/upload_image"})
 @MultipartConfig
@@ -70,15 +68,9 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                     if (ext.equals(FilePart.FILE_EXTENSION_JPG) || ext.equals(FilePart.FILE_EXTENSION_PNG)) {
 
                         //Double check if it's an image
-                        Image image = ImageIO.read(filePart.getInputStream());
+                        BufferedImage image = ImageIO.read(filePart.getInputStream());
                         if (image == null) {
                             throw new Request.RequestException("Invalid image : double check");
-                        }
-
-
-                        final int fileSizeInKb = filePart.getInputStream().available() / 1024;
-                        if (fileSizeInKb > MAX_FILE_SIZE_IN_KB) {
-                            throw new Request.RequestException("File size should be less than " + MAX_FILE_SIZE_IN_KB + "kb");
                         }
 
 
@@ -93,19 +85,35 @@ public class UploadImageServlet extends AdvancedBaseServlet {
 
 
                         final File imageFile = new File(dataDir.getAbsolutePath() + File.separator + fp.getRandomFileName());
-                        final InputStream is = filePart.getInputStream();
 
-                        final FileOutputStream fos = new FileOutputStream(imageFile);
-                        int read = 0;
-                        final byte[] buffer = new byte[1024];
+                        TinifyKeys tinifyTable = TinifyKeys.getInstance();
+                        final TinifyKey tinifyKey = tinifyTable.getLeastUsedKey();
+                        Tinify.setKey(tinifyKey.getKey());
+                        try {
+                            Tinify.fromBuffer(getByteArray(filePart.getInputStream())).toFile(imageFile.getAbsolutePath());
+                        } catch (AccountException e) {
 
-                        while ((read = is.read(buffer)) != -1) {
-                            fos.write(buffer, 0, read);
+                            //Disabling key
+                            tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey.getId(), TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE);
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //Sending report
+                                    try {
+                                        MailHelper.sendMail("theapache64@gmail.com", "Tinify key failed", tinifyKey.toString(), "Mock-API");
+                                    } catch (MailException e1) {
+                                        e1.printStackTrace();
+                                    }
+
+                                }
+                            }).start();
+
+                            throw new Request.RequestException("Compression failed, Please try again");
                         }
 
-                        fos.flush();
-                        fos.close();
-                        is.close();
+                        //Update usage
+                        tinifyTable.update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, String.valueOf(Tinify.compressionCount()));
 
                         imageFile.setReadable(true, false);
                         imageFile.setExecutable(true, false);
@@ -123,11 +131,26 @@ public class UploadImageServlet extends AdvancedBaseServlet {
             } else {
                 throw new Request.RequestException("image missing from request");
             }
-        } catch (javax.servlet.ServletException e) {
+        } catch (javax.servlet.ServletException | SQLException | QueryBuilderException e) {
             e.printStackTrace();
             throw new Request.RequestException(e.getMessage());
         }
 
+    }
+
+    private byte[] getByteArray(InputStream is) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        byte[] data = new byte[16384];
+
+        while ((nRead = is.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        buffer.flush();
+
+        return buffer.toByteArray();
     }
 
 

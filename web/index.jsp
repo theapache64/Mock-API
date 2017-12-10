@@ -6,6 +6,8 @@
 <%@ page import="java.net.URLEncoder" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.theah64.mock_api.utils.CodeGen" %>
+<%@ page import="com.theah64.mock_api.utils.GlobalVariables" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -1014,32 +1016,10 @@
     } catch (SQLException e) {
         e.printStackTrace();
     }
+
 %>
 
-<nav class="navbar navbar-inverse" style="border-radius: 0px">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#"><%=project.getName()%>
-            </a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="index.jsp?api_key=<%=project.getApiKey()%>">Home</a></li>
-            <li>
-                <a href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
-            </li>
-            <li><a href="#" data-toggle="modal" data-target="#shortcuts">Shortcuts</a></li>
-            <li><a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare</a></li>
-
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a id="base_og_api_url"
-                   href="#"><%=project.getBaseOgApiUrl() == null ? "Set original base URL" : project.getBaseOgApiUrl()%>
-            </a></li>
-
-            <li><a href="logout.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-        </ul>
-    </div>
-</nav>
+<%@include file="nav_bar.jsp" %>
 
 <div class="container">
 

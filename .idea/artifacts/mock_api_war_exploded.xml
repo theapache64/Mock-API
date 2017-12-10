@@ -10,6 +10,7 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="com.thedeanda:lorem:2.1" />
+          <element id="library" level="project" name="com.tinify:tinify:1.5.1" />
         </element>
       </element>
     </root>

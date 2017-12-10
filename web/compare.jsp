@@ -39,20 +39,10 @@
 
 </head>
 <body>
+
+<%@include file="nav_bar.jsp"%>
+
 <div class="container">
-
-    <%--Heading--%>
-    <div class="row ">
-        <div class="col-md-12 text-center">
-            <h1>Mock API</h1>
-            <p>
-                <small>Project <%=project.getName()%>
-                </small>
-                <a href="logout.jsp"><i>(logout)</i></a>
-            </p>
-
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-md-12">
