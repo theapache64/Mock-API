@@ -1117,6 +1117,17 @@
                 $("div#dInsertImage").modal("hide");
             });
 
+            $("div.dGalleryRow").hover(function (e) {
+                $(this).find("button.bDeleteImage").fadeIn("300");
+            }, function () {
+                $(this).find("button.bDeleteImage").fadeOut("300");
+            });
+
+            $("div#dGallery").on('click',"button.bDeleteImage",function(e){
+                alert("delete");
+                e.stopPropagation();
+            });
+
         });
     </script>
     <style>
@@ -1164,6 +1175,7 @@
         div.dGalleryRow {
             cursor: pointer;
         }
+
 
     </style>
 </head>
@@ -1584,7 +1596,13 @@
                         <div class="col-md-3">
                             <div class="center-cropped dGalleryRow"
                                  data-image-url="<%=image.getImageUrl()%>"
-                                 style="background-image: url('<%=image.getThumbUrl()%>')"></div>
+                                 style="background-image: url('<%=image.getThumbUrl()%>')">
+                                <button
+                                        style="display:none;margin: 10px;background-color: transparent;border: 0;"
+                                        class="pull-right bDeleteImage"><span style="color: white"
+                                                                              class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </div>
                         </div>
 
 
