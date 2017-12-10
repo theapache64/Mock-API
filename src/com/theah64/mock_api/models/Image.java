@@ -1,14 +1,15 @@
 package com.theah64.mock_api.models;
 
 public class Image {
-    private final String id, projectId, tinifyKeyId, imageUrl, thumbUrl;
+    private final String id, projectId, tinifyKeyId, imageUrl, thumbUrl, filePath;
 
-    public Image(String id, String projectId, String tinifyKeyId, String imageUrl, String thumbUrl) {
+    public Image(String id, String projectId, String tinifyKeyId, String imageUrl, String thumbUrl, String filePath) {
         this.id = id;
         this.projectId = projectId;
         this.tinifyKeyId = tinifyKeyId;
         this.imageUrl = imageUrl;
         this.thumbUrl = thumbUrl;
+        this.filePath = filePath;
     }
 
     public String getId() {
@@ -29,5 +30,9 @@ public class Image {
 
     public String getThumbUrl() {
         return thumbUrl;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 }

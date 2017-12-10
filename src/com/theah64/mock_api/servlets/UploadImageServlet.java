@@ -112,44 +112,51 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                         String fileDownloadPath = imageFile.getAbsolutePath().split("/html")[1];
                         String downloadLink = (WebEngineConfig.getBaseURL().contains("http://localhost") ? "http://localhost:8090" : "http://theapache64.com:8090") + fileDownloadPath;
 
-                        TinifyKeys tinifyTable = TinifyKeys.getInstance();
-                        final TinifyKey tinifyKey = tinifyTable.getLeastUsedKey();
-                        Tinify.setKey(tinifyKey.getKey());
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
 
-                        //Compressing in another thread
-                        try {
-                            System.out.println("Download link : " + downloadLink);
-                            //Tinify.fromUrl("https://images-na.ssl-images-amazon.com/images/I/91-k8Ex-KCL._RI_SX200_.jpg").toFile(imageFile.getAbsolutePath());
-                            Tinify.fromUrl(downloadLink).toFile(imageFile.getAbsolutePath());
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                                TinifyKey tinifyKey = null;
+                                try {
 
-                            if (e instanceof AccountException) {
-                                //Disabling key
-                                tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey.getId(), TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE);
+                                    TinifyKeys tinifyTable = TinifyKeys.getInstance();
+                                    tinifyKey = tinifyTable.getLeastUsedKey();
+                                    Tinify.setKey(tinifyKey.getKey());
 
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Sending report
-                                        try {
-                                            MailHelper.sendMail("theapache64@gmail.com", "Tinify key failed", tinifyKey.toString(), "Mock-API");
-                                        } catch (MailException e1) {
-                                            e1.printStackTrace();
+                                    //Compressing in another thread
+                                    try {
+                                        System.out.println("Download link : " + downloadLink);
+                                        //Tinify.fromUrl("https://images-na.ssl-images-amazon.com/images/I/91-k8Ex-KCL._RI_SX200_.jpg").toFile(imageFile.getAbsolutePath());
+                                        Tinify.fromUrl(downloadLink).toFile(imageFile.getAbsolutePath());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+
+                                        if (e instanceof AccountException) {
+                                            //Disabling key
+                                            tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey.getId(), TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE);
                                         }
 
+
+                                        throw new Request.RequestException("Compression failed, Please try again: " + e.getMessage());
                                     }
-                                }).start();
+
+                                    //Update usage
+                                    tinifyTable.update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, String.valueOf(Tinify.compressionCount()));
+
+                                    //Adding to db
+                                    Images.getInstance().add(new Image(null, getHeaderSecurity().getProjectId(), tinifyKey.getId(), downloadLink, downloadLink, imageFile.getAbsolutePath()));
+
+                                } catch (QueryBuilderException | Request.RequestException | SQLException e) {
+                                    e.printStackTrace();
+
+                                    try {
+                                        MailHelper.sendMail("theapache64@gmail.com", "Compression failed", e.getMessage() + tinifyKey, "Mock-API");
+                                    } catch (MailException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                }
                             }
-
-                            throw new Request.RequestException("Compression failed, Please try again: " + e.getMessage());
-                        }
-
-                        //Update usage
-                        tinifyTable.update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, String.valueOf(Tinify.compressionCount()));
-
-                        //Adding to db
-                        Images.getInstance().add(new Image(null, getHeaderSecurity().getProjectId(), tinifyKey.getId(), downloadLink, downloadLink));
+                        }).start();
 
                         getWriter().write(new Response("File uploaded", "download_link", downloadLink).getResponse());
 
@@ -162,7 +169,7 @@ public class UploadImageServlet extends AdvancedBaseServlet {
             } else {
                 throw new Request.RequestException("image missing from request");
             }
-        } catch (javax.servlet.ServletException | SQLException | QueryBuilderException e) {
+        } catch (javax.servlet.ServletException e) {
             e.printStackTrace();
             throw new Request.RequestException(e.getMessage());
         }

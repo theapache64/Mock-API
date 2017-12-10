@@ -1251,7 +1251,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label for="route">Route</label>
                     <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route">
                 </div>
@@ -1565,7 +1565,7 @@
                     </div>
 
                     <form id="fInsertImage" style="width: 0px;height: 0px;overflow: hidden">
-                        <input id="iFile" type="file" accept="image/*" name="<%=UploadImageServlet.KEY_IMAGE%>[]"
+                        <input id="iFile" type="file" accept="image/*" name="<%=UploadImageServlet.KEY_IMAGE%>"
                                required/>
                         <input type="submit" value="Upload"/>
                     </form>
