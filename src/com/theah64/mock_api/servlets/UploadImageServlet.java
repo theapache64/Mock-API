@@ -5,18 +5,22 @@ import com.theah64.mock_api.database.Projects;
 import com.theah64.webengine.utils.*;
 import org.json.JSONException;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Paths;
+import java.util.Iterator;
 
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/upload_image"})
 @MultipartConfig
@@ -24,6 +28,7 @@ public class UploadImageServlet extends AdvancedBaseServlet {
 
 
     private static final String KEY_IMAGE = "image";
+    private static final int MAX_FILE_SIZE_IN_KB = 900;
 
 
     @Override
@@ -65,9 +70,17 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                     if (ext.equals(FilePart.FILE_EXTENSION_JPG) || ext.equals(FilePart.FILE_EXTENSION_PNG)) {
 
                         //Double check if it's an image
-                        if (ImageIO.read(filePart.getInputStream()) == null) {
+                        Image image = ImageIO.read(filePart.getInputStream());
+                        if (image == null) {
                             throw new Request.RequestException("Invalid image : double check");
                         }
+
+
+                        final int fileSizeInKb = filePart.getInputStream().available() / 1024;
+                        if (fileSizeInKb > MAX_FILE_SIZE_IN_KB) {
+                            throw new Request.RequestException("File size should be less than " + MAX_FILE_SIZE_IN_KB + "kb");
+                        }
+
 
                         final File dataDir = new File("/var/www/html/mock_api_data");
 
@@ -80,8 +93,8 @@ public class UploadImageServlet extends AdvancedBaseServlet {
 
 
                         final File imageFile = new File(dataDir.getAbsolutePath() + File.separator + fp.getRandomFileName());
-
                         final InputStream is = filePart.getInputStream();
+
                         final FileOutputStream fos = new FileOutputStream(imageFile);
                         int read = 0;
                         final byte[] buffer = new byte[1024];
@@ -93,7 +106,6 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                         fos.flush();
                         fos.close();
                         is.close();
-
 
                         imageFile.setReadable(true, false);
                         imageFile.setExecutable(true, false);
