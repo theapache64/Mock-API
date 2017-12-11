@@ -117,6 +117,15 @@ public class Route {
             case METHOD_POST:
                 return "label-success";
 
+            case METHOD_GET:
+                return "label-primary";
+
+            case METHOD_DELETE:
+                return "label-danger";
+
+            case METHOD_PATCH:
+                return "label-warning";
+
             default:
                 return "label-default";
         }

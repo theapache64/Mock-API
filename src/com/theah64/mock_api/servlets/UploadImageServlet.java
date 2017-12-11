@@ -104,7 +104,6 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                         fos.close();
                         is.close();
 
-
                         imageFile.setReadable(true, false);
                         imageFile.setExecutable(true, false);
                         imageFile.setWritable(true, false);
@@ -126,13 +125,19 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                                     //Compressing in another thread
                                     try {
                                         System.out.println("Download link : " + downloadLink);
-                                        //Tinify.fromUrl("https://images-na.ssl-images-amazon.com/images/I/91-k8Ex-KCL._RI_SX200_.jpg").toFile(imageFile.getAbsolutePath());
                                         final String tempCmpPath = imageFile.getAbsolutePath() + "_cmp";
+                                        //Tinify.fromUrl("https://images-na.ssl-images-amazon.com/images/I/91-k8Ex-KCL._RI_SX200_.jpg").toFile(tempCmpPath);
                                         Tinify.fromUrl(downloadLink).toFile(tempCmpPath);
-                                        if (new File(tempCmpPath).renameTo(imageFile)) {
 
+                                        File cmpFile = new File(tempCmpPath);
+
+                                        if (!cmpFile.renameTo(imageFile)) {
+                                            throw new Request.RequestException("Failed to replace compressed file with original");
+                                        } else {
+                                            imageFile.setReadable(true, false);
+                                            imageFile.setExecutable(true, false);
+                                            imageFile.setWritable(true, false);
                                         }
-
                                     } catch (Exception e) {
                                         e.printStackTrace();
 

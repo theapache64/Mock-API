@@ -44,6 +44,12 @@
         p {
             font-size: 16px;
         }
+
+        .label-sm {
+            font-size: 45%;
+            position: relative;
+            top: -4px;
+        }
     </style>
 </head>
 <body>
@@ -107,16 +113,14 @@
             i++;
     %>
 
-
     <h3>
         <small><%=i%>
             .
         </small>
         /<%=route.getName()%>
+        <span class="label label-sm <%=route.getBootstrapLabelForMethod()%>"><%=route.getMethod()%></span>
     </h3>
-    <br>
-    <span class="label <%=route.getBootstrapLabelForMethod()%>"><%=route.getMethod()%></span>
-    <br>
+
     <br>
 
     <%--End point--%>

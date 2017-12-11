@@ -748,7 +748,7 @@
                         if (!data.error) {
 
                             $(resultDiv).removeClass('alert-danger').addClass('alert-success');
-                            var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "?"+ data.data.dummy_params + "'>/" + route + "</a>";
+                            var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "?" + data.data.dummy_params + "'>/" + route + "</a>";
                             $(resultDiv).html("<strong>Success! </strong> " + data.message + ": " + link);
                             $(resultDiv).show();
 
@@ -1069,7 +1069,7 @@
                             $("div#dGallery").prepend(galleryRow.html());
 
                             if (isAutoUpload) {
-                                editor.replaceSelection(data.data.download_link);
+                                editor.replaceSelection('"' + data.data.download_link + '"');
                                 editor.focus();
                             }
 
