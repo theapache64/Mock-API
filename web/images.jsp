@@ -16,6 +16,59 @@
     <title>Images / <%=project.getName()%>
     </title>
     <%@include file="common_headers.jsp" %>
+    <script>
+        $(document).ready(function () {
+
+            $("div.dGalleryRow").hover(function (e) {
+                $(this).find("button.bTransfer").fadeIn("300");
+            }, function () {
+                $(this).find("button.bTransfer").fadeOut("300");
+            });
+
+            $("form#fImageSearch").on('submit', function (e) {
+                e.preventDefault();
+                var keyword = $.trim($("input#iKeyword").val());
+
+                if (keyword !== "") {
+
+                    $.ajax({
+                        type: "POST",
+                        beforeSend: function () {
+
+                        },
+                        dataType: "jsonp",
+                        jsonp: false,
+                        data: {
+                            keyword: keyword,
+                            Authorization: "GoZNYVeK9O"
+                        },
+                        url: "http://theapache64.com/gpix/v1/search",
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        error: function () {
+
+                        }
+                    });
+
+                }
+            });
+
+        });
+    </script>
+    <style>
+        .center-cropped {
+            width: 100px;
+            height: 100px;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        div.dGalleryRow {
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+    </style>
 </head>
 <body>
 <%@include file="nav_bar.jsp" %>
@@ -40,8 +93,8 @@
                      style="background-image: url('<%=image.getThumbUrl()%>')">
                     <button
                             style="display:none;margin: 10px;background-color: transparent;border: 0;"
-                            class="pull-right bDeleteImage"><span style="color: white"
-                                                                  class="glyphicon glyphicon-trash"></span>
+                            class="pull-right bDelete"><span style="color: white"
+                                                             class="glyphicon glyphicon-trash"></span>
                     </button>
                 </div>
             </div>
@@ -59,19 +112,48 @@
         <div class="col-md-6">
             <h3>Search</h3>
             <br>
-            <form class="form-inline">
+            <form id="fImageSearch" class="form-inline">
 
                 <div class="form-group">
-                    <input id="iSearch" class="form-control" name="search_keyword" placeholder="Keyword"/>
+                    <input id="iKeyword" class="form-control" name="search_keyword" placeholder="Keyword"/>
                 </div>
 
-                <button type="submit" class="btn btn-primary">&nbsp; <span class="glyphicon glyphicon-search"></span> &nbsp;</button>
+                <button type="submit" class="btn btn-primary">&nbsp; <span class="glyphicon glyphicon-search"></span>
+                    &nbsp;</button>
             </form>
 
+            <br>
+
+            <div class="row">
+
+                <%
+                    for (int i = 0; i < 10; i++) {
+                %>
+
+                <%
+                    }
+                %>
+
+            </div>
 
         </div>
 
     </div>
+
+    <div id="dSearchImageRow" style="display: none">
+        <div class="col-md-2" style="margin-right: 5px">
+            <div class="center-cropped dGalleryRow"
+                 data-image-url="http://pbs.twimg.com/profile_images/3323288933/120b2f736d1180c9708854159d84c0c5_400x400.jpeg"
+                 style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT6D434LO8ddPE9TomVjs3iIC3RpKQXTR2lmJxci5gq933EWqU')">
+                <button
+                        style="display:none;margin: 5px;background-color: transparent;border: 0;"
+                        class="pull-right bTransfer"><span style="color: white"
+                                                           class="glyphicon glyphicon-transfer"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 </body>

@@ -1161,20 +1161,13 @@
             background-color: #053d76;
         }
 
-        .center-cropped {
-            width: 200px;
-            height: 200px;
-            background-position: center center;
-            background-repeat: no-repeat;
-        }
+
 
         div#dGallery div {
             margin-bottom: 10px;
         }
 
-        div.dGalleryRow {
-            cursor: pointer;
-        }
+
 
 
     </style>
