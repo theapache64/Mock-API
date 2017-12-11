@@ -127,7 +127,12 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                                     try {
                                         System.out.println("Download link : " + downloadLink);
                                         //Tinify.fromUrl("https://images-na.ssl-images-amazon.com/images/I/91-k8Ex-KCL._RI_SX200_.jpg").toFile(imageFile.getAbsolutePath());
-                                        Tinify.fromUrl(downloadLink).toFile(imageFile.getAbsolutePath());
+                                        final String tempCmpPath = imageFile.getAbsolutePath() + "_cmp";
+                                        Tinify.fromUrl(downloadLink).toFile(tempCmpPath);
+                                        if (new File(tempCmpPath).renameTo(imageFile)) {
+
+                                        }
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
 

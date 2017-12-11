@@ -34,7 +34,7 @@ import java.util.List;
 public class FetchJSONServlet extends AdvancedBaseServlet {
 
 
-    private static final String KEY_DUMMY_PARAMS = "dummy_params";
+    public static final String KEY_DUMMY_PARAMS = "dummy_params";
     private static final String KEY_LAST_MODIFIED = "last_modified";
     private static final String KEY_LAST_MODIFIED_DATE = "last_modified_date";
     private static final String KEY_RESPONSES = "responses";

@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.theah64.mock_api.servlets.FetchJSONServlet.KEY_DUMMY_PARAMS;
+
 /**
  * Created by theapache64 on 14/5/17.
  */
@@ -49,7 +51,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
         final String projectId = getHeaderSecurity().getProjectId();
 
-        final String routeId = Routes.getInstance().get(Routes.COLUMN_NAME, routeName, Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_ID);
+        String routeId = Routes.getInstance().get(Routes.COLUMN_NAME, routeName, Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_ID);
 
         final String responseId = getStringParameter(KEY_RESPONSE_ID);
         final String response = getStringParameter(KEY_RESPONSE);
@@ -69,7 +71,6 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String paramDefaultValues[] = getStringParameterArray(KEY_DEFAULT_VALUES);
         final String paramDescriptions[] = getStringParameterArray(KEY_DESCRIPTIONS);
         final String paramIsRequired[] = getStringParameterArray(KEY_IS_REQUIRED);
-
 
 
         if (paramNames != null) {
@@ -103,15 +104,20 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
         final Route route = new Route(null, projectId, routeName, defaultResponse, description, externalApiUrl, method, params, isSecure, delay, -1);
 
+        final JSONObject joResp = new JSONObject();
+        joResp.put(KEY_DUMMY_PARAMS, route.getDummyRequiredParams());
+
         if (routeId == null) {
             //Route doesn't exist
-            final String jsonId = Routes.getInstance().addv3(route);
-            getWriter().write(new APIResponse("Route established ", Routes.COLUMN_ID, jsonId).getResponse());
+            routeId = Routes.getInstance().addv3(route);
+            joResp.put(Routes.COLUMN_ID, routeId);
+
+            getWriter().write(new APIResponse("Route established ", joResp).getResponse());
         } else {
             //Update the existing route
             route.setId(routeId);
             Routes.getInstance().update(route);
-            getWriter().write(new APIResponse("Route updated", new JSONObject()).getResponse());
+            getWriter().write(new APIResponse("Route updated", joResp).getResponse());
         }
     }
 
