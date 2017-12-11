@@ -140,6 +140,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
 
             jsonResp = RandomResponseGenerator.generate(jsonResp);
+
             System.out.println(jsonResp);
             getWriter().write(new JSONObject(jsonResp).toString());
 

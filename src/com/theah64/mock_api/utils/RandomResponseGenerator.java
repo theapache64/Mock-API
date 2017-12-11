@@ -9,7 +9,11 @@ public class RandomResponseGenerator {
 
 
     //First name throw back
-    static final LoremIpsum loremIpsum = LoremIpsum.getInstance();
+    private static final LoremIpsum loremIpsum = LoremIpsum.getInstance();
+
+    public static LoremIpsum getLoremIpsum() {
+        return loremIpsum;
+    }
 
     public static final RandomResponse[] randomResponses = new RandomResponse[]{
 

@@ -1,5 +1,6 @@
 package com.theah64.mock_api.models;
 
+import com.theah64.mock_api.utils.RandomResponseGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,7 +107,7 @@ public class Route {
     public String getDummyRequiredParams() {
         final StringBuilder dummyParamBuilder = new StringBuilder();
         for (final String param : filterRequiredParams()) {
-            dummyParamBuilder.append(param).append("=sampleParam&");
+            dummyParamBuilder.append(param).append("=").append(RandomResponseGenerator.getLoremIpsum().getWords(1)).append("&");
         }
         return dummyParamBuilder.toString();
     }
