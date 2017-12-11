@@ -8,6 +8,7 @@ import com.theah64.webengine.database.querybuilders.SelectQueryBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class TinifyKeys extends BaseTable<TinifyKey> {
 
@@ -50,5 +51,19 @@ public class TinifyKeys extends BaseTable<TinifyKey> {
                 1,
                 COLUMN_USAGE
         ).get();
+    }
+
+    @Override
+    public List<TinifyKey> getAll() throws QueryBuilderException, SQLException {
+        return new SelectQueryBuilder.Builder<TinifyKey>(getTableName(), rs -> new TinifyKey(
+                rs.getString(COLUMN_ID),
+                rs.getString(COLUMN_KEY),
+                rs.getString(COLUMN_EMAIL),
+                rs.getString(COLUMN_USAGE)
+        )).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_EMAIL, COLUMN_USAGE})
+                .orderBy(COLUMN_USAGE)
+                .build()
+                .getAll();
+
     }
 }

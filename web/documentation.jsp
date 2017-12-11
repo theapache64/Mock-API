@@ -115,8 +115,9 @@
         /<%=route.getName()%>
     </h3>
     <br>
-    <p>HTTP <%=route.getMethod()%>
-    </p>
+    <span class="label <%=route.getBootstrapLabelForMethod()%>"><%=route.getMethod()%></span>
+    <br>
+    <br>
 
     <%--End point--%>
     <div class="row">
@@ -138,6 +139,18 @@
             </table>
         </div>
     </div>
+
+    <br>
+    <%
+        if (route.getDescription() != null && !route.getDescription().trim().isEmpty()) {
+    %>
+    <h4><b>Description</b></h4>
+    <p><%=route.getDescription()%>
+    </p>
+    <br>
+    <%
+        }
+    %>
 
     <%
         if (!route.getParams().isEmpty()) {
@@ -187,7 +200,7 @@
     %>
 
     <%--Examples--%>
-    <p>Test URLs</p>
+    <h4><b>Test URLs</b></h4>
     <div class="row">
         <div class="col-md-10">
             <table class="table table-bordered ">

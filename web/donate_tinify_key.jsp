@@ -1,12 +1,13 @@
 <%@ page import="com.theah64.mock_api.database.TinifyKeys" %>
-<%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.mock_api.models.TinifyKey" %>
-<%@ page import="com.theah64.webengine.utils.Request" %>
-<%@ page import="java.sql.SQLException" %>
 <%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
+<%@ page import="com.theah64.webengine.utils.Form" %>
+<%@ page import="com.theah64.webengine.utils.Request" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
+<%@ page import="com.tinify.AccountException" %>
 <%@ page import="com.tinify.Tinify" %>
-<%@ page import="com.tinify.AccountException" %><%--
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: theapache64
   Date: 10/12/17
@@ -25,7 +26,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <h3>Donate Tinify Key</h3> <br>
             <%--key, email, dashboard_url, usage--%>
             <form method="POST" action="donate_tinify_key.jsp?api_key=<%=project.getApiKey()%>">
@@ -88,6 +89,43 @@
 
 
             </form>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Live Keys</h3> <br>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <td>Email</td>
+                    <td>Key</td>
+                    <td>Usage</td>
+                </tr>
+                </thead>
+
+                <tbody>
+                <%
+                    try {
+                        final List<TinifyKey> tinifyKeys = TinifyKeys.getInstance().getAll();
+                        for (final TinifyKey tinifyKey : tinifyKeys) {
+                %>
+
+                <tr>
+                    <td><%=tinifyKey.getEmail()%>
+                    </td>
+                    <td><%=tinifyKey.getKey().replaceAll("[A-Z]","*")%>
+                    </td>
+                    <td><%=tinifyKey.getUsage()%>/500</td>
+                </tr>
+
+                <%
+                        }
+
+                    } catch (QueryBuilderException | SQLException e) {
+                        e.printStackTrace();
+                    }
+                %>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

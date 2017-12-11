@@ -10,6 +10,13 @@ import java.util.List;
  * Created by theapache64 on 14/5/17.
  */
 public class Route {
+
+    private static final String METHOD_POST = "POST";
+    private static final String METHOD_GET = "GET";
+    private static final String METHOD_PUT = "PUT";
+    private static final String METHOD_PATCH = "PATCH";
+    private static final String METHOD_DELETE = "DELETE";
+
     private String id;
     private final String projectId;
     private final String name;
@@ -102,5 +109,16 @@ public class Route {
             dummyParamBuilder.append(param).append("=sampleParam&");
         }
         return dummyParamBuilder.toString();
+    }
+
+    public String getBootstrapLabelForMethod() {
+        switch (method) {
+
+            case METHOD_POST:
+                return "label-success";
+
+            default:
+                return "label-default";
+        }
     }
 }
