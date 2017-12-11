@@ -5,6 +5,7 @@ import com.theah64.mock_api.database.Images;
 import com.theah64.mock_api.database.TinifyKeys;
 import com.theah64.mock_api.models.Image;
 import com.theah64.mock_api.models.TinifyKey;
+import com.theah64.webengine.database.BaseTable;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.exceptions.MailException;
 import com.theah64.webengine.utils.*;
@@ -115,12 +116,20 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                             @Override
                             public void run() {
 
+                                //First add the image to db
                                 TinifyKey tinifyKey = null;
+
                                 try {
 
                                     TinifyKeys tinifyTable = TinifyKeys.getInstance();
                                     tinifyKey = tinifyTable.getLeastUsedKey();
                                     Tinify.setKey(tinifyKey.getKey());
+
+                                    //Adding to db
+                                    final Image image1 = new Image(null, getHeaderSecurity().getProjectId(), tinifyKey.getId(), downloadLink, downloadLink, imageFile.getAbsolutePath(), false);
+                                    Images imagesTable = Images.getInstance();
+                                    final String id = imagesTable.addv3(image1);
+                                    image1.setId(id);
 
                                     //Compressing in another thread
                                     try {
@@ -138,6 +147,10 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                                             imageFile.setExecutable(true, false);
                                             imageFile.setWritable(true, false);
                                         }
+
+                                        //Setting compression finished
+                                        imagesTable.update(Images.COLUMN_ID, image1.getId(), Images.COLUMN_IS_COMPRESSED, BaseTable.TRUE);
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
 
@@ -152,9 +165,6 @@ public class UploadImageServlet extends AdvancedBaseServlet {
 
                                     //Update usage
                                     tinifyTable.update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, String.valueOf(Tinify.compressionCount()));
-
-                                    //Adding to db
-                                    Images.getInstance().add(new Image(null, getHeaderSecurity().getProjectId(), tinifyKey.getId(), downloadLink, downloadLink, imageFile.getAbsolutePath()));
 
                                 } catch (QueryBuilderException | Request.RequestException | SQLException e) {
                                     e.printStackTrace();

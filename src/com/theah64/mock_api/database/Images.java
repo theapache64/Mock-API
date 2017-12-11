@@ -17,6 +17,7 @@ public class Images extends BaseTable<Image> {
     private static final String COLUMN_IMAGE_URL = "image_url";
     private static final String COLUMN_THUMB_URL = "thumb_url";
     public static final String COLUMN_FILE_PATH = "file_path";
+    public static final String COLUMN_IS_COMPRESSED = "is_compressed";
 
     private Images() {
         super("images");
@@ -29,13 +30,19 @@ public class Images extends BaseTable<Image> {
     //id, projectId, tinifyKeyId, imageUrl, thumbUrl;
     @Override
     public boolean add(Image image) throws SQLException, QueryBuilderException {
-        return new AddQueryBuilder.Builder(getTableName())
+        return !addv3(image).equals("-1");
+    }
+
+    @Override
+    public String addv3(Image image) throws QueryBuilderException, SQLException {
+        return String.valueOf(new AddQueryBuilder.Builder(getTableName())
                 .add(COLUMN_PROJECT_ID, image.getProjectId())
                 .add(COLUMN_TINIFY_KEY_ID, image.getTinifyKeyId())
                 .add(COLUMN_IMAGE_URL, image.getImageUrl())
                 .add(COLUMN_THUMB_URL, image.getThumbUrl())
                 .add(COLUMN_FILE_PATH, image.getFilePath())
-                .done();
+                .add(COLUMN_IS_COMPRESSED, image.isCompressed())
+                .doneAndReturn());
     }
 
     @Override
@@ -48,8 +55,9 @@ public class Images extends BaseTable<Image> {
                         rs.getString(COLUMN_TINIFY_KEY_ID),
                         rs.getString(COLUMN_IMAGE_URL),
                         rs.getString(COLUMN_THUMB_URL),
-                        rs.getString(COLUMN_FILE_PATH)),
-                new String[]{COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL,COLUMN_FILE_PATH},
+                        rs.getString(COLUMN_FILE_PATH),
+                        rs.getBoolean(COLUMN_IS_COMPRESSED)),
+                new String[]{COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED},
                 new String[]{whereColumn}, new String[]{whereColumnValue}, SelectQueryBuilder.UNLIMITED, COLUMN_ID + " DESC"
         ).getAll();
     }

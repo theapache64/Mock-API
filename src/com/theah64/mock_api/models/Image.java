@@ -1,15 +1,22 @@
 package com.theah64.mock_api.models;
 
 public class Image {
-    private final String id, projectId, tinifyKeyId, imageUrl, thumbUrl, filePath;
+    private String id;
+    private final String projectId;
+    private final String tinifyKeyId;
+    private final String imageUrl;
+    private final String thumbUrl;
+    private final String filePath;
+    private final boolean isCompressed;
 
-    public Image(String id, String projectId, String tinifyKeyId, String imageUrl, String thumbUrl, String filePath) {
+    public Image(String id, String projectId, String tinifyKeyId, String imageUrl, String thumbUrl, String filePath, boolean isCompressed) {
         this.id = id;
         this.projectId = projectId;
         this.tinifyKeyId = tinifyKeyId;
         this.imageUrl = imageUrl;
         this.thumbUrl = thumbUrl;
         this.filePath = filePath;
+        this.isCompressed = isCompressed;
     }
 
     public String getId() {
@@ -34,5 +41,25 @@ public class Image {
 
     public String getFilePath() {
         return filePath;
+    }
+
+    public boolean isCompressed() {
+        return isCompressed;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id='" + id + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", tinifyKeyId='" + tinifyKeyId + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", thumbUrl='" + thumbUrl + '\'' +
+                ", filePath='" + filePath + '\'' +
+                '}';
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
