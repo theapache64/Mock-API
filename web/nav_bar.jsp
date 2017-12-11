@@ -1,5 +1,9 @@
-<%@ page import="java.net.URLEncoder" %>
 <%@ page import="com.theah64.webengine.utils.DarKnight" %>
+<%@ page import="java.net.URLEncoder" %>
+<%
+    final boolean isHomePage = request.getAttribute("is_home_page") != null;
+    System.out.println("Home:" + isHomePage);
+%>
 <nav class="navbar navbar-inverse" style="border-radius: 0px">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -11,16 +15,23 @@
             <li>
                 <a href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
             </li>
-            <li><a href="#" data-toggle="modal" data-target="#shortcuts">Shortcuts</a></li>
+
+            <%=isHomePage ? "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#shortcuts\">Shortcuts</a></li>" : "" %>
             <li><a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare</a></li>
             <li><a href="images.jsp?api_key=<%=project.getApiKey()%>">Images</a></li>
             <li><a href="donate_tinify_key.jsp?api_key=<%=project.getApiKey()%>">Donate Key</a></li>
 
         </ul>
         <ul class="nav navbar-nav navbar-right">
+            <%
+                if (isHomePage) {
+            %>
             <li><a id="base_og_api_url"
                    href="#"><%=project.getBaseOgApiUrl() == null ? "Set original base URL" : project.getBaseOgApiUrl()%>
             </a></li>
+            <%
+                }
+            %>
 
             <li><a href="logout.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>

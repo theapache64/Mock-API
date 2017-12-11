@@ -66,8 +66,14 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
              */
             StringBuilder codeBuilder = new StringBuilder();
 
+
+
+            if (route.getDescription() != null && !route.getDescription().trim().isEmpty()) {
+                codeBuilder.append("/**\n*").append(route.getDescription()).append("\n*/\n");
+            }
+
             //@POST("add_address") Call<BaseAPIResponse<AddAddressResponse>> editAddress(
-            codeBuilder.append(String.format("@POST(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", route.getName(), responseClass, CodeGen.toCamelCase(route.getName())));
+            codeBuilder.append(String.format("@%s(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", route.getMethod(), route.getName(), responseClass, CodeGen.toCamelCase(route.getName())));
 
             if (route.isSecure()) {
                 codeBuilder.append("\n@Header(KEY_AUTHORIZATION) String apiKey,");
@@ -77,7 +83,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
                 final List<Param> params = route.getParams();
                 for (final Param param : params) {
-                    codeBuilder.append(String.format("\n@Query(\"%s\") String %s,", param, CodeGen.toCamelCase(param.getName())));
+                    codeBuilder.append(String.format("\n\t@Query(\"%s\") String %s,", param, CodeGen.toCamelCase(param.getName())));
                 }
 
                 codeBuilder = new StringBuilder(codeBuilder.substring(0, codeBuilder.length() - 1));

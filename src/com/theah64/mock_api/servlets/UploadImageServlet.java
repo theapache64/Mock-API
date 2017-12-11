@@ -74,10 +74,10 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                             throw new Request.RequestException("Invalid image : double check");
                         }
 
-                        final int fileSizeInKb = filePart.getInputStream().available() / 1024;
+                        /*final int fileSizeInKb = filePart.getInputStream().available() / 1024;
                         if (fileSizeInKb > MAX_FILE_SIZE_IN_KB) {
                             throw new Request.RequestException("File size should be less than " + MAX_FILE_SIZE_IN_KB + "kb");
-                        }
+                        }*/
 
                         final File dataDir = new File("/var/www/html/mock_api_data");
 

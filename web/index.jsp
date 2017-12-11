@@ -1,17 +1,13 @@
+<%@ page import="com.theah64.mock_api.database.Images" %>
 <%@ page import="com.theah64.mock_api.database.Routes" %>
+<%@ page import="com.theah64.mock_api.models.Image" %>
 <%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="com.theah64.mock_api.servlets.SaveJSONServlet" %>
+<%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
 <%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
-<%@ page import="com.theah64.webengine.utils.DarKnight" %>
-<%@ page import="java.net.URLEncoder" %>
+<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.theah64.mock_api.utils.CodeGen" %>
-<%@ page import="com.theah64.mock_api.utils.GlobalVariables" %>
-<%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
-<%@ page import="com.theah64.mock_api.models.Image" %>
-<%@ page import="com.theah64.mock_api.database.Images" %>
-<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -244,9 +240,13 @@
                 //F4
                 if (event.keyCode == 115) {
 
-                    var route = $("input#route").val();
-                    var responseClassName = prompt("Response class name ? ", "GetProductResponse");
-                    window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>&response_class=" + responseClassName);
+                    var route = $.trim($("select#routes option:selected").text());
+                    if (route === "") {
+                        alert("Please select a route first");
+                    } else {
+                        var responseClassName = prompt("Response class name ? ", "GetProductResponse");
+                        window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>&response_class=" + responseClassName);
+                    }
 
                 }
 
@@ -1123,7 +1123,7 @@
                 $(this).find("button.bDeleteImage").fadeOut("300");
             });
 
-            $("div#dGallery").on('click',"button.bDeleteImage",function(e){
+            $("div#dGallery").on('click', "button.bDeleteImage", function (e) {
                 alert("delete");
                 e.stopPropagation();
             });
@@ -1189,6 +1189,7 @@
         e.printStackTrace();
     }
 
+    request.setAttribute("is_home_page", true);
 %>
 
 <%@include file="nav_bar.jsp" %>
