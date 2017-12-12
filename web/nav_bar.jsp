@@ -13,7 +13,8 @@
         <ul class="nav navbar-nav">
             <li><a href="index.jsp?api_key=<%=project.getApiKey()%>">Home</a></li>
             <li>
-                <a href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
+                <a target="_blank"
+                   href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
             </li>
 
             <%=isHomePage ? "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#shortcuts\">Shortcuts</a></li>" : "" %>

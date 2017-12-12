@@ -1161,13 +1161,9 @@
             background-color: #053d76;
         }
 
-
-
         div#dGallery div {
             margin-bottom: 10px;
         }
-
-
 
 
     </style>
@@ -1578,34 +1574,38 @@
 
                     <div id="dGallery" style="max-height: 400px; overflow-y: auto;overflow-x: hidden">
 
-                        <%
+                        <div class="row">
+                            <%
 
-                            try {
-                                List<Image> images = Images.getInstance().getAll(Images.COLUMN_PROJECT_ID, project.getId());
+                                try {
+                                    List<Image> images = Images.getInstance().getAll(Images.COLUMN_PROJECT_ID, project.getId());
 
-                                for (final Image image : images) {
-                        %>
+                                    for (final Image image : images) {
+                            %>
 
 
-                        <div class="col-md-3">
-                            <div class="center-cropped dGalleryRow"
-                                 data-image-url="<%=image.getImageUrl()%>"
-                                 style="background-image: url('<%=image.getThumbUrl()%>')">
-                                <button
-                                        style="display:none;margin: 10px;background-color: transparent;border: 0;"
-                                        class="pull-right bDeleteImage"><span style="color: white"
-                                                                              class="glyphicon glyphicon-trash"></span>
-                                </button>
+                            <div class="col-md-3">
+
+                                <div class="center-cropped dGalleryRow"
+                                     data-image-url="<%=image.getImageUrl()%>"
+                                     style="background-image: url('<%=image.getThumbUrl()%>')">
+                                    <button
+                                            style="display:none;margin: 10px;background-color: transparent;border: 0;"
+                                            class="pull-right bDeleteImage"><span style="color: white"
+                                                                                  class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </div>
+
                             </div>
-                        </div>
 
 
-                        <%
+                            <%
+                                    }
+                                } catch (QueryBuilderException | SQLException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (QueryBuilderException | SQLException e) {
-                                e.printStackTrace();
-                            }
-                        %>
+                            %>
+                        </div>
 
 
                     </div>
