@@ -4,10 +4,10 @@ public class Image {
     private String id;
     private final String projectId;
     private final String tinifyKeyId;
-    private final String imageUrl;
+    private String imageUrl;
     private final String thumbUrl;
     private final String filePath;
-    private final boolean isCompressed;
+    private boolean isCompressed;
 
     public Image(String id, String projectId, String tinifyKeyId, String imageUrl, String thumbUrl, String filePath, boolean isCompressed) {
         this.id = id;
@@ -61,5 +61,13 @@ public class Image {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setCompressed(boolean isCompressed) {
+        this.isCompressed = isCompressed;
     }
 }

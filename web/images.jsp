@@ -27,25 +27,25 @@
             var dProgressChild = $("div#dProgressChild");
 
 
-            dSearchResult.on('mouseenter', 'div.dGalleryRow', function () {
+            dSearchResult.on('mouseenter', 'div.dGalleryRow1', function () {
                 //do
                 $(this).find("button.bTransfer").fadeIn("300");
-            }).on('mouseleave', 'div.dGalleryRow', function () {
+            }).on('mouseleave', 'div.dGalleryRow1', function () {
                 //do
                 $(this).find("button.bTransfer").fadeOut("300");
             });
 
 
-            dProjectImages.on('mouseenter', 'div.dGalleryRow', function () {
+            dProjectImages.on('mouseenter', 'div.dGalleryRow1', function () {
                 //do
-                $(this).find("button.bDelete").fadeIn("300");
-            }).on('mouseleave', 'div.dGalleryRow', function () {
+                $(this).find("button.bDelete").fadeIn(100);
+            }).on('mouseleave', 'div.dGalleryRow1', function () {
                 //do
-                $(this).find("button.bDelete").fadeOut("300");
+                $(this).find("button.bDelete").fadeOut(100);
             });
 
-            $("body").on('click', 'div.dGalleryRow', function () {
-                var imageUrl = $(this).data("image-url");
+            $("body").on('click', 'div.dGalleryRow1', function () {
+                var imageUrl = $(this).find("img").data("image-url");
                 $("img#imgImage").attr('src', imageUrl);
                 $("div#image_viewer").modal("show");
             });
@@ -54,8 +54,8 @@
 
                 e.stopPropagation();
 
-                var image = $(this).parent().parent();
-                var id = $(this).parent().attr('id');
+                var image = $(this).siblings("img");
+                var id = image.attr('id');
 
                 $.ajax({
                     type: "POST",
@@ -74,7 +74,7 @@
                         dProgress.slideUp(200);
 
                         if (!data.error) {
-                            image.remove();
+                            image.parent().remove();
                         } else {
                             alert(data.message);
                         }
@@ -121,10 +121,10 @@
                                     var imageRow = $("div#dSearchImageRow");
 
                                     $(imageRow)
-                                        .find("div.dGalleryRow")
+                                        .find("img")
                                         .attr('data-image-url', image.image_url)
                                         .attr('data-thumb-url', image.thumb_url)
-                                        .css('background-image', 'url(\'' + image.thumb_url + '\')');
+                                        .attr('src', image.thumb_url);
 
                                     $("div#dSearchResult").append(imageRow.html());
                                 });
@@ -143,16 +143,16 @@
                 }
             });
 
-            var isTranferInProgress = false;
+            var isTransferInProgress = false;
             dSearchResult.on('click', 'button.bTransfer', function (e) {
                 e.stopPropagation();
 
-                if (isTranferInProgress) {
+                if (isTransferInProgress) {
                     alert("Failed, Another transfer in progress. Please try again later");
                     return;
                 }
 
-                var dImage = $(this).parent();
+                var dImage = $(this).siblings("img");
                 var imageUrl = dImage.data('image-url');
                 var thumbUrl = dImage.data('thumb-url');
                 var isCompress = confirm("Do you want to compress the image?");
@@ -181,11 +181,11 @@
                             var imageRow = $("div#dProjectImageRow");
 
                             $(imageRow)
-                                .find("div.dGalleryRow")
+                                .find("img")
                                 .attr('id', data.data.id)
                                 .attr('data-image-url', data.data.image_url)
                                 .attr('data-thumb-url', data.data.thumb_url)
-                                .css('background-image', 'url(\'' + data.data.thumb_url + '\')');
+                                .attr('src', data.data.thumb_url);
 
                             $("div#dProjectImages").prepend(imageRow.html());
 
@@ -206,15 +206,58 @@
     </script>
     <style>
         .center-cropped {
-            width: 100px;
-            height: 100px;
+            max-height: 100%;
+            max-width: 100%;
+            align-items: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
             background-position: center center;
             background-repeat: no-repeat;
         }
 
-        div.dGalleryRow {
+        .dGalleryRow1 {
+            border: 1px solid #eeeeee;
+            padding: 3px !important;
+            margin: 10px;
+            height: 17%;
             cursor: pointer;
+        }
+
+        div.dGalleryRow img {
+            min-width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        div.dGalleryRow {
             margin-bottom: 2px;
+        }
+
+        .bDelete {
+            position: absolute;
+            right: 2px;
+            top: 5px;
+            font-size: 8px;
+            background-color: #F44336;
+            border-radius: 11px;
+            padding: 5px;
+            border: 0;
+            display: none;
+        }
+
+        .bTransfer {
+            position: absolute;
+            right: 2px;
+            top: 5px;
+            font-size: 8px;
+            background-color: #00a0f4;
+            border-radius: 11px;
+            padding: 5px;
+            border: 0;
+            display: none;
+
+        span.glyphicon.glyphicon-remove {
+            margin-top: -1px;
         }
     </style>
 </head>
@@ -230,12 +273,12 @@
 
                 <div class="modal-body content-centred">
                     <img id="imgImage"
+                         alt="image-failed-to-load"
                          style="display: block;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 500px;
-    max-height: 500px;
-"
+                                margin-left: auto;
+                                margin-right: auto;
+                                max-width: 500px;
+                                max-height: 500px;"
                          src="https://vignette.wikia.nocookie.net/dbxfanon/images/6/67/Iron_Man.png/revision/latest?cb=20160403042153"/>
                 </div>
 
@@ -278,18 +321,17 @@
                         for (final Image image : images) {
                 %>
 
-                <div class="col-md-2" style="margin-right: 5px">
-                    <div class="center-cropped dGalleryRow"
+                <div class="col-md-2 dGalleryRow1">
+                    <img class="center-cropped dGalleryRow"
                          id="<%=image.getId()%>"
                          data-image-url="<%=image.getImageUrl()%>"
                          data-thumb-url="<%=image.getThumbUrl()%>"
-                         style="background-image: url('<%=image.getThumbUrl()%>')">
-                        <button
-                                style="display:none;margin: 5px;background-color: transparent;border: 0;"
-                                class="pull-right bDelete"><span style="color: white"
-                                                                 class="glyphicon glyphicon-trash"></span>
-                        </button>
-                    </div>
+                         src="<%=image.getThumbUrl()%>">
+
+                    <button
+                            class="pull-right bDelete"><span style="color: white"
+                                                             class="glyphicon glyphicon-remove"></span>
+                    </button>
                 </div>
 
 
@@ -340,30 +382,30 @@
     </div>
 
     <div id="dSearchImageRow" style="display: none">
-        <div class="col-md-2" style="margin-right: 5px">
-            <div class="center-cropped dGalleryRow"
-                 data-image-url="http://pbs.twimg.com/profile_images/3323288933/120b2f736d1180c9708854159d84c0c5_400x400.jpeg"
-                 style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT6D434LO8ddPE9TomVjs3iIC3RpKQXTR2lmJxci5gq933EWqU')">
-                <button
-                        style="display:none;margin: 5px;background-color: transparent;border: 0;"
-                        class="pull-right bTransfer"><span style="color: white"
-                                                           class="glyphicon glyphicon-transfer"></span>
-                </button>
-            </div>
+        <div class="col-md-2 dGalleryRow1">
+            <img class="center-cropped dGalleryRow"
+                 id=""
+                 data-image-url=""
+                 data-thumb-url=""
+                 src="">
+
+            <button class="pull-right bTransfer">
+                <span style="color: white" class="glyphicon glyphicon-transfer"></span>
+            </button>
         </div>
     </div>
 
     <div id="dProjectImageRow" style="display: none">
-        <div class="col-md-2" style="margin-right: 5px">
-            <div class="center-cropped dGalleryRow"
-                 data-image-url="http://pbs.twimg.com/profile_images/3323288933/120b2f736d1180c9708854159d84c0c5_400x400.jpeg"
-                 style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT6D434LO8ddPE9TomVjs3iIC3RpKQXTR2lmJxci5gq933EWqU')">
-                <button
-                        style="display:none;margin: 5px;background-color: transparent;border: 0;"
-                        class="pull-right bDelete"><span style="color: white"
-                                                         class="glyphicon glyphicon-trash"></span>
-                </button>
-            </div>
+        <div class="col-md-2 dGalleryRow1">
+            <img class="center-cropped dGalleryRow"
+                 data-image-url=""
+                 data-thumb-url=""
+                 src="">
+
+            <button
+                    class="pull-right bDelete"><span style="color: white"
+                                                     class="glyphicon glyphicon-remove"></span>
+            </button>
         </div>
     </div>
 

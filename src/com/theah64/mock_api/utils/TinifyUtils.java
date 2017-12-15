@@ -4,11 +4,11 @@ import com.theah64.mock_api.database.Images;
 import com.theah64.mock_api.database.TinifyKeys;
 import com.theah64.mock_api.models.Image;
 import com.theah64.mock_api.models.TinifyKey;
-import com.theah64.webengine.database.BaseTable;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.exceptions.MailException;
 import com.theah64.webengine.utils.MailHelper;
 import com.theah64.webengine.utils.Request;
+import com.theah64.webengine.utils.WebEngineConfig;
 import com.tinify.AccountException;
 import com.tinify.Tinify;
 
@@ -21,7 +21,6 @@ import java.sql.SQLException;
 public class TinifyUtils {
 
     public static String manage(final String projectId, final String imageUrl, String thumbUrl, String filePath, boolean isCompress) throws QueryBuilderException, SQLException {
-
 
         TinifyKeys tinifyTable = TinifyKeys.getInstance();
         final TinifyKey tinifyKey = tinifyTable.getLeastUsedKey();
@@ -61,10 +60,32 @@ public class TinifyUtils {
                             imageFile.setWritable(true, false);
                         }
 
-                        //Setting compression finished
-                        imagesTable.update(Images.COLUMN_ID, image1.getId(), Images.COLUMN_IS_COMPRESSED, BaseTable.TRUE);
+                        //Checking if image still exists in database
+                        final boolean isImgExistInDb = imagesTable.get(Images.COLUMN_ID, image1.getId(), Images.COLUMN_ID, false) != null;
+                        if (isImgExistInDb) {
 
-                    } catch (Exception e) {
+                            //Changing image url if it's from external website
+                            if (!imageUrl.startsWith(WebEngineConfig.getBaseURL())) {
+                                System.out.println("From external, changing to self-host");
+
+                                String fileDownloadPath = imageFile.getAbsolutePath().split("/html")[1];
+                                String newImageUrl = (
+                                        WebEngineConfig.getBaseURL().startsWith("http://localhost") ? "http://localhost:8090" : "http://theapache64.com:8090")
+                                        + fileDownloadPath;
+                                image1.setImageUrl(newImageUrl);
+                                image1.setCompressed(true);
+                            }
+
+                            //Setting compression finished
+                            imagesTable.update(image1);
+                        } else {
+                            //Delete the file
+                            System.out.println("Deleted compressed file");
+                            imageFile.delete();
+                        }
+
+
+                    } catch (Exception | QueryBuilderException e) {
 
                         e.printStackTrace();
 

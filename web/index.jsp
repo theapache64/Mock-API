@@ -1113,9 +1113,10 @@
                 }
             });
 
-            $("div#dGallery").on('click', 'div.dGalleryRow', function () {
+            var dGallery = $("div#dGallery");
+            dGallery.on('click', 'div.dGalleryRow', function () {
                 var imageUrl = $(this).data("image-url");
-                editor.replaceSelection(imageUrl);
+                editor.replaceSelection('"' + imageUrl + '"');
                 editor.focus();
                 $("div#dInsertImage").modal("hide");
             });
@@ -1126,7 +1127,7 @@
                 $(this).find("button.bDeleteImage").fadeOut("300");
             });
 
-            $("div#dGallery").on('click', "button.bDeleteImage", function (e) {
+            dGallery.on('click', "button.bDeleteImage", function (e) {
                 alert("delete");
                 e.stopPropagation();
             });

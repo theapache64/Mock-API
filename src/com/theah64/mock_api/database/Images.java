@@ -5,6 +5,7 @@ import com.theah64.webengine.database.BaseTable;
 import com.theah64.webengine.database.querybuilders.AddQueryBuilder;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.database.querybuilders.SelectQueryBuilder;
+import com.theah64.webengine.database.querybuilders.UpdateQueryBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -60,5 +61,15 @@ public class Images extends BaseTable<Image> {
                 new String[]{COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED},
                 new String[]{whereColumn}, new String[]{whereColumnValue}, SelectQueryBuilder.UNLIMITED, COLUMN_ID + " DESC"
         ).getAll();
+    }
+
+    @Override
+    public boolean update(Image image) throws SQLException, QueryBuilderException {
+        return new UpdateQueryBuilder.Builder(getTableName())
+                .set(COLUMN_IMAGE_URL, image.getImageUrl())
+                .set(COLUMN_IS_COMPRESSED, image.isCompressed())
+                .where(COLUMN_ID, image.getId())
+                .build()
+                .done();
     }
 }

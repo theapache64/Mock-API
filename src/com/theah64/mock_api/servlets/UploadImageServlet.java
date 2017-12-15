@@ -17,7 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/upload_image"})
@@ -128,7 +131,6 @@ public class UploadImageServlet extends AdvancedBaseServlet {
         }
 
     }
-
 
 
 }

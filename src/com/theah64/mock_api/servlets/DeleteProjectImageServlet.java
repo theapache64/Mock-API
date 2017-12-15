@@ -35,13 +35,13 @@ public class DeleteProjectImageServlet extends AdvancedBaseServlet {
         if (filePath != null) {
             System.out.println(filePath);
             final File file = new File(filePath);
-            if (file.delete()) {
-                //Delete from db also
-                Images.getInstance().delete(Images.COLUMN_ID, imageId, Images.COLUMN_PROJECT_ID, projectId);
-                getWriter().write(new APIResponse("Image deleted", null).getResponse());
-            } else {
-                throw new Request.RequestException("Failed to delete image");
-            }
+            //noinspection ResultOfMethodCallIgnored
+            file.delete();
+
+            //Delete from db also
+            Images.getInstance().delete(Images.COLUMN_ID, imageId, Images.COLUMN_PROJECT_ID, projectId);
+            getWriter().write(new APIResponse("Image deleted", null).getResponse());
+
         } else {
             throw new Request.RequestException("Invalid request");
         }
