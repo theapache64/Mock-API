@@ -1572,17 +1572,9 @@
                         <input type="submit" value="Upload"/>
                     </form>
 
-                    <div class="center-cropped dGalleryRow"
-                         data-image-url="http://rukminim1.flixcart.com/image/704/704/iron/z/g/y/inalsa-oscar-original-imaehgceykzzwg9w.jpeg?q=70"
-                         style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFriNc8iB__zxs_u5PMHwmb9d1MNlDmk3UCyVppTUtgKQt3YkeLw')">
-                        <button
-                                style="display:none;margin: 10px;background-color: transparent;border: 0;"
-                                class="pull-right bDeleteImage"><span style="color: white"
-                                                                      class="glyphicon glyphicon-trash"></span>
-                        </button>
-                    </div>
 
                     <div id="dGallery" style="max-height: 400px; overflow-y: auto;overflow-x: hidden">
+
 
                         <div class="row">
                             <%
@@ -1598,7 +1590,7 @@
 
                                 <div class="center-cropped dGalleryRow"
                                      data-image-url="<%=image.getImageUrl()%>"
-                                     style="background-image: url('<%=image.getThumbUrl()%>')">
+                                     style="background-image: url('<%=image.getThumbUrl()%>');min-height: 200px">
                                     <button
                                             style="display:none;margin: 10px;background-color: transparent;border: 0;"
                                             class="pull-right bDeleteImage"><span style="color: white"
