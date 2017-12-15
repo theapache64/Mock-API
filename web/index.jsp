@@ -828,6 +828,9 @@
                 }
             }
 
+            var paramRow = $("div#dParamRow").html();
+            $("form#fParam").append(paramRow);
+
             $("button#bDelete").on('click', function () {
 
                 if (!confirm('Do you really want to delete this route?')) {

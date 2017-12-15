@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 
 @WebServlet(urlPatterns = AdvancedBaseServlet.VERSION_CODE + "/delete_image")
-public class DeleteImageServlet extends AdvancedBaseServlet {
+public class DeleteProjectImageServlet extends AdvancedBaseServlet {
 
     @Override
     protected boolean isSecureServlet() {
@@ -33,6 +33,7 @@ public class DeleteImageServlet extends AdvancedBaseServlet {
 
         final String filePath = Images.getInstance().get(Images.COLUMN_ID, imageId, Images.COLUMN_PROJECT_ID, projectId, Images.COLUMN_FILE_PATH);
         if (filePath != null) {
+            System.out.println(filePath);
             final File file = new File(filePath);
             if (file.delete()) {
                 //Delete from db also

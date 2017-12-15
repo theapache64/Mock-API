@@ -23,6 +23,8 @@
             var dProjectImages = $("div#dProjectImages");
             var dSearchResult = $("div#dSearchResult");
             var dTransferProgress = $("div#dTransferProgress");
+            var dProgress = $("div#dProgress");
+            var dProgressChild = $("div#dProgressChild");
 
 
             dSearchResult.on('mouseenter', 'div.dGalleryRow', function () {
@@ -42,8 +44,47 @@
                 $(this).find("button.bDelete").fadeOut("300");
             });
 
-            dProjectImages.on('click', 'button.bDelete', function () {
-                alert("Delete from project images");
+            $("body").on('click', 'div.dGalleryRow', function () {
+                var imageUrl = $(this).data("image-url");
+                $("img#imgImage").attr('src', imageUrl);
+                $("div#image_viewer").modal("show");
+            });
+
+            dProjectImages.on('click', 'button.bDelete', function (e) {
+
+                e.stopPropagation();
+
+                var image = $(this).parent().parent();
+                var id = $(this).parent().attr('id');
+
+                $.ajax({
+                    type: "POST",
+                    beforeSend: function () {
+                        dProgressChild.text("Deleting image...");
+                        dProgress.slideDown(100);
+                    },
+                    headers: {
+                        Authorization: "<%=project.getApiKey()%>"
+                    },
+                    data: {
+                        id: id
+                    },
+                    url: "v1/delete_image",
+                    success: function (data) {
+                        dProgress.slideUp(200);
+
+                        if (!data.error) {
+                            image.remove();
+                        } else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function (e) {
+                        dProgress.slideUp(200);
+                        alert("Network error occurred, please check your connection");
+                    }
+                });
+
             });
 
             $("form#fImageSearch").on('submit', function (e) {
@@ -103,7 +144,8 @@
             });
 
             var isTranferInProgress = false;
-            dSearchResult.on('click', 'button.bTransfer', function () {
+            dSearchResult.on('click', 'button.bTransfer', function (e) {
+                e.stopPropagation();
 
                 if (isTranferInProgress) {
                     alert("Failed, Another transfer in progress. Please try again later");
@@ -159,6 +201,7 @@
 
             });
 
+
         });
     </script>
     <style>
@@ -179,6 +222,37 @@
 <%@include file="nav_bar.jsp" %>
 
 <div class="container">
+
+
+    <div class="modal fade" id="image_viewer" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-body content-centred">
+                    <img id="imgImage"
+                         style="display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 500px;
+    max-height: 500px;
+"
+                         src="https://vignette.wikia.nocookie.net/dbxfanon/images/6/67/Iron_Man.png/revision/latest?cb=20160403042153"/>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="dProgress" style="display: none" class="progress">
+            <div id="dProgressChild" class="progress-bar progress-bar-striped progress-bar-danger active"
+                 role="progressbar"
+                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <h3>Project Images</h3>
