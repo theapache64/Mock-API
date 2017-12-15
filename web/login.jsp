@@ -15,7 +15,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Admin Login - WASP</title>
+    <title>Mock-API / login</title>
     <%@include file="common_headers.jsp" %>
     <script>
         $(document).ready(function () {
