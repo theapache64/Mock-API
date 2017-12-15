@@ -20,6 +20,7 @@
         $(document).ready(function () {
 
             var dSearchProgress = $("div#dSearchProgress");
+            var dProjectImages = $("div#dProjectImages");
             var dSearchResult = $("div#dSearchResult");
             var dTransferProgress = $("div#dTransferProgress");
 
@@ -30,6 +31,19 @@
             }).on('mouseleave', 'div.dGalleryRow', function () {
                 //do
                 $(this).find("button.bTransfer").fadeOut("300");
+            });
+
+
+            dProjectImages.on('mouseenter', 'div.dGalleryRow', function () {
+                //do
+                $(this).find("button.bDelete").fadeIn("300");
+            }).on('mouseleave', 'div.dGalleryRow', function () {
+                //do
+                $(this).find("button.bDelete").fadeOut("300");
+            });
+
+            dProjectImages.on('click', 'button.bDelete', function () {
+                alert("Delete from project images");
             });
 
             $("form#fImageSearch").on('submit', function (e) {
@@ -111,7 +125,7 @@
                         thumb_url: thumbUrl,
                         is_compress: isCompress
                     },
-                    headers:{
+                    headers: {
                         "Authorization": "<%=project.getApiKey()%>"
                     },
                     url: "v1/add_to_project_images",
@@ -186,7 +200,6 @@
                     try {
                         List<Image> images = Images.getInstance().getAll(Images.COLUMN_PROJECT_ID, project.getId());
 
-                        
 
                         for (final Image image : images) {
                 %>
@@ -229,7 +242,8 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">&nbsp; <span class="glyphicon glyphicon-search"></span>
-                    &nbsp;</button>
+                    &nbsp;
+                </button>
             </form>
 
             <div id="dSearchProgress" style="display: none" class="progress">
