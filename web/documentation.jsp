@@ -36,6 +36,7 @@
     <title>API Documentation - <%=project.getName()%>
     </title>
     <%@include file="common_headers.jsp" %>
+
     <style>
         body {
             background-color: #FFF;
@@ -50,6 +51,29 @@
             position: relative;
             top: -4px;
         }
+
+        .CodeMirror-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: auto;
+            z-index: 9;
+        }
+
+        .CodeMirror {
+            border: 1px solid silver;
+        }
+
+        .CodeMirror-empty.CodeMirror-focused {
+            outline: none;
+        }
+
+        .CodeMirror pre.CodeMirror-placeholder {
+            color: #999;
+        }
+
     </style>
 </head>
 <body>
@@ -203,6 +227,22 @@
         }
     %>
 
+
+    <h4><b>Sample Response</b></h4>
+
+    <%--Sample output--%>
+
+
+    <div class="row">
+        <div class="col-md-10">
+            <textarea class="default_response" name="response"
+                      placeholder="Response" title="JSON"><%=route.getDefaultResponse()%></textarea>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
     <%--Examples--%>
     <h4><b>Test URLs</b></h4>
     <div class="row">
@@ -253,5 +293,36 @@
     %>
 
 </div>
+<script>
+    $(document).ready(function () {
+
+        $('textarea.default_response').each(function (index, elem) {
+
+            var editor = CodeMirror.fromTextArea(elem, {
+                lineNumbers: true,
+                mode: "application/json",
+                matchBrackets: true,
+                foldGutter: true,
+                extraKeys: {
+                    "Ctrl-Q": function (cm) {
+                        cm.foldCode(cm.getCursor());
+                    },
+                    "F11": function (cm) {
+                        isAlertResult = !cm.getOption("fullScreen");
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                },
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+            });
+            editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
+
+        });
+
+
+    });
+</script>
 </body>
 </html>
