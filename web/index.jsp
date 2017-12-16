@@ -1,8 +1,11 @@
+<%@ page import="com.theah64.mock_api.database.Images" %>
 <%@ page import="com.theah64.mock_api.database.Routes" %>
+<%@ page import="com.theah64.mock_api.models.Image" %>
 <%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="com.theah64.mock_api.servlets.SaveJSONServlet" %>
 <%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
 <%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
+<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
 <%--
@@ -249,9 +252,67 @@
 
             });
 
+            var dProgress = $("div#dProgress");
+            var dProgressChild = $("div#dProgressChild");
+
+            $("button#bNice").on('click', function () {
+                var imageUrl = $(this).parent().parent().find("img").attr('src');
+                editor.replaceSelection('"' + imageUrl + '"');
+            });
 
             //Editor shortcuts
             editor.on('keyup', function () {
+
+                console.log(event.keyCode);
+
+                //Control + Alt+  O
+                if (event.keyCode === 120) {
+
+                    //TODO:
+                    var keyword = prompt("Insert random image, enter keyword");
+                    console.log(keyword);
+                    if (keyword !== null) {
+
+                        $.ajax({
+                            type: "POST",
+                            beforeSend: function () {
+                                startLoading(false);
+                                dProgressChild.text("Searching for '" + keyword + "' image");
+                                dProgress.slideDown(100);
+                            },
+                            data: {
+                                keyword: keyword
+                            },
+                            url: "v1/search_images",
+                            success: function (data) {
+                                stopLoading(false);
+                                dProgress.slideUp(200);
+
+                                if (!data.error) {
+                                    var entry = data.data.images[Math.floor(Math.random() * data.data.images.length)];
+
+                                    var imageViewer = $("#image_viewer");
+                                    imageViewer
+                                        .find("img")
+                                        .attr('src', entry.image_url);
+
+                                    imageViewer.modal("show");
+
+                                } else {
+                                    alert(data.message);
+                                }
+                            },
+                            error: function (e) {
+                                dProgress.slideUp(200);
+                                stopLoading(false);
+                                alert("Network error occurred, please check your connection");
+                            }
+                        });
+
+                    }
+
+                }
+
 
                 //Control + Alt + U
                 if (event.ctrlKey && event.altKey && event.keyCode === 85) {
@@ -817,7 +878,6 @@
                 $("textarea#description").prop('disabled', false);
                 editor.setOption('readOnly', false);
 
-
                 if (isSubmit) {
                     $("button#bSubmit").html('<span class="glyphicon glyphicon-save"></span> SAVE');
                 } else {
@@ -989,6 +1049,48 @@
             });
 
 
+            $("div#dGallery").on('mouseenter', 'div.dGalleryRow1', function () {
+                //do
+                $(this).find("button.bDelete").fadeIn(100);
+            }).on('mouseleave', 'div.dGalleryRow1', function () {
+                //do
+                $(this).find("button.bDelete").fadeOut(100);
+            });
+
+            $("div#dGallery").on('click', 'button.bDelete', function (e) {
+
+                e.stopPropagation();
+
+                var image = $(this).siblings("img");
+                var id = image.attr('id');
+
+                $.ajax({
+                    type: "POST",
+                    beforeSend: function () {
+
+                    },
+                    headers: {
+                        Authorization: "<%=project.getApiKey()%>"
+                    },
+                    data: {
+                        id: id
+                    },
+                    url: "v1/delete_image",
+                    success: function (data) {
+
+                        if (!data.error) {
+                            image.parent().remove();
+                        } else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function (e) {
+                        alert("Network error occurred, please check your connection");
+                    }
+                });
+
+            });
+
             $("form#fInsertImage").on('submit', function (e) {
 
                 var dInsertImageProgressContainer = $("div#dInsertImageProgressContainer");
@@ -1062,18 +1164,20 @@
 
                             var galleryRow = $("div#dGalleryRow");
                             $(galleryRow)
-                                .find("img")
-                                .attr('data-image-url', data.data.download_link)
-                                .css('background-image', 'url(\'' + data.data.download_link + '\')');
+                                .find('img')
+                                .attr('id', data.data.id)
+                                .attr('data-image-url', data.data.image_url)
+                                .attr('data-thumb-url', data.data.image_url)
+                                .attr('src', data.data.image_url);
 
                             $("div#dGallery").prepend(galleryRow.html());
 
                             if (isAutoUpload) {
-                                editor.replaceSelection('"' + data.data.download_link + '"');
+                                editor.replaceSelection('"' + data.data.image_url + '"');
                                 editor.focus();
                             }
 
-                            $(resultDiv).html("<strong>Success!! </strong> <a target='_blank' href='" + data.data.download_link + "'>image</a> uploaded");
+                            $(resultDiv).html("<strong>Success!! </strong> <a target='_blank' href='" + data.data.image_url + "'>image</a> uploaded");
 
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
@@ -1128,6 +1232,8 @@
                 alert("delete");
                 e.stopPropagation();
             });
+
+            //$("#image_viewer").modal("show");
 
         });
     </script>
@@ -1201,21 +1307,39 @@
 <div class="container">
 
 
-    <br>
+    <div class="modal fade" id="image_viewer" role="dialog">
+        <div class="modal-dialog modal-lg">
 
-    <div id="dGalleryRow" style="display: none">
-        <div class="col-md-2 dGalleryRow1">
-            <img class="center-cropped dGalleryRow"
-                 data-image-url=""
-                 data-thumb-url=""
-                 src="">
 
-            <button
-                    class="pull-right bDelete"><span style="color: white"
-                                                     class="glyphicon glyphicon-remove"></span>
-            </button>
+            <div class="modal-content">
+
+
+                <div class="modal-body content-centred">
+                    <img id="imgImage"
+                         alt="image-failed-to-load"
+                         style="display: block;
+                                margin-left: auto;
+                                margin-right: auto;
+                                max-width: 500px;
+                                max-height: 500px;"
+                         src="https://vignette.wikia.nocookie.net/dbxfanon/images/6/67/Iron_Man.png/revision/latest?cb=20160403042153"/>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="bNice" type="button" class="btn btn-success" data-dismiss="modal">Nice!</button>
+                </div>
+
+            </div>
+
+
         </div>
+
+
     </div>
+
+
+    <br>
 
 
     <p id="pLastModified" title="" class="pull-right"></p>
@@ -1372,6 +1496,19 @@
 
 
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="dProgress" style="display: none" class="progress">
+                        <div id="dProgressChild" class="progress-bar progress-bar-striped progress-bar-active active"
+                             role="progressbar"
+                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="row text-center">
                 <%
@@ -1540,6 +1677,7 @@
                     <p><code>F1 </code>To search for a route</p>
                     <p><code>F4 </code>To generate API interface method</p>
                     <p><code>F7 </code>To save</p>
+                    <p><code>F9 </code>Search and insert random image</p>
                     <p><code>F10 </code>Legacy param adding</p>
                 </div>
                 <div class="modal-footer">
@@ -1582,10 +1720,40 @@
                     </form>
 
 
-                    <div style="max-height: 400px; overflow-y: auto;overflow-x: hidden">
-                        <div id="dGallery" class="row">
+                    <div id="dGallery" style="max-height: 400px; overflow-y: auto;overflow-x: hidden">
 
+
+                        <%
+
+                            try {
+                                List<Image> images = Images.getInstance().getAll(Images.COLUMN_PROJECT_ID, project.getId());
+
+                                for (final Image image : images) {
+                        %>
+
+
+                        <div class="col-md-2 dGalleryRow1">
+                            <img class="center-cropped dGalleryRow"
+                                 id="<%=image.getId()%>"
+                                 data-image-url="<%=image.getImageUrl()%>"
+                                 data-thumb-url="<%=image.getThumbUrl()%>"
+                                 src="<%=image.getThumbUrl()%>">
+
+                            <button
+                                    class="pull-right bDelete"><span style="color: white"
+                                                                     class="glyphicon glyphicon-remove"></span>
+                            </button>
                         </div>
+
+
+                        <%
+                                }
+                            } catch (QueryBuilderException | SQLException e) {
+                                e.printStackTrace();
+                            }
+                        %>
+
+
                     </div>
 
                 </div>
@@ -1596,6 +1764,21 @@
         </div>
     </div>
 
+</div>
+
+<div id="dGalleryRow" style="display: none">
+    <div class="col-md-2 dGalleryRow1">
+        <img class="center-cropped dGalleryRow"
+             id
+             data-image-url
+             data-thumb-url
+             src>
+
+        <button
+                class="pull-right bDelete"><span style="color: white"
+                                                 class="glyphicon glyphicon-remove"></span>
+        </button>
+    </div>
 </div>
 
 </body>

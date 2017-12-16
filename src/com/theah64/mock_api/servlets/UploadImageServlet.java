@@ -9,6 +9,7 @@ import com.theah64.webengine.utils.Request;
 import com.theah64.webengine.utils.Response;
 import com.theah64.webengine.utils.WebEngineConfig;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.servlet.annotation.MultipartConfig;
@@ -106,9 +107,13 @@ public class UploadImageServlet extends AdvancedBaseServlet {
                                 + fileDownloadPath;
 
                         try {
-                            TinifyUtils.manage(getHeaderSecurity().getProjectId(), imageUrl, imageUrl, imageFile.getAbsolutePath(), true);
+                            final String id = TinifyUtils.manage(getHeaderSecurity().getProjectId(), imageUrl, imageUrl, imageFile.getAbsolutePath(), true);
 
-                            getWriter().write(new Response("File uploaded", "download_link", imageUrl).getResponse());
+                            final JSONObject joImage = new JSONObject();
+                            joImage.put("id", id);
+                            joImage.put("image_url", imageUrl);
+
+                            getWriter().write(new Response("File uploaded", joImage).getResponse());
 
                         } catch (QueryBuilderException | SQLException e) {
                             e.printStackTrace();

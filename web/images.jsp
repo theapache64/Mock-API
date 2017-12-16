@@ -89,8 +89,8 @@
 
             $("form#fImageSearch").on('submit', function (e) {
                 e.preventDefault();
-                var keyword = $.trim($("input#iKeyword").val());
 
+                var keyword = $.trim($("input#iKeyword").val());
                 if (keyword !== "") {
 
 
