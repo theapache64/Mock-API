@@ -204,62 +204,7 @@
 
         });
     </script>
-    <style>
-        .center-cropped {
-            max-height: 100%;
-            max-width: 100%;
-            align-items: center;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            background-position: center center;
-            background-repeat: no-repeat;
-        }
 
-        .dGalleryRow1 {
-            border: 1px solid #eeeeee;
-            padding: 3px !important;
-            margin: 10px;
-            height: 17%;
-            cursor: pointer;
-        }
-
-        div.dGalleryRow img {
-            min-width: 100% !important;
-            max-width: 100% !important;
-        }
-
-        div.dGalleryRow {
-            margin-bottom: 2px;
-        }
-
-        .bDelete {
-            position: absolute;
-            right: 2px;
-            top: 5px;
-            font-size: 8px;
-            background-color: #F44336;
-            border-radius: 11px;
-            padding: 5px;
-            border: 0;
-            display: none;
-        }
-
-        .bTransfer {
-            position: absolute;
-            right: 2px;
-            top: 5px;
-            font-size: 8px;
-            background-color: #00a0f4;
-            border-radius: 11px;
-            padding: 5px;
-            border: 0;
-            display: none;
-
-        span.glyphicon.glyphicon-remove {
-            margin-top: -1px;
-        }
-    </style>
 </head>
 <body>
 <%@include file="nav_bar.jsp" %>

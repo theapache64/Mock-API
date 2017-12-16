@@ -1065,7 +1065,7 @@
 
                             var galleryRow = $("div#dGalleryRow");
                             $(galleryRow)
-                                .find("div.dGalleryRow")
+                                .find("img")
                                 .attr('data-image-url', data.data.download_link)
                                 .css('background-image', 'url(\'' + data.data.download_link + '\')');
 
@@ -1207,8 +1207,16 @@
     <br>
 
     <div id="dGalleryRow" style="display: none">
-        <div class="col-md-3">
-            <div class="center-cropped dGalleryRow"></div>
+        <div class="col-md-2 dGalleryRow1">
+            <img class="center-cropped dGalleryRow"
+                 data-image-url=""
+                 data-thumb-url=""
+                 src="">
+
+            <button
+                    class="pull-right bDelete"><span style="color: white"
+                                                     class="glyphicon glyphicon-remove"></span>
+            </button>
         </div>
     </div>
 
@@ -1590,18 +1598,17 @@
                             %>
 
 
-                            <div class="col-md-3">
-
-                                <div class="center-cropped dGalleryRow"
+                            <div class="col-md-2 dGalleryRow1">
+                                <img class="center-cropped dGalleryRow"
+                                     id="<%=image.getId()%>"
                                      data-image-url="<%=image.getImageUrl()%>"
-                                     style="background-image: url('<%=image.getThumbUrl()%>');min-height: 200px">
-                                    <button
-                                            style="display:none;margin: 10px;background-color: transparent;border: 0;"
-                                            class="pull-right bDeleteImage"><span style="color: white"
-                                                                                  class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                </div>
+                                     data-thumb-url="<%=image.getThumbUrl()%>"
+                                     src="<%=image.getThumbUrl()%>">
 
+                                <button
+                                        class="pull-right bDelete"><span style="color: white"
+                                                                         class="glyphicon glyphicon-remove"></span>
+                                </button>
                             </div>
 
 
