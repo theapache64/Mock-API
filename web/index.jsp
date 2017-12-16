@@ -1,11 +1,8 @@
-<%@ page import="com.theah64.mock_api.database.Images" %>
 <%@ page import="com.theah64.mock_api.database.Routes" %>
-<%@ page import="com.theah64.mock_api.models.Image" %>
 <%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="com.theah64.mock_api.servlets.SaveJSONServlet" %>
 <%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
 <%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
-<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.List" %>
 <%--
@@ -1585,42 +1582,10 @@
                     </form>
 
 
-                    <div id="dGallery" style="max-height: 400px; overflow-y: auto;overflow-x: hidden">
+                    <div style="max-height: 400px; overflow-y: auto;overflow-x: hidden">
+                        <div id="dGallery" class="row">
 
-
-                        <div class="row">
-                            <%
-
-                                try {
-                                    List<Image> images = Images.getInstance().getAll(Images.COLUMN_PROJECT_ID, project.getId());
-
-                                    for (final Image image : images) {
-                            %>
-
-
-                            <div class="col-md-2 dGalleryRow1">
-                                <img class="center-cropped dGalleryRow"
-                                     id="<%=image.getId()%>"
-                                     data-image-url="<%=image.getImageUrl()%>"
-                                     data-thumb-url="<%=image.getThumbUrl()%>"
-                                     src="<%=image.getThumbUrl()%>">
-
-                                <button
-                                        class="pull-right bDelete"><span style="color: white"
-                                                                         class="glyphicon glyphicon-remove"></span>
-                                </button>
-                            </div>
-
-
-                            <%
-                                    }
-                                } catch (QueryBuilderException | SQLException e) {
-                                    e.printStackTrace();
-                                }
-                            %>
                         </div>
-
-
                     </div>
 
                 </div>
