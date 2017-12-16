@@ -1215,7 +1215,7 @@
             });
 
             var dGallery = $("div#dGallery");
-            dGallery.on('click', 'div.dGalleryRow', function () {
+            dGallery.on('click', '.dGalleryRow', function () {
                 var imageUrl = $(this).data("image-url");
                 editor.replaceSelection('"' + imageUrl + '"');
                 editor.focus();
