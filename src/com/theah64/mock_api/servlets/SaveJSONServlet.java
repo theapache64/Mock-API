@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.theah64.mock_api.servlets.FetchJSONServlet.KEY_DUMMY_PARAMS;
@@ -73,7 +74,12 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String paramIsRequired[] = getStringParameterArray(KEY_IS_REQUIRED);
 
 
+
+
         if (paramNames != null) {
+
+            System.out.println(Arrays.asList(paramNames));
+            System.out.println(Arrays.asList(paramIsRequired));
 
             for (int i = 0; i < paramNames.length; i++) {
 
@@ -81,9 +87,9 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
                 final String paramDataType = paramDataTypes[i];
                 final String paramDefaultValue = paramDefaultValues[i];
                 final String paramDescription = paramDescriptions[i];
-                System.out.println("dESC IS : " + paramDescription);
+
                 boolean isRequired = paramIsRequired[i].equals("on");
-                System.out.println(paramIsRequired[i]);
+                System.out.println(paramName + ":" + paramIsRequired[i]);
 
                 if (!paramName.trim().isEmpty()) {
                     params.add(new Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired));

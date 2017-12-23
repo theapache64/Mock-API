@@ -85,7 +85,7 @@ public class Params extends BaseTable<Param> {
             ps1.setString(6, param.getName());
             ps1.executeUpdate();
 
-            System.out.println("Added: " + param.toStringAll());
+            System.out.println("Updated: " + param.toStringAll());
         }
 
 

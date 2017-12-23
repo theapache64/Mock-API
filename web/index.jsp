@@ -671,6 +671,8 @@
                                     $("input#" + iDefauleValuesId).val(item.default_value);
                                     $("textarea#" + taDescriptionsId).val(item.description);
                                     $("input#" + iIsRequiredId).prop('checked', item.is_required);
+                                    $("input#" + iIsRequiredHiddenId).attr('disable', item.is_required);
+
 
                                     //Setting names
                                 });
@@ -729,17 +731,7 @@
             });
 
             $("button#bClear").on('click', function () {
-                $("input#route").val("");
-                editor.getDoc().setValue("");
-                $("input#external_api_url").val("");
-                $("input#delay").val("");
-                $("textarea#description").val("");
-                $("form#fParam").html("");
-                $("p#pLastModified").html("");
-                $("select#routes").val($("select#routes option:first").val());
-                $("button#bDelete").hide();
-                $("a#aParamResp").hide();
-                $("div#response_panel").css('visibility', 'hidden');
+                window.location = "index.jsp?api_key=<%=project.getApiKey()%>";
             });
 
             var resultDiv = $("div#resultDiv");
@@ -771,6 +763,7 @@
                 var route = $("input#route").val();
                 var response = editor.getDoc().getValue();
                 var params = $("form#fParam").serialize();
+                console.log("Params:" + params);
                 var opParams = $("input#optional_params").val();
                 var isSecure = $("input#is_secure").is(":checked") ? true : false;
                 var delay = $("input#delay").val();
@@ -1583,9 +1576,9 @@
 
             <div class="col-md-1 checkbox">
                 <input class="iIsRequiredHidden" type="hidden" value="off"
-                       name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">
+                       name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>" disabled>
                 <label><input class="iIsRequired" type="checkbox" value="on"
-                              name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>">Required</label>
+                              name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>" checked>Required</label>
             </div>
 
             <div class="col-md-2">
