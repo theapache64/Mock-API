@@ -1510,7 +1510,7 @@
             </div>
 
 
-            <div class="row text-center">
+            <div class="row text-center" style="line-height: 3">
                 <%
                     for (final RandomResponseGenerator.RandomResponse randomResponse : RandomResponseGenerator.randomResponses) {
                 %>

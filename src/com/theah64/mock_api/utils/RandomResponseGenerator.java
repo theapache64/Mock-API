@@ -1,5 +1,6 @@
 package com.theah64.mock_api.utils;
 
+import com.theah64.webengine.utils.RandomString;
 import com.thedeanda.lorem.LoremIpsum;
 
 import java.util.regex.Matcher;
@@ -16,6 +17,15 @@ public class RandomResponseGenerator {
     }
 
     public static final RandomResponse[] randomResponses = new RandomResponse[]{
+
+
+            //random number
+            new RandomResponse("{randomNumber (\\d+)}") {
+                @Override
+                String getValue(int count) {
+                    return RandomString.getRandomNumber(count);
+                }
+            },
 
             //random name
             new RandomResponse("{randomName}") {
