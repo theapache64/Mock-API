@@ -74,8 +74,6 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String paramIsRequired[] = getStringParameterArray(KEY_IS_REQUIRED);
 
 
-
-
         if (paramNames != null) {
 
             System.out.println(Arrays.asList(paramNames));
@@ -88,7 +86,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
                 final String paramDefaultValue = paramDefaultValues[i];
                 final String paramDescription = paramDescriptions[i];
 
-                boolean isRequired = paramIsRequired[i].equals("on");
+                boolean isRequired = paramIsRequired[i].equals("true");
                 System.out.println(paramName + ":" + paramIsRequired[i]);
 
                 if (!paramName.trim().isEmpty()) {

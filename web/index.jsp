@@ -671,7 +671,7 @@
                                     $("input#" + iDefauleValuesId).val(item.default_value);
                                     $("textarea#" + taDescriptionsId).val(item.description);
                                     $("input#" + iIsRequiredId).prop('checked', item.is_required);
-                                    $("input#" + iIsRequiredHiddenId).attr('disable', item.is_required);
+                                    $("input#" + iIsRequiredHiddenId).val(item.is_required);
 
 
                                     //Setting names
@@ -736,27 +736,11 @@
 
             var resultDiv = $("div#resultDiv");
 
+            $("form#fParam").on('change', 'input.iIsRequired', function () {
+                $(this).parent().parent().find("input.iIsRequiredHidden").val($(this).is(":checked"));
+            });
+
             $("button#bSubmit").on('click', function () {
-
-                $('#fParam *').filter(':input').each(function () {
-                    //your code here
-                    if ($(this).attr('name') === '<%=SaveJSONServlet.KEY_IS_REQUIRED%>') {
-                        var curId = $(this).attr('id');
-                        if (curId != undefined && curId.indexOf("Hidden") == -1) {
-                            var hidId = "input#" + curId + "Hidden";
-                            if ($(this).is(":checked")) {
-                                console.log("Disabling hidden:" + hidId);
-                                $(hidId).attr('disabled', true);
-                            } else {
-                                console.log("Enabling hidden:" + hidId);
-                                $(hidId).attr('disabled', false);
-                            }
-                        }
-
-                    }
-                });
-
-                console.log("DONE!");
 
 
                 resultDiv.hide();
@@ -1034,6 +1018,7 @@
 
             $("#fParam").on('click', 'a.aAddParam', function () {
                 var paramRow = $("div#dParamRow").html();
+
                 $(paramRow).insertAfter($(this).parent().parent());
             });
 
@@ -1575,10 +1560,9 @@
             </div>
 
             <div class="col-md-1 checkbox">
-                <input class="iIsRequiredHidden" type="hidden" value="off"
-                       name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>" disabled>
-                <label><input class="iIsRequired" type="checkbox" value="on"
-                              name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>" checked>Required</label>
+                <input class="iIsRequiredHidden" type="hidden"
+                       name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>" value="true">
+                <label><input class="iIsRequired" type="checkbox" checked>Required</label>
             </div>
 
             <div class="col-md-2">
