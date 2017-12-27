@@ -17,7 +17,7 @@
 <%
 
     final String apiKey = DarKnight.getDecrypted(request.getParameter(Projects.COLUMN_API_KEY));
-    System.out.println("apiKey:" + apiKey);
+
     Project project = null;
 
     if (apiKey != null) {

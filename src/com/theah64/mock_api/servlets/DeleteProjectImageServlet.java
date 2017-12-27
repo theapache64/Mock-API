@@ -33,7 +33,6 @@ public class DeleteProjectImageServlet extends AdvancedBaseServlet {
 
         final String filePath = Images.getInstance().get(Images.COLUMN_ID, imageId, Images.COLUMN_PROJECT_ID, projectId, Images.COLUMN_FILE_PATH);
         if (filePath != null) {
-            System.out.println(filePath);
             final File file = new File(filePath);
             //noinspection ResultOfMethodCallIgnored
             file.delete();

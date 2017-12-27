@@ -2,7 +2,6 @@
 <%@ page import="java.net.URLEncoder" %>
 <%
     final boolean isHomePage = request.getAttribute("is_home_page") != null;
-    System.out.println("Home:" + isHomePage);
 %>
 <nav class="navbar navbar-inverse" style="border-radius: 0px">
     <div class="container-fluid">

@@ -16,11 +16,21 @@ public class RandomResponseGenerator {
         return loremIpsum;
     }
 
+    private static RandomResponse randomNumber = //random number
+            new RandomResponse("{randomNumber (\\d+)}") {
+                @Override
+                String getValue(int count) {
+                    return RandomString.getRandomNumber(count);
+                }
+            };
+
+
     public static final RandomResponse[] randomResponses = new RandomResponse[]{
 
 
-            //random number
-            new RandomResponse("{randomNumber (\\d+)}") {
+            randomNumber,
+
+            new RandomResponse("{randomNumberString (\\d+)}") {
                 @Override
                 String getValue(int count) {
                     return RandomString.getRandomNumber(count);
@@ -132,11 +142,11 @@ public class RandomResponseGenerator {
 
             if (jsonResp.contains(randomResponse.getKey())) {
 
+                //values without count
                 final String splitter = randomResponse.getKey()
                         .replaceAll("\\{", "\\\\{")
                         .replaceAll("\\}", "\\\\}");
 
-                System.out.println("SP:" + splitter);
 
                 final String[] jsonRespArr = jsonResp.split(
                         splitter
@@ -154,6 +164,7 @@ public class RandomResponseGenerator {
                 randomRegEx = randomRegEx.replace("{", "\\{");
                 randomRegEx = randomRegEx.replace("}", "\\}");
 
+
                 final Pattern pattern = Pattern.compile(randomRegEx);
                 final Matcher matcher = pattern.matcher(jsonResp);
 
@@ -162,6 +173,7 @@ public class RandomResponseGenerator {
                     do {
                         final int count = Integer.parseInt(matcher.group(1));
                         String newRandomRegEx = randomRegEx.replace("(\\d+)", count + "");
+
 
                         //Regex matching
                         final String[] jsonRespArr = jsonResp.split(
@@ -173,7 +185,17 @@ public class RandomResponseGenerator {
 
                             String data = randomResponse.getValue(count);
                             data = data.replace("\n", "\\n");
-                            sb.append(jsonRespArr[i]).append(data);
+                            //TODO: Hotpoint
+                            String chunk = jsonRespArr[i];
+                            if (randomResponse.getKey().equals(randomNumber.getKey())) {
+                                if (chunk.endsWith("\"")) {
+                                    chunk = chunk.substring(0, chunk.length() - 1);
+                                } else if (chunk.startsWith("\"")) {
+                                    chunk = chunk.substring(1);
+                                }
+                            }
+
+                            sb.append(chunk).append(data);
 
                         }
 

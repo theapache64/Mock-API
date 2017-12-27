@@ -46,7 +46,6 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
             throw new Request.RequestException("Invalid URL");
         }
 
-        System.out.println("Updating project");
 
         final Projects projectsTable = Projects.getInstance();
         final String id = getHeaderSecurity().getProjectId();

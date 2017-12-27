@@ -76,8 +76,6 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
         if (paramNames != null) {
 
-            System.out.println(Arrays.asList(paramNames));
-            System.out.println(Arrays.asList(paramIsRequired));
 
             for (int i = 0; i < paramNames.length; i++) {
 
