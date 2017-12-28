@@ -16,9 +16,10 @@ public class RandomResponseGenerator {
         return loremIpsum;
     }
 
-
     public static final RandomResponse[] randomResponses = new RandomResponse[]{
 
+
+            //random number
             new RandomResponse("{randomNumber (\\d+)}") {
                 @Override
                 String getValue(int count) {
@@ -131,28 +132,34 @@ public class RandomResponseGenerator {
 
             if (jsonResp.contains(randomResponse.getKey())) {
 
-                //values without count
                 final String splitter = randomResponse.getKey()
                         .replaceAll("\\{", "\\\\{")
                         .replaceAll("\\}", "\\\\}");
 
+                System.out.println("SP:" + splitter);
 
                 final String[] jsonRespArr = jsonResp.split(
                         splitter
                 );
 
+                System.out.println(jsonRespArr.length);
                 final StringBuilder sb = new StringBuilder();
-                for (String aJsonRespArr : jsonRespArr) {
-                    sb.append(aJsonRespArr).append(randomResponse.getValue(1));
-                }
-                jsonResp = sb.toString();
+                for (int i = 0; i < jsonRespArr.length; i++) {
+                    final String aJsonRespArr = jsonRespArr[i];
+                    final String data = randomResponse.getValue(1);
+                    sb.append(aJsonRespArr);
 
+                    if (i < (jsonRespArr.length - 1)) {
+                        sb.append(data);
+                    }
+                }
+
+                jsonResp = sb.toString();
             } else {
 
                 String randomRegEx = randomResponse.getKey();
                 randomRegEx = randomRegEx.replace("{", "\\{");
                 randomRegEx = randomRegEx.replace("}", "\\}");
-
 
                 final Pattern pattern = Pattern.compile(randomRegEx);
                 final Matcher matcher = pattern.matcher(jsonResp);
@@ -163,18 +170,21 @@ public class RandomResponseGenerator {
                         final int count = Integer.parseInt(matcher.group(1));
                         String newRandomRegEx = randomRegEx.replace("(\\d+)", count + "");
 
-
                         //Regex matching
                         final String[] jsonRespArr = jsonResp.split(
                                 newRandomRegEx
                         );
 
                         final StringBuilder sb = new StringBuilder();
-                        for (String aJsonRespArr : jsonRespArr) {
+                        for (int i = 0; i < jsonRespArr.length; i++) {
 
                             String data = randomResponse.getValue(count);
                             data = data.replace("\n", "\\n");
-                            sb.append(aJsonRespArr).append(data);
+                            sb.append(jsonRespArr[i]);
+
+                            if (i < (jsonRespArr.length - 1)) {
+                                sb.append(data);
+                            }
 
                         }
 

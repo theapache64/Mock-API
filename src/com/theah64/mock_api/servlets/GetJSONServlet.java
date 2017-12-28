@@ -13,9 +13,7 @@ import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.utils.CommonUtils;
 import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -153,7 +151,6 @@ public class GetJSONServlet extends AdvancedBaseServlet {
             throw new Request.RequestException(e.getMessage());
         }
     }
-
 
 
 }
