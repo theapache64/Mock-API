@@ -30,11 +30,11 @@ public class Route {
     private final long updatedInMillis;
     private final List<Param> params;
 
-    public Route(String id, String projectId, String route, String response, String description, String externalApiUrl, String method, List<Param> params, boolean isSecure, long delay, long updatedInMillis) throws JSONException {
+    public Route(String id, String projectId, String route, String response, String description, String externalApiUrl, String method, List<Param> params, boolean isSecure, long delay, long updatedInMillis) {
         this.id = id;
         this.projectId = projectId;
         this.name = route;
-        this.defaultResponse = response != null ? new JSONObject(response).toString() : null;
+        this.defaultResponse = response;
         this.description = description;
         this.externalApiUrl = externalApiUrl;
         this.method = method;

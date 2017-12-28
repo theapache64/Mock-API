@@ -5,6 +5,7 @@ import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.APIResponse;
+import com.theah64.webengine.utils.CommonUtils;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.theah64.mock_api.servlets.FetchJSONServlet.KEY_DUMMY_PARAMS;
@@ -58,69 +58,74 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
         final String response = getStringParameter(KEY_RESPONSE);
         final String method = getStringParameter(Routes.COLUMN_METHOD);
 
-        String defaultResponse = null;
-        if (responseId.equals(Routes.COLUMN_DEFAULT_RESPONSE)) {
-            defaultResponse = response;
-        } else {
-            Responses.getInstance().update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response);
-        }
+        //Validation
+        if (CommonUtils.isJSONValid(response)) {
 
-        final List<Param> params = new ArrayList<>();
+            String defaultResponse = null;
+            if (responseId.equals(Routes.COLUMN_DEFAULT_RESPONSE)) {
+                defaultResponse = response;
+            } else {
+                Responses.getInstance().update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response);
+            }
 
-        final String paramNames[] = getStringParameterArray(KEY_PARAMS);
-        final String paramDataTypes[] = getStringParameterArray(KEY_DATA_TYPES);
-        final String paramDefaultValues[] = getStringParameterArray(KEY_DEFAULT_VALUES);
-        final String paramDescriptions[] = getStringParameterArray(KEY_DESCRIPTIONS);
-        final String paramIsRequired[] = getStringParameterArray(KEY_IS_REQUIRED);
+            final List<Param> params = new ArrayList<>();
+
+            final String paramNames[] = getStringParameterArray(KEY_PARAMS);
+            final String paramDataTypes[] = getStringParameterArray(KEY_DATA_TYPES);
+            final String paramDefaultValues[] = getStringParameterArray(KEY_DEFAULT_VALUES);
+            final String paramDescriptions[] = getStringParameterArray(KEY_DESCRIPTIONS);
+            final String paramIsRequired[] = getStringParameterArray(KEY_IS_REQUIRED);
 
 
-        if (paramNames != null) {
+            if (paramNames != null) {
 
 
-            for (int i = 0; i < paramNames.length; i++) {
+                for (int i = 0; i < paramNames.length; i++) {
 
-                final String paramName = paramNames[i].replaceAll("\\s+", "_");
-                final String paramDataType = paramDataTypes[i];
-                final String paramDefaultValue = paramDefaultValues[i];
-                final String paramDescription = paramDescriptions[i];
+                    final String paramName = paramNames[i].replaceAll("\\s+", "_");
+                    final String paramDataType = paramDataTypes[i];
+                    final String paramDefaultValue = paramDefaultValues[i];
+                    final String paramDescription = paramDescriptions[i];
 
-                boolean isRequired = paramIsRequired[i].equals("true");
-                System.out.println(paramName + ":" + paramIsRequired[i]);
+                    boolean isRequired = paramIsRequired[i].equals("true");
+                    System.out.println(paramName + ":" + paramIsRequired[i]);
 
-                if (!paramName.trim().isEmpty()) {
-                    params.add(new Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired));
+                    if (!paramName.trim().isEmpty()) {
+                        params.add(new Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired));
+                    }
                 }
+            }
+
+
+            final String description = getStringParameter(Routes.COLUMN_DESCRIPTION);
+            final boolean isSecure = getBooleanParameter(Routes.COLUMN_IS_SECURE);
+            final long delay = getLongParameter(Routes.COLUMN_DELAY);
+            final String externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL);
+
+            if (externalApiUrl != null && !externalApiUrl.matches(URL_REGEX)) {
+                throw new Request.RequestException("Invalid external api url :" + externalApiUrl);
+            }
+
+
+            final Route route = new Route(null, projectId, routeName, defaultResponse, description, externalApiUrl, method, params, isSecure, delay, -1);
+
+            final JSONObject joResp = new JSONObject();
+            joResp.put(KEY_DUMMY_PARAMS, route.getDummyRequiredParams());
+
+            if (routeId == null) {
+                //Route doesn't exist
+                routeId = Routes.getInstance().addv3(route);
+                joResp.put(Routes.COLUMN_ID, routeId);
+
+                getWriter().write(new APIResponse("Route established ", joResp).getResponse());
+            } else {
+                //Update the existing route
+                route.setId(routeId);
+                Routes.getInstance().update(route);
+                getWriter().write(new APIResponse("Route updated", joResp).getResponse());
             }
         }
 
-
-        final String description = getStringParameter(Routes.COLUMN_DESCRIPTION);
-        final boolean isSecure = getBooleanParameter(Routes.COLUMN_IS_SECURE);
-        final long delay = getLongParameter(Routes.COLUMN_DELAY);
-        final String externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL);
-
-        if (externalApiUrl != null && !externalApiUrl.matches(URL_REGEX)) {
-            throw new Request.RequestException("Invalid external api url :" + externalApiUrl);
-        }
-
-
-        final Route route = new Route(null, projectId, routeName, defaultResponse, description, externalApiUrl, method, params, isSecure, delay, -1);
-
-        final JSONObject joResp = new JSONObject();
-        joResp.put(KEY_DUMMY_PARAMS, route.getDummyRequiredParams());
-
-        if (routeId == null) {
-            //Route doesn't exist
-            routeId = Routes.getInstance().addv3(route);
-            joResp.put(Routes.COLUMN_ID, routeId);
-
-            getWriter().write(new APIResponse("Route established ", joResp).getResponse());
-        } else {
-            //Update the existing route
-            route.setId(routeId);
-            Routes.getInstance().update(route);
-            getWriter().write(new APIResponse("Route updated", joResp).getResponse());
-        }
     }
 
 

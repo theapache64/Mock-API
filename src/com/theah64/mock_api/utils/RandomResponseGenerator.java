@@ -184,9 +184,7 @@ public class RandomResponseGenerator {
 
                             String data = randomResponse.getValue(count);
                             data = data.replace("\n", "\\n");
-                            String t = aJsonRespArr + data;
-                            System.out.println("Data:" + t);
-                            sb.append(t);
+                            sb.append(aJsonRespArr).append(data);
 
                         }
 

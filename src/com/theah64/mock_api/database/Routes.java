@@ -4,7 +4,6 @@ import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
 import com.theah64.webengine.database.BaseTable;
 import com.theah64.webengine.database.Connection;
-import org.json.JSONException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -104,7 +103,7 @@ public class Routes extends BaseTable<Route> {
             }
             rs.close();
             ps.close();
-        } catch (SQLException | JSONException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             error = e.getMessage();
         } finally {
@@ -158,7 +157,7 @@ public class Routes extends BaseTable<Route> {
             }
             rs.close();
             ps.close();
-        } catch (SQLException | JSONException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             error = e.getMessage();
         } finally {
@@ -201,9 +200,11 @@ public class Routes extends BaseTable<Route> {
 
                 route = new Route(id, null, routeName, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis);
             }
+
             rs.close();
             ps.close();
-        } catch (SQLException | JSONException e) {
+
+        } catch (SQLException e) {
             e.printStackTrace();
             error = e.getMessage();
         } finally {
@@ -229,7 +230,9 @@ public class Routes extends BaseTable<Route> {
         try {
             final PreparedStatement ps = con.prepareStatement(query);
 
-            ps.setString(1, route.getDefaultResponse() == null ? get(COLUMN_ID, route.getId(), COLUMN_DEFAULT_RESPONSE, true) : route.getDefaultResponse());
+            String r = route.getDefaultResponse() == null ? get(COLUMN_ID, route.getId(), COLUMN_DEFAULT_RESPONSE, true) : route.getDefaultResponse();
+            System.out.println("R is : " + r);
+            ps.setString(1, r);
             ps.setString(2, route.getDescription());
             ps.setBoolean(3, route.isSecure());
             ps.setLong(4, route.getDelay());

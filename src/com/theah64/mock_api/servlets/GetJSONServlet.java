@@ -10,8 +10,10 @@ import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.HeaderSecurity;
 import com.theah64.mock_api.utils.RandomResponseGenerator;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
+import com.theah64.webengine.utils.CommonUtils;
 import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -140,11 +142,18 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
 
             jsonResp = RandomResponseGenerator.generate(jsonResp);
-            getWriter().write(new JSONObject(jsonResp).toString());
+
+            //Validation
+            if (CommonUtils.isJSONValid(jsonResp)) {
+                getWriter().write(jsonResp);
+            }
 
         } catch (QueryBuilderException e) {
             e.printStackTrace();
             throw new Request.RequestException(e.getMessage());
         }
     }
+
+
+
 }
