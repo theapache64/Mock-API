@@ -27,7 +27,6 @@ public class RandomResponseGenerator {
 
     public static final RandomResponse[] randomResponses = new RandomResponse[]{
 
-
             randomNumber,
 
             new RandomResponse("{randomNumberString (\\d+)}") {
@@ -185,17 +184,7 @@ public class RandomResponseGenerator {
 
                             String data = randomResponse.getValue(count);
                             data = data.replace("\n", "\\n");
-                            //TODO: Hotpoint
-                            String chunk = jsonRespArr[i];
-                            if (randomResponse.getKey().equals(randomNumber.getKey())) {
-                                if (chunk.endsWith("\"")) {
-                                    chunk = chunk.substring(0, chunk.length() - 1);
-                                } else if (chunk.startsWith("\"")) {
-                                    chunk = chunk.substring(1);
-                                }
-                            }
-
-                            sb.append(chunk).append(data);
+                            sb.append(jsonRespArr[i]).append(data);
 
                         }
 
