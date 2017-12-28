@@ -16,20 +16,10 @@ public class RandomResponseGenerator {
         return loremIpsum;
     }
 
-    private static RandomResponse randomNumber = //random number
-            new RandomResponse("{randomNumber (\\d+)}") {
-                @Override
-                String getValue(int count) {
-                    return RandomString.getRandomNumber(count);
-                }
-            };
-
 
     public static final RandomResponse[] randomResponses = new RandomResponse[]{
 
-            randomNumber,
-
-            new RandomResponse("{randomNumberString (\\d+)}") {
+            new RandomResponse("{randomNumber (\\d+)}") {
                 @Override
                 String getValue(int count) {
                     return RandomString.getRandomNumber(count);
