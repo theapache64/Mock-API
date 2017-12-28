@@ -151,12 +151,12 @@ public class RandomResponseGenerator {
                         splitter
                 );
 
-                System.out.println(jsonRespArr.length);
                 final StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < jsonRespArr.length; i++) {
-                    sb.append(jsonRespArr[i]).append(randomResponse.getValue(1));
+                for (String aJsonRespArr : jsonRespArr) {
+                    sb.append(aJsonRespArr).append(randomResponse.getValue(1));
                 }
                 jsonResp = sb.toString();
+
             } else {
 
                 String randomRegEx = randomResponse.getKey();
@@ -180,11 +180,13 @@ public class RandomResponseGenerator {
                         );
 
                         final StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < jsonRespArr.length; i++) {
+                        for (String aJsonRespArr : jsonRespArr) {
 
                             String data = randomResponse.getValue(count);
                             data = data.replace("\n", "\\n");
-                            sb.append(jsonRespArr[i]).append(data);
+                            String t = aJsonRespArr + data;
+                            System.out.println("Data:" + t);
+                            sb.append(t);
 
                         }
 
