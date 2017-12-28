@@ -6,8 +6,12 @@
 <nav class="navbar navbar-inverse" style="border-radius: 0px">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#"><%=project.getName()%>
+
+            <a class="navbar-brand" href="#">
+                <%=project.getName()%>
             </a>
+
+
         </div>
         <ul class="nav navbar-nav">
             <li><a href="index.jsp?api_key=<%=project.getApiKey()%>">Home</a></li>

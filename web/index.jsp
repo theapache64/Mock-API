@@ -7,6 +7,7 @@
 <%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
 <%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="java.sql.SQLException" %>
+<%@ page import="java.util.Calendar" %>
 <%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
@@ -1250,6 +1251,14 @@
             margin-bottom: 10px;
         }
 
+        img#xmas {
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+            position: absolute;
+            width: 56px;
+            top: 7px;
+            right: -13px;
+        }
 
     </style>
 </head>
@@ -1336,20 +1345,33 @@
                 <%--Available jsonList--%>
                 <div class=" col-md-2">
 
+
                     <label for="routes">Select route</label>
-                    <select id="routes" class="form-control" title="Routes">
-                        <option value="">Select a route</option>
+                    <div>
                         <%
-                            if (jsonList != null) {
-                                for (final Route json : jsonList) {
+                            if (Calendar.getInstance().get(Calendar.MONTH) == 11) {
                         %>
-                        <option value="<%=json.getId()%>"><%=json.getName()%>
-                        </option>
+                        <img id="xmas" class="pull-right" src="assets/xmas_hat.png"/>
                         <%
-                                }
                             }
                         %>
-                    </select>
+
+                        <select id="routes" class="form-control" title="Routes">
+                            <option value="">Select a route</option>
+                            <%
+                                if (jsonList != null) {
+                                    for (final Route json : jsonList) {
+                            %>
+                            <option value="<%=json.getId()%>"><%=json.getName()%>
+                            </option>
+                            <%
+                                    }
+                                }
+                            %>
+                        </select>
+                    </div>
+
+
                 </div>
 
                 <div class="col-md-2">
