@@ -67,7 +67,6 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
             StringBuilder codeBuilder = new StringBuilder();
 
 
-
             if (route.getDescription() != null && !route.getDescription().trim().isEmpty()) {
                 codeBuilder.append("/**\n*").append(route.getDescription()).append("\n*/\n");
             }
@@ -83,7 +82,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
                 final List<Param> params = route.getParams();
                 for (final Param param : params) {
-                    codeBuilder.append(String.format("\n\t@Query(\"%s\") String %s,", param, CodeGen.toCamelCase(param.getName())));
+                    codeBuilder.append(String.format("\n\t@Query(\"%s\") %s %s,", param, getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
                 }
 
                 codeBuilder = new StringBuilder(codeBuilder.substring(0, codeBuilder.length() - 1));
@@ -99,5 +98,12 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
         }
 
 
+    }
+
+    private String getPrimitive(String dataType) {
+        if (!dataType.equals("String")) {
+            return dataType.toLowerCase();
+        }
+        return dataType;
     }
 }

@@ -14,6 +14,6 @@ A Web Application to build Mock API
 - Add data type check to menu F4
 - Add feature 'Download all class as zip' => Control + Alt + M
 - Convert class based code generation 
-
+- Add loading progress bar
 
 
