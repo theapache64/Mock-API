@@ -1,5 +1,6 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.CodeGen;
 import com.theah64.webengine.utils.PathInfo;
@@ -24,7 +25,7 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
 
     @Override
     protected boolean isSecureServlet() {
-        return false;
+        return true;
     }
 
     @Override
@@ -43,7 +44,8 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
         final String joString = getStringParameter(KEY_JO_STRING);
         final boolean isRetrofitModel = getBooleanParameter(KEY_IS_RETROFIT_MODEL);
 
-        getWriter().write(new APIResponse("Done", "data", CodeGen.getFinalCode(joString, modelName, isRetrofitModel)).getResponse());
+            final String packageName = Projects.getInstance().get(Projects.COLUMN_ID, getHeaderSecurity().getProjectId(), Projects.COLUMN_PACKAGE_NAME, false);
+        getWriter().write(new APIResponse("Done", "data", CodeGen.getFinalCode(packageName, joString, modelName, isRetrofitModel)).getResponse());
     }
 
 

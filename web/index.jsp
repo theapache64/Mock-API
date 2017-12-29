@@ -159,7 +159,7 @@
                 var packageName = $("input#iPackageName").val();
                 var baseOGAPIURL = $("input#iBaseOGAPIURL").val();
 
-                var dSettingsUpdateProgress  = $("div#dSettingsUpdateProgress");
+                var dSettingsUpdateProgress = $("div#dSettingsUpdateProgress");
 
                 $.ajax({
 
@@ -175,11 +175,7 @@
                     },
                     success: function (data) {
                         dSettingsUpdateProgress.slideUp(100);
-                        if (!data.error) {
-                            $("#base_og_api_url").text(baseOGAPIURL);
-                        } else {
-                            alert(data.message);
-                        }
+                        alert(data.message);
                     },
                     error: function () {
                         dSettingsUpdateProgress.slideUp(100);
@@ -418,6 +414,9 @@
                                 type: "POST",
                                 beforeSend: function () {
                                     startLoading(true);
+                                },
+                                headers: {
+                                    "Authorization": '<%=project.getApiKey()%>'
                                 },
                                 data: {
                                     jo_string: selection,
@@ -1715,11 +1714,12 @@
                                    name="<%=Projects.COLUMN_BASE_OG_API_URL%>" placeholder="Base OG API URL"/>
                         </div>
 
-                            <div id="dSettingsUpdateProgress" style="display: none" class="progress">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
-                                    Updating...
-                                </div>
+                        <div id="dSettingsUpdateProgress" style="display: none" class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                                Updating...
                             </div>
+                        </div>
 
                     </form>
                 </div>

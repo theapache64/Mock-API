@@ -82,10 +82,11 @@ public class CodeGen {
 
     }
 
-    public static String getFinalCode(String joString, String modelName, boolean isRetrofitModel) throws JSONException {
+    public static String getFinalCode(final String packageName, String joString, String modelName, boolean isRetrofitModel) throws JSONException {
         final StringBuilder codeBuilder = new StringBuilder();
         CodeGen.getGenClassCode(false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
-        codeBuilder.insert(0, String.format("%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
+        codeBuilder.insert(0, String.format("%s\n\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
+                "package " + packageName + ".api.responses;",
                 isRetrofitModel ? SERIALIZED_NAME_IMPORT : "",
                 new Date().toString(), modelName));
         codeBuilder.append("\n\n}");
