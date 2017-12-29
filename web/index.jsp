@@ -36,6 +36,19 @@
         var isAutoUpload = false;
         $(document).ready(function () {
 
+            //Control + Alt + R
+            function showRandomGenModal() {
+                $("#random").modal("show");
+                setTimeout(function () {
+                    $('input#iWords').focus();
+                }, 500);
+            }
+
+
+            $("a#aGenRandomText").on('click',function(){
+                showRandomGenModal();
+            });
+
 
             function formatJSON() {
                 var start_cursor = editor.getCursor();  //I need to get the cursor position
@@ -387,12 +400,10 @@
                 }
 
 
-                //Control + Alt + R
+
+
                 if (event.ctrlKey && event.altKey && event.keyCode === 82) {
-                    $("#random").modal("show");
-                    setTimeout(function () {
-                        $('input#iWords').focus();
-                    }, 500);
+                    showRandomGenModal();
                 }
 
 
@@ -1221,6 +1232,14 @@
         });
     </script>
     <style>
+
+
+
+        .menu_shortcut {
+            position: relative;
+            right: -14px;
+        }
+
         .CodeMirror-fullscreen {
             position: fixed;
             top: 0;

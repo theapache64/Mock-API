@@ -15,4 +15,3 @@ A Web Application to build Mock API
 - Convert class based code generation 
 - Add loading progress bar
 - Add JSON error on validation -> control + alt + l
-
