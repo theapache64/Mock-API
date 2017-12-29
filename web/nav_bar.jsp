@@ -14,7 +14,7 @@
         </div>
 
         <ul class="nav navbar-nav">
-            <li><a href="index.jsp?api_key=<%=project.getApiKey()%>"><span class="glyphicon glyphicon-home"></span> </a></li>
+            <li><a href="index.jsp?api_key=<%=project.getApiKey()%>"> Home </a></li>
 
             <%--Generate--%>
             <li class="dropdown">
