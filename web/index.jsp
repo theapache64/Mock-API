@@ -38,7 +38,17 @@
 
 
             function formatJSON() {
+                var start_cursor = editor.getCursor();  //I need to get the cursor position
+                console.log(start_cursor);  //Cursor position
+                var cursorLine = start_cursor.line;
+                var cursorCh = start_cursor.ch;
+
                 editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
+                editor.focus();
+
+
+                //Code to move cursor back [x] amount of spaces. [x] is the data-val value.
+                editor.setCursor({line: cursorLine , ch : cursorCh });
             }
 
             var editor = CodeMirror.fromTextArea(document.getElementById("response"), {

@@ -19,6 +19,7 @@
 <script src="//codemirror.net/addon/fold/brace-fold.js"></script>
 <script src="//codemirror.net/addon/fold/indent-fold.js"></script>
 <script src="//codemirror.net/addon/fold/comment-fold.js"></script>
+<script src="//codemirror.net/2/lib/util/formatting.js"></script>
 
 <link rel="stylesheet" href="/mock_api/styles/style.css">
 
