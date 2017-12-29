@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 public class CodeGen {
 
 
+    private static final String SERIALIZED_NAME_IMPORT = "import com.google.gson.annotations.SerializedName;";
+
     public static void getGenClassCode(final boolean isNestedClass, final StringBuilder codeBuilder, final Object object, final String modelName, final boolean isRetrofitModel) throws JSONException {
 
         JSONObject joModel = null;
@@ -83,7 +85,9 @@ public class CodeGen {
     public static String getFinalCode(String joString, String modelName, boolean isRetrofitModel) throws JSONException {
         final StringBuilder codeBuilder = new StringBuilder();
         CodeGen.getGenClassCode(false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
-        codeBuilder.insert(0, String.format("/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n", new Date().toString(), modelName));
+        codeBuilder.insert(0, String.format("%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
+                isRetrofitModel ? SERIALIZED_NAME_IMPORT : "",
+                new Date().toString(), modelName));
         codeBuilder.append("\n\n}");
 
         return codeBuilder.toString().replaceAll("\\n", "<br>").replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");

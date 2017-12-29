@@ -4,6 +4,8 @@ import com.sun.istack.internal.Nullable;
 import com.theah64.mock_api.models.Project;
 import com.theah64.webengine.database.BaseTable;
 import com.theah64.webengine.database.Connection;
+import com.theah64.webengine.database.querybuilders.QueryBuilderException;
+import com.theah64.webengine.database.querybuilders.UpdateQueryBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +20,7 @@ public class Projects extends BaseTable<Project> {
     public static final String COLUMN_PASS_HASH = "pass_hash";
     public static final String COLUMN_API_KEY = "api_key";
     public static final String COLUMN_BASE_OG_API_URL = "base_og_api_url";
+    public static final String COLUMN_PACKAGE_NAME = "package_name";
 
     private Projects() {
         super("projects");
@@ -34,14 +37,26 @@ public class Projects extends BaseTable<Project> {
     }
 
     @Override
+    public boolean update(Project project) throws SQLException, QueryBuilderException {
+
+        return new UpdateQueryBuilder.Builder(getTableName())
+                .set(COLUMN_PACKAGE_NAME, project.getPackageName())
+                .set(COLUMN_BASE_OG_API_URL, project.getBaseOgApiUrl())
+                .where(COLUMN_ID, project.getId())
+                .build()
+                .done();
+
+    }
+
+    @Override
     public Project get(String column1, String value1, @Nullable String column2, @Nullable String value2) {
         Project project = null;
         final String query;
 
         if (column2 != null && value2 != null) {
-            query = String.format("SELECT id,name,api_key,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
+            query = String.format("SELECT id,name,api_key,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
         } else {
-            query = String.format("SELECT id,name,api_key,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND is_active = 1 LIMIT 1", tableName, column1);
+            query = String.format("SELECT id,name,api_key,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND is_active = 1 LIMIT 1", tableName, column1);
         }
         String resultValue = null;
         final java.sql.Connection con = Connection.getConnection();
@@ -57,12 +72,15 @@ public class Projects extends BaseTable<Project> {
             final ResultSet rs = ps.executeQuery();
 
             if (rs.first()) {
+
                 final String id = rs.getString(COLUMN_ID);
                 final String name = rs.getString(COLUMN_NAME);
                 final String apiKey = rs.getString(COLUMN_API_KEY);
-                final String baseOgApiUrl = rs.getString(COLUMN_BASE_OG_API_URL);
                 final String passHash = rs.getString(COLUMN_PASS_HASH);
-                project = new Project(id, name, passHash, apiKey, baseOgApiUrl);
+                final String packageName = rs.getString(COLUMN_PACKAGE_NAME);
+                final String baseOgApiUrl = rs.getString(COLUMN_BASE_OG_API_URL);
+
+                project = new Project(id, name, passHash, apiKey, baseOgApiUrl, packageName);
             }
 
             rs.close();
@@ -85,7 +103,7 @@ public class Projects extends BaseTable<Project> {
     public String addv3(Project project) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO projects (name, pass_hash,api_key,base_og_api_url) VALUES (?,?,?,?);";
+        final String query = "INSERT INTO projects (name, pass_hash,api_key,base_og_api_url,package_name) VALUES (?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
 
         try {
@@ -94,6 +112,7 @@ public class Projects extends BaseTable<Project> {
             ps.setString(2, project.getPassHash());
             ps.setString(3, project.getApiKey());
             ps.setString(4, project.getBaseOgApiUrl());
+            ps.setString(5, project.getPackageName());
             ps.executeUpdate();
             final ResultSet rs = ps.getGeneratedKeys();
 

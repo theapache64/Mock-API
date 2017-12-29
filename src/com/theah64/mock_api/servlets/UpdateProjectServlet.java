@@ -2,7 +2,9 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.database.Routes;
+import com.theah64.mock_api.models.Project;
 import com.theah64.mock_api.utils.APIResponse;
+import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
@@ -19,8 +21,6 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = {AdvancedBaseServlet.VERSION_CODE + "/update_project"})
 public class UpdateProjectServlet extends AdvancedBaseServlet {
 
-    private static final String KEY_COLUMN = "column";
-    private static final String KEY_VALUE = "value";
 
     @Override
     protected boolean isSecureServlet() {
@@ -29,7 +29,7 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() throws Request.RequestException {
-        return new String[]{KEY_COLUMN, KEY_VALUE};
+        return new String[]{Projects.COLUMN_PACKAGE_NAME, Projects.COLUMN_BASE_OG_API_URL};
     }
 
     @Override
@@ -38,32 +38,27 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException,  PathInfo.PathInfoException {
-        final String column = getStringParameter(KEY_COLUMN);
-        final String value = getStringParameter(KEY_VALUE);
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException, QueryBuilderException {
 
-        if (column.equals(Projects.COLUMN_BASE_OG_API_URL) && !value.matches(URL_REGEX)) {
-            throw new Request.RequestException("Invalid URL");
+        final String packageName = getStringParameter(Projects.COLUMN_PACKAGE_NAME);
+        final String baseOgAPIUrl = getStringParameter(Projects.COLUMN_BASE_OG_API_URL);
+
+        if (!baseOgAPIUrl.matches(URL_REGEX)) {
+            throw new Request.RequestException("Invalid URL passed for base og API URL");
         }
 
 
         final Projects projectsTable = Projects.getInstance();
         final String id = getHeaderSecurity().getProjectId();
-        final String oldBaseUrl = projectsTable.get(Projects.COLUMN_ID, id, Projects.COLUMN_BASE_OG_API_URL, true);
-        projectsTable.update(Projects.COLUMN_ID, id, column, value);
+        final Project project = projectsTable.get(Projects.COLUMN_ID, id);
+        final String oldBaseUrl = project.getBaseOgApiUrl();
 
-        if (column.equals(Projects.COLUMN_BASE_OG_API_URL)) {
-
-            System.out.println("Updating og base api url");
-
-            //update project url
-
-            //updating all old instance of string with new route
-            Routes.getInstance().updateBaseOGAPIURL(id, oldBaseUrl, value);
-        }
+        //Setting new values
+        project.setBaseOgApiUrl(baseOgAPIUrl);
+        project.setPackageName(packageName);
+        projectsTable.update(project);
+        Routes.getInstance().updateBaseOGAPIURL(id, oldBaseUrl, baseOgAPIUrl);
 
         getWriter().write(new APIResponse("Project updated", null).getResponse());
-
-
     }
 }

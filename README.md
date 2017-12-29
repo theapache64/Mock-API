@@ -14,5 +14,5 @@ A Web Application to build Mock API
 - Add feature 'Download all class as zip' => Control + Alt + M
 - Convert class based code generation 
 - Add loading progress bar
-
+- Add JSON error on validation -> control + alt + l
 

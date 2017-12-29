@@ -10,13 +10,19 @@ public class Project {
     private final String passHash;
     private final String apiKey;
     private String baseOgApiUrl;
+    private String packageName;
 
-    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl) {
+    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl, String packageName) {
         this.id = id;
         this.name = name;
         this.passHash = passHash;
         this.apiKey = apiKey;
         this.baseOgApiUrl = baseOgApiUrl;
+        this.packageName = packageName;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 
     public String getBaseOgApiUrl() {
@@ -45,5 +51,9 @@ public class Project {
 
     public void setBaseOgApiUrl(String baseOgApiUrl) {
         this.baseOgApiUrl = baseOgApiUrl;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 }

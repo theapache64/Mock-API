@@ -48,7 +48,7 @@
 
 
                 //Code to move cursor back [x] amount of spaces. [x] is the data-val value.
-                editor.setCursor({line: cursorLine , ch : cursorCh });
+                editor.setCursor({line: cursorLine, ch: cursorCh});
             }
 
             var editor = CodeMirror.fromTextArea(document.getElementById("response"), {
@@ -151,6 +151,41 @@
                     });
                 }
 
+
+            });
+
+            $("#bSaveSettings").on('click', function () {
+
+                var packageName = $("input#iPackageName").val();
+                var baseOGAPIURL = $("input#iBaseOGAPIURL").val();
+
+                var dSettingsUpdateProgress  = $("div#dSettingsUpdateProgress");
+
+                $.ajax({
+
+                    type: "POST",
+                    beforeSend: function (request) {
+                        dSettingsUpdateProgress.slideDown(100);
+                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
+                    },
+                    url: "v1/update_project",
+                    data: {
+                        package_name: packageName,
+                        base_og_api_url: baseOGAPIURL
+                    },
+                    success: function (data) {
+                        dSettingsUpdateProgress.slideUp(100);
+                        if (!data.error) {
+                            $("#base_og_api_url").text(baseOGAPIURL);
+                        } else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function () {
+                        dSettingsUpdateProgress.slideUp(100);
+                        alert("Failed to update settings");
+                    }
+                });
 
             });
 
@@ -926,46 +961,6 @@
                 $(this).val(newVal);
             });
 
-            $("#base_og_api_url").on('click', function () {
-
-                var curVal = $.trim($(this).text());
-                if (!curVal.startsWith("http")) {
-                    //It's not a url so no pre-text
-                    curVal = "";
-                }
-
-                var newUrl = prompt("Set new base og API URL", curVal);
-
-                if (newUrl != null) {
-                    $.ajax({
-                        type: "POST",
-                        beforeSend: function (request) {
-                            startLoading(true);
-                            request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
-                        },
-                        url: "v1/update_project",
-                        data: {
-                            column: 'base_og_api_url',
-                            value: newUrl
-
-                        },
-                        success: function (data) {
-                            stopLoading(true);
-                            if (!data.error) {
-                                $("#base_og_api_url").text(newUrl);
-
-                            } else {
-                                alert(data.message);
-                            }
-                        },
-                        error: function () {
-                            alert("Failed to update theProject");
-                        }
-                    });
-                }
-
-
-            });
 
             var selectedRoute = "<%=request.getParameter("route")%>";
 
@@ -1691,6 +1686,45 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%--Settings--%>
+    <div class="modal fade" id="settings" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="fSettings">
+
+                        <%--package name--%>
+                        <div class="form-group">
+                            <label for="iPackageName">Package Name</label>
+                            <input id="iPackageName" class="form-control" value="<%=project.getPackageName()%>"
+                                   name="<%=Projects.COLUMN_PACKAGE_NAME%>" placeholder="Package name"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="iBaseOGAPIURL">Base OG API URL</label>
+                            <input id="iBaseOGAPIURL" class="form-control" value="<%=project.getBaseOgApiUrl()%>"
+                                   name="<%=Projects.COLUMN_BASE_OG_API_URL%>" placeholder="Base OG API URL"/>
+                        </div>
+
+                            <div id="dSettingsUpdateProgress" style="display: none" class="progress">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                                    Updating...
+                                </div>
+                            </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="bSaveSettings" class="btn btn-success">Save</button>
                 </div>
             </div>
         </div>

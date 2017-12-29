@@ -27,16 +27,7 @@
 
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <%
-                if (isHomePage) {
-            %>
-            <li><a id="base_og_api_url"
-                   href="#"><%=project.getBaseOgApiUrl() == null ? "Set original base URL" : project.getBaseOgApiUrl()%>
-            </a></li>
-            <%
-                }
-            %>
-
+            <%=isHomePage ? "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#settings\">Settings</a></li>" : "" %>
             <li><a href="logout.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>
     </div>
