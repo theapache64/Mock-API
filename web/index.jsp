@@ -50,6 +50,9 @@
             });
 
 
+            var dAllProgress = $("div#dAllProgress");
+            dAllProgress.hide();
+
             function formatJSON() {
                 var start_cursor = editor.getCursor();  //I need to get the cursor position
                 console.log(start_cursor);  //Cursor position
@@ -876,6 +879,7 @@
             });
 
             function startLoading(isSubmit) {
+                dAllProgress.show();
                 $("button#bDelete").prop('disabled', true);
                 $("a#aParamResp").prop('disabled', true);
                 $("button#bSubmit").prop('disabled', true);
@@ -897,6 +901,7 @@
             }
 
             function stopLoading(isSubmit) {
+                dAllProgress.slideUp(500);
                 $("div#resultDiv").show();
                 $("button#bDelete").prop('disabled', false);
                 $("a#aParamResp").prop('disabled', false);
@@ -1316,6 +1321,8 @@
 <div class="container">
 
 
+
+
     <div class="modal fade" id="image_viewer" role="dialog">
         <div class="modal-dialog modal-lg">
 
@@ -1352,6 +1359,17 @@
 
 
     <p id="pLastModified" title="" class="pull-right"></p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="dAllProgress" class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                    Please wait...
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="row">
