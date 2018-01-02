@@ -23,7 +23,6 @@ import java.util.List;
 public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
     private static final String KEY_PROJECT_NAME = "project_name";
-    private static final String KEY_RESPONSE_CLASS = "response_class";
 
     @Override
     protected boolean isSecureServlet() {
@@ -37,7 +36,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() throws Request.RequestException {
-        return new String[]{KEY_PROJECT_NAME, KEY_RESPONSE_CLASS, Routes.COLUMN_NAME};
+        return new String[]{KEY_PROJECT_NAME, Routes.COLUMN_NAME};
     }
 
     @Override
@@ -46,7 +45,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
         final String projectName = getStringParameter(KEY_PROJECT_NAME);
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
-        final String responseClass = getStringParameter(KEY_RESPONSE_CLASS);
+        final String responseClass = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName))+"Response";
 
         final Route route = Routes.getInstance().get(projectName, routeName);
         if (route != null) {

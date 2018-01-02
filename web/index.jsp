@@ -299,8 +299,7 @@
                     if (route === "") {
                         alert("Please select a route first");
                     } else {
-                        var responseClassName = prompt("Response class name ? ", "GetProductResponse");
-                        window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>&response_class=" + responseClassName);
+                        window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>");
                     }
 
                 }
