@@ -206,6 +206,7 @@
             $(window).keydown(function (event) {
 
 
+                //F10
                 if (event.keyCode == 121) {
                     var params = prompt("Type params comma sep", "param1,param2");
                     var paramArr = params.split(",");
@@ -220,8 +221,6 @@
                         }
 
                         $("form#fParam").append(paramRow.html());
-
-
                     }
 
                 }
@@ -423,51 +422,46 @@
                     var selection = editor.getSelection();
 
                     if (selection.length > 0) {
-                        var modelName = prompt("Model name ? ", "MyModel");
-                        if (modelName) {
 
-                            var isRetrofitModel = confirm("is this a Retrofit model ?");
+                        var isRetrofitModel = confirm("Is this a retrofit model?");
 
-                            $.ajax({
-                                type: "POST",
-                                beforeSend: function () {
-                                    startLoading(true);
-                                },
-                                headers: {
-                                    "Authorization": '<%=project.getApiKey()%>'
-                                },
-                                data: {
-                                    jo_string: selection,
-                                    is_retrofit_model: isRetrofitModel,
-                                    model_name: modelName
-                                },
-                                url: "v1/json_to_model_engine",
-                                success: function (data) {
+                        $.ajax({
+                            type: "POST",
+                            beforeSend: function () {
+                                startLoading(true);
+                            },
+                            headers: {
+                                "Authorization": '<%=project.getApiKey()%>'
+                            },
+                            data: {
+                                jo_string: selection,
+                                is_retrofit_model: isRetrofitModel,
+                                route_name: $("input#route").val()
+                            },
+                            url: "v1/json_to_model_engine",
+                            success: function (data) {
 
-                                    stopLoading(true);
+                                stopLoading(true);
 
-                                    if (!data.error) {
-                                        console.log(data.data.data);
+                                if (!data.error) {
+                                    console.log(data.data.data);
 
-                                        var newWindow = window.open();
-                                        newWindow.document.write(data.data.data);
+                                    var newWindow = window.open();
+                                    newWindow.document.write(data.data.data);
 
-                                    } else {
-                                        alert(data.message);
-                                    }
-
-
-                                },
-                                error: function () {
-                                    stopLoading(true);
-                                    $(resultDiv).addClass('alert-danger').removeClass('alert-success');
-                                    $(resultDiv).html("<strong>Error! </strong> Please check your connection");
-                                    $(resultDiv).show();
+                                } else {
+                                    alert(data.message);
                                 }
-                            });
 
 
-                        }
+                            },
+                            error: function () {
+                                stopLoading(true);
+                                $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                                $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                                $(resultDiv).show();
+                            }
+                        });
 
 
                     }

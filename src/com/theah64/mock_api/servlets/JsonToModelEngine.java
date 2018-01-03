@@ -19,7 +19,7 @@ import java.sql.SQLException;
 @WebServlet(AdvancedBaseServlet.VERSION_CODE + "/json_to_model_engine")
 public class JsonToModelEngine extends AdvancedBaseServlet {
 
-    private static final String KEY_MODEL_NAME = "model_name";
+    private static final String KEY_ROUTE_NAME = "route_name";
     private static final String KEY_JO_STRING = "jo_string";
     private static final String KEY_IS_RETROFIT_MODEL = "is_retrofit_model";
 
@@ -31,7 +31,7 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     @Override
     protected String[] getRequiredParameters() throws Request.RequestException {
         return new String[]{
-                KEY_MODEL_NAME,
+                KEY_ROUTE_NAME,
                 KEY_JO_STRING,
                 KEY_IS_RETROFIT_MODEL
         };
@@ -40,7 +40,8 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException {
 
-        final String modelName = getStringParameter(KEY_MODEL_NAME);
+        final String routeName = getStringParameter(KEY_ROUTE_NAME);
+        final String modelName = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response";
         final String joString = getStringParameter(KEY_JO_STRING);
         final boolean isRetrofitModel = getBooleanParameter(KEY_IS_RETROFIT_MODEL);
 
