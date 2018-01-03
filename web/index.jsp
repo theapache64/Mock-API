@@ -45,7 +45,7 @@
             }
 
 
-            $("a#aGenRandomText").on('click',function(){
+            $("a#aGenRandomText").on('click', function () {
                 showRandomGenModal();
             });
 
@@ -207,14 +207,21 @@
 
 
                 if (event.keyCode == 121) {
-                    var params = prompt("Type params comma sep", "param1, param2");
+                    var params = prompt("Type params comma sep", "param1,param2");
                     var paramArr = params.split(",");
                     for (var i = 0; i < paramArr.length; i++) {
                         var paramRow = $("div#dParamRow");
                         var oldVal = paramArr[i];
                         var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/g, '_'));
                         $(paramRow).find("input.iNames").attr('value', newVal);
+
+                        if (newVal.startsWith("is_")) {
+                            //TODO: Preselected boolean value
+                        }
+
                         $("form#fParam").append(paramRow.html());
+
+
                     }
 
                 }
@@ -400,8 +407,6 @@
                     }
 
                 }
-
-
 
 
                 if (event.ctrlKey && event.altKey && event.keyCode === 82) {
@@ -1238,7 +1243,6 @@
     <style>
 
 
-
         .menu_shortcut {
             position: relative;
             right: -14px;
@@ -1319,8 +1323,6 @@
 --%>
 
 <div class="container">
-
-
 
 
     <div class="modal fade" id="image_viewer" role="dialog">
