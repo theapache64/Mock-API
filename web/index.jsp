@@ -191,7 +191,7 @@
                     },
                     success: function (data) {
                         dSettingsUpdateProgress.slideUp(100);
-                        alert(data.message);
+                        $("div#settings").modal("hide");
                     },
                     error: function () {
                         dSettingsUpdateProgress.slideUp(100);
