@@ -491,7 +491,7 @@ public class Inflector {
         Inflector inflect = this;
         inflect.addPluralize("$", "s");
         inflect.addPluralize("s$", "s");
-        inflect.addPluralize("(ax|test)is$", "$1es");
+        inflect.addPluralize("(ax|lab)is$", "$1es");
         inflect.addPluralize("(octop|vir)us$", "$1i");
         inflect.addPluralize("(octop|vir)i$", "$1i"); // already plural
         inflect.addPluralize("(alias|status)$", "$1es");
@@ -532,8 +532,8 @@ public class Inflector {
         inflect.addSingularize("(bus)es$", "$1");
         inflect.addSingularize("(o)es$", "$1");
         inflect.addSingularize("(shoe)s$", "$1");
-        inflect.addSingularize("(cris|ax|test)is$", "$1is"); // already singular, but ends in 's'
-        inflect.addSingularize("(cris|ax|test)es$", "$1is");
+        inflect.addSingularize("(cris|ax|lab)is$", "$1is"); // already singular, but ends in 's'
+        inflect.addSingularize("(cris|ax|lab)es$", "$1is");
         inflect.addSingularize("(octop|vir)i$", "$1us");
         inflect.addSingularize("(octop|vir)us$", "$1us"); // already singular, but ends in 's'
         inflect.addSingularize("(alias|status)es$", "$1");

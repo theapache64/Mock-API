@@ -23,7 +23,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
 
 
     public static final String VERSION_CODE = "/v1";
-    protected static final String CONTENT_TYPE_JSON = "application/json";
+    private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String ERROR_GET_NOT_SUPPORTED = "GET method not supported";
     private static final String ERROR_POST_NOT_SUPPORTED = "POST method not supported";
     private Request request;
@@ -32,7 +32,7 @@ public abstract class AdvancedBaseServlet extends HttpServlet {
     private HttpServletRequest httpServletRequest;
     private HttpServletResponse httpServletResponse;
 
-    protected static void setGETMethodNotSupported(HttpServletResponse response) throws IOException {
+    static void setGETMethodNotSupported(HttpServletResponse response) throws IOException {
         notSupported(ERROR_GET_NOT_SUPPORTED, response);
     }
 
