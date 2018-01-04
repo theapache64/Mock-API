@@ -23,6 +23,7 @@ public class CodeGen {
 
         JSONObject joModel = null;
 
+
         if (object instanceof JSONObject) {
 
             joModel = (JSONObject) object;
@@ -56,7 +57,7 @@ public class CodeGen {
                     getGenClassCode(true, codeBuilder, joModel1, dataType, isRetrofitModel);
 
                     if (joModel1.getClass().getSimpleName().equals("JSONObject") && !x) {
-                        dataType = ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? removePlural(dataType) : joModel1.getClass().getSimpleName());
+                        dataType = ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? dataType : joModel1.getClass().getSimpleName());
                     } else {
                         dataType = "List&#60;" + ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? removePlural(dataType) : joModel1.getClass().getSimpleName()) + "&#62;";
                     }
@@ -137,6 +138,9 @@ public class CodeGen {
     }
 
     private static String removePlural(String modelName) {
+        if (modelName.equals("Data")) {
+            return modelName;
+        }
         return Inflector.getInstance().singularize(modelName);
     }
 
