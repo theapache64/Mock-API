@@ -19,7 +19,9 @@ public class CodeGen {
 
     private static final String SERIALIZED_NAME_IMPORT = "import com.google.gson.annotations.SerializedName;";
 
-    public static void getGenClassCode(final boolean isNestedClass, final StringBuilder codeBuilder, final Object object, final String modelName, final boolean isRetrofitModel) throws JSONException {
+    private static boolean hasList = false;
+
+    private static boolean getGenClassCode(final boolean isJsonObject, final boolean isNestedClass, final StringBuilder codeBuilder, final Object object, final String modelName, final boolean isRetrofitModel) throws JSONException {
 
         JSONObject joModel = null;
 
@@ -39,7 +41,7 @@ public class CodeGen {
                 if (dataType.equals("JSONArray") || dataType.equals("JSONObject")) {
 
                     final Object joModel1 = dataType.equals("JSONArray") ? joModel.getJSONArray(variableName).get(0) : joModel.getJSONObject(variableName);
-                    final boolean x = dataType.equals("JSONArray");
+                    final boolean isJsonArray = dataType.equals("JSONArray");
 
                     //Capital first letter
                     dataType = variableName.substring(0, 1).toUpperCase() + variableName.substring(1);
@@ -54,12 +56,13 @@ public class CodeGen {
                     }
 
 
-                    getGenClassCode(true, codeBuilder, joModel1, dataType, isRetrofitModel);
+                    getGenClassCode(!isJsonArray, true, codeBuilder, joModel1, dataType, isRetrofitModel);
 
-                    if (joModel1.getClass().getSimpleName().equals("JSONObject") && !x) {
+                    if (joModel1.getClass().getSimpleName().equals("JSONObject") && !isJsonArray) {
                         dataType = ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? dataType : joModel1.getClass().getSimpleName());
                     } else {
                         dataType = "List&#60;" + ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? removePlural(dataType) : joModel1.getClass().getSimpleName()) + "&#62;";
+                        hasList = true;
                     }
                 }
 
@@ -76,30 +79,32 @@ public class CodeGen {
                 return o1.getVariableName().length() - o2.getVariableName().length();
             });
 
-            codeBuilder.insert(0, genClassCode(isNestedClass, modelName, properties, isRetrofitModel));
-
+            codeBuilder.insert(0, genClassCode(isNestedClass, modelName, properties, isRetrofitModel, isJsonObject));
         }
 
+        return hasList;
 
     }
 
     public static String getFinalCode(final String packageName, String joString, String modelName, boolean isRetrofitModel) throws JSONException {
         final StringBuilder codeBuilder = new StringBuilder();
-        CodeGen.getGenClassCode(false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
-        codeBuilder.insert(0, String.format("<code>%s\n\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
+        hasList = false;
+        CodeGen.getGenClassCode(true, false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
+        codeBuilder.insert(0, String.format("<code>%s\n\n%s\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
                 "package " + packageName + ".api.responses;",
                 isRetrofitModel ? SERIALIZED_NAME_IMPORT : "",
+                hasList ? "import java.util.List;" : "",
                 new Date().toString(), modelName));
         codeBuilder.append("\n\n}</code>");
 
         return codeBuilder.toString().replaceAll("\\n", "<br>").replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
     }
 
-    private static String genClassCode(boolean isNestedClass, String modelName, List<Model.Property> properties, boolean isRetrofitModel) {
+    private static String genClassCode(boolean isNestedClass, String modelName, List<Model.Property> properties, boolean isRetrofitModel, boolean isJSONObject) {
 
         final StringBuilder codeBuilder = new StringBuilder();
         if (isNestedClass) {
-            codeBuilder.append(String.format("\tpublic static class %s {", removePlural(modelName))).append("\n\n");
+            codeBuilder.append(String.format("\tpublic static class %s {", isJSONObject ? modelName : removePlural(modelName))).append("\n\n");
         }
 
         final StringBuilder constructorParams = new StringBuilder();
@@ -122,7 +127,7 @@ public class CodeGen {
             getters.append(String.format("%s\tpublic ", isNestedClass ? "\t" : "")).append(property.getDataType()).append(" ").append(toGetterName(property.getDataType(), variableCamelCase)).append(String.format("{\n%s\t\treturn ", isNestedClass ? "\t" : "")).append(variableCamelCase).append(String.format(";\n%s\t}\n\n", isNestedClass ? "\t" : ""));
         }
 
-        codeBuilder.append(String.format("\n%s\tpublic ", isNestedClass ? "\t" : "")).append(removePlural(modelName)).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");
+        codeBuilder.append(String.format("\n%s\tpublic ", isNestedClass ? "\t" : "")).append(isJSONObject ? modelName : removePlural(modelName)).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");
         codeBuilder.append(constructorThis);
         codeBuilder.append(String.format("\n%s\t}", isNestedClass ? "\t" : ""));
 
