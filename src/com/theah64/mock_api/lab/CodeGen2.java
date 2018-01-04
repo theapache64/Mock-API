@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CodeGen {
+public class CodeGen2 {
 
     public static void main(String[] args) {
 
@@ -33,7 +33,7 @@ public class CodeGen {
         //Signature
         pojoBuilder.append("//Developed using mock api\n\n");
 
-        //CodeGen class signature
+        //CodeGen2 class signature
         pojoBuilder.append("public class ").append(mainClass.getName()).append(" {\n\n");
 
         final StringBuilder constructorVariables = new StringBuilder();
@@ -59,7 +59,7 @@ public class CodeGen {
         }
 
 
-        //CodeGen class constructor
+        //CodeGen2 class constructor
         pojoBuilder
                 .append("\tpublic ")
                 .append(mainClass.getName())
