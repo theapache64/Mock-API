@@ -4,6 +4,9 @@ package com.theah64.mock_api.models;
  * Created by theapache64 on 30/11/17.
  */
 public class Param {
+
+    public static final String DATA_TYPE_FILE = "File";
+
     private final String id, name, routeId, dataType, defaultValue, description;
     private final boolean isRequired;
 

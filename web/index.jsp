@@ -1604,6 +1604,7 @@
                     <option value="Long">Long</option>
                     <option value="Float">Float</option>
                     <option value="Double">Double</option>
+                    <option value="File">File</option>
                 </select>
             </div>
 

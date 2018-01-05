@@ -45,7 +45,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
         final String projectName = getStringParameter(KEY_PROJECT_NAME);
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
-        final String responseClass = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName))+"Response";
+        final String responseClass = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response";
 
         final Route route = Routes.getInstance().get(projectName, routeName);
         if (route != null) {
@@ -81,7 +81,11 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
                 final List<Param> params = route.getParams();
                 for (final Param param : params) {
-                    codeBuilder.append(String.format("\n\t@Query(\"%s\") %s %s,", param, getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
+                    if (param.getDataType().equals(Param.DATA_TYPE_FILE)) {
+                        codeBuilder.append(String.format("\n\t@Part MultipartBody.Part %s,", CodeGen.toCamelCase(param.getName())));
+                    } else {
+                        codeBuilder.append(String.format("\n\t@Query(\"%s\") %s %s,", param, getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
+                    }
                 }
 
                 codeBuilder = new StringBuilder(codeBuilder.substring(0, codeBuilder.length() - 1));
