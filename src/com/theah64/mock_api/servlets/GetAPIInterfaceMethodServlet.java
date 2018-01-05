@@ -77,11 +77,13 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                 codeBuilder.append("\n@Header(KEY_AUTHORIZATION) String apiKey,");
             }
 
+            boolean hasFileParam = false;
             if (!route.getParams().isEmpty()) {
 
                 final List<Param> params = route.getParams();
                 for (final Param param : params) {
                     if (param.getDataType().equals(Param.DATA_TYPE_FILE)) {
+                        hasFileParam = true;
                         codeBuilder.append(String.format("\n\t@Part MultipartBody.Part %s,", CodeGen.toCamelCase(param.getName())));
                     } else {
                         codeBuilder.append(String.format("\n\t@Query(\"%s\") %s %s,", param, getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
@@ -91,6 +93,10 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                 codeBuilder = new StringBuilder(codeBuilder.substring(0, codeBuilder.length() - 1));
             }
 
+            if (hasFileParam) {
+                final int index = codeBuilder.indexOf("@" + route.getMethod());
+                codeBuilder.insert(index, "@Multipart\n");
+            }
 
             codeBuilder.append(");");
 
