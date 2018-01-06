@@ -127,7 +127,8 @@ public class CodeGen {
             getters.append(String.format("%s\tpublic ", isNestedClass ? "\t" : "")).append(property.getDataType()).append(" ").append(toGetterName(property.getDataType(), variableCamelCase)).append(String.format("{\n%s\t\treturn ", isNestedClass ? "\t" : "")).append(variableCamelCase).append(String.format(";\n%s\t}\n\n", isNestedClass ? "\t" : ""));
         }
 
-        codeBuilder.append(String.format("\n%s\tpublic ", isNestedClass ? "\t" : "")).append(isJSONObject ? modelName : removePlural(modelName)).append("(").append(constructorParams.substring(0, constructorParams.length() - 1)).append("){");
+        codeBuilder.append(String.format("\n%s\tpublic ", isNestedClass ? "\t" : "")).append(isJSONObject ? modelName : removePlural(modelName)).append("(")
+                .append(constructorParams.substring(0, constructorParams.length() > 0 ? constructorParams.length() - 1 : 0)).append("){");
         codeBuilder.append(constructorThis);
         codeBuilder.append(String.format("\n%s\t}", isNestedClass ? "\t" : ""));
 

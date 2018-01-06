@@ -115,4 +115,6 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
         }
         return dataType;
     }
+
+
 }
