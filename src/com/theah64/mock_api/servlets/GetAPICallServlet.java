@@ -69,6 +69,8 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
                     codeBuilder.append("gs").append(fCharUp).append(".getCustomSpinner().getItemSelected().getId(),");
                 } else if (paramName.startsWith("is_")) {
                     codeBuilder.append("cb").append(fCharUp).append(".isChecked(),");
+                } else if (paramName.contains("date")) {
+                    codeBuilder.append("dp").append(fCharUp).append(".getString(),");
                 } else {
                     //ValidTextInputLayout
                     codeBuilder.append("vtil").append(fCharUp).append(".getString(),");
