@@ -1,3 +1,5 @@
+<%--suppress JSDuplicatedDeclaration --%>
+<%--suppress ALL --%>
 <%@ page import="com.theah64.mock_api.database.Images" %>
 <%@ page import="com.theah64.mock_api.database.Routes" %>
 <%@ page import="com.theah64.mock_api.models.Image" %>
@@ -309,6 +311,18 @@
                         alert("Please select a route first");
                     } else {
                         window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>");
+                    }
+
+                }
+
+                //F8
+                if (event.keyCode == 119) {
+
+                    var route = $.trim($("select#routes option:selected").text());
+                    if (route === "") {
+                        alert("Please select a route first");
+                    } else {
+                        window.open('v1/get_api_call?name=' + route + "&project_name=<%=project.getName()%>");
                     }
 
                 }
