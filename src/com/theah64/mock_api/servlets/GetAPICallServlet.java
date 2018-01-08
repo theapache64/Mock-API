@@ -82,7 +82,7 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
 
             codeBuilder.append(String.format("\n).enqueue(new CustomRetrofitCallback<BaseAPIResponse<%s>, %s>(this, R.string.Loading){", responseClass, responseClass));
             codeBuilder.append("\n\t").append("@Override");
-            codeBuilder.append("\n\t").append(String.format("@protected void onSuccess(%s data) {", responseClass));
+            codeBuilder.append("\n\t").append(String.format("protected void onSuccess(%s data) {", responseClass));
             codeBuilder.append("\n\t}");
             codeBuilder.append("\n});");
             /*
