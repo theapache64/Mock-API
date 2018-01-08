@@ -4,6 +4,7 @@ import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.CodeGen;
+import com.theah64.mock_api.utils.Inflector;
 import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
@@ -64,7 +65,7 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
                     codeBuilder.append("App.getCompany().getApiKey(),");
                 } else if (paramName.endsWith("_id")) {
                     //Spinner
-                    fCharUp = fCharUp.substring(0, fCharUp.length() - 2) + "s";
+                    fCharUp = Inflector.getInstance().pluralize(fCharUp.substring(0, fCharUp.length() - 2));
                     codeBuilder.append("gs").append(fCharUp).append(".getCustomSpinner().getItemSelected().getId(),");
                 } else if (paramName.startsWith("is_")) {
                     codeBuilder.append("cb").append(fCharUp).append(".isChecked(),");
