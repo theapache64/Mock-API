@@ -29,7 +29,7 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() throws Request.RequestException {
-        return new String[]{Projects.COLUMN_PACKAGE_NAME, Projects.COLUMN_BASE_OG_API_URL};
+        return new String[]{Projects.COLUMN_PACKAGE_NAME, Projects.COLUMN_BASE_OG_API_URL, Projects.COLUMN_IS_ALL_SMALL_ROUTES};
     }
 
     @Override
@@ -42,6 +42,7 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
 
         final String packageName = getStringParameter(Projects.COLUMN_PACKAGE_NAME);
         final String baseOgAPIUrl = getStringParameter(Projects.COLUMN_BASE_OG_API_URL);
+        final boolean isAllSmallRoutes = getBooleanParameter(Projects.COLUMN_IS_ALL_SMALL_ROUTES);
 
         if (!baseOgAPIUrl.matches(URL_REGEX)) {
             throw new Request.RequestException("Invalid URL passed for base og API URL");
@@ -56,6 +57,8 @@ public class UpdateProjectServlet extends AdvancedBaseServlet {
         //Setting new values
         project.setBaseOgApiUrl(baseOgAPIUrl);
         project.setPackageName(packageName);
+        project.setAllSmallRoutes(isAllSmallRoutes);
+
         projectsTable.update(project);
         Routes.getInstance().updateBaseOGAPIURL(id, oldBaseUrl, baseOgAPIUrl);
 

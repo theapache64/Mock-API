@@ -21,6 +21,7 @@ public class Projects extends BaseTable<Project> {
     public static final String COLUMN_API_KEY = "api_key";
     public static final String COLUMN_BASE_OG_API_URL = "base_og_api_url";
     public static final String COLUMN_PACKAGE_NAME = "package_name";
+    public static final String COLUMN_IS_ALL_SMALL_ROUTES = "is_all_small_routes";
 
     private Projects() {
         super("projects");
@@ -42,6 +43,7 @@ public class Projects extends BaseTable<Project> {
         return new UpdateQueryBuilder.Builder(getTableName())
                 .set(COLUMN_PACKAGE_NAME, project.getPackageName())
                 .set(COLUMN_BASE_OG_API_URL, project.getBaseOgApiUrl())
+                .set(COLUMN_IS_ALL_SMALL_ROUTES, project.isAllSmallRoutes())
                 .where(COLUMN_ID, project.getId())
                 .build()
                 .done();
@@ -54,9 +56,9 @@ public class Projects extends BaseTable<Project> {
         final String query;
 
         if (column2 != null && value2 != null) {
-            query = String.format("SELECT id,name,api_key,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
+            query = String.format("SELECT id,name,api_key,is_all_small_routes,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
         } else {
-            query = String.format("SELECT id,name,api_key,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND is_active = 1 LIMIT 1", tableName, column1);
+            query = String.format("SELECT id,name,api_key,is_all_small_routes,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND is_active = 1 LIMIT 1", tableName, column1);
         }
         String resultValue = null;
         final java.sql.Connection con = Connection.getConnection();
@@ -79,8 +81,9 @@ public class Projects extends BaseTable<Project> {
                 final String passHash = rs.getString(COLUMN_PASS_HASH);
                 final String packageName = rs.getString(COLUMN_PACKAGE_NAME);
                 final String baseOgApiUrl = rs.getString(COLUMN_BASE_OG_API_URL);
+                final boolean isAllSmallRoutes = rs.getBoolean(COLUMN_IS_ALL_SMALL_ROUTES);
 
-                project = new Project(id, name, passHash, apiKey, baseOgApiUrl, packageName);
+                project = new Project(id, name, passHash, apiKey, baseOgApiUrl, packageName, isAllSmallRoutes);
             }
 
             rs.close();
@@ -103,7 +106,7 @@ public class Projects extends BaseTable<Project> {
     public String addv3(Project project) throws SQLException {
         String error = null;
         String id = null;
-        final String query = "INSERT INTO projects (name, pass_hash,api_key,base_og_api_url,package_name) VALUES (?,?,?,?,?);";
+        final String query = "INSERT INTO projects (name, pass_hash,api_key,base_og_api_url,package_name,is_all_small_routes) VALUES (?,?,?,?,?,?);";
         final java.sql.Connection con = Connection.getConnection();
 
         try {
@@ -113,6 +116,7 @@ public class Projects extends BaseTable<Project> {
             ps.setString(3, project.getApiKey());
             ps.setString(4, project.getBaseOgApiUrl());
             ps.setString(5, project.getPackageName());
+            ps.setBoolean(6, project.isAllSmallRoutes());
             ps.executeUpdate();
             final ResultSet rs = ps.getGeneratedKeys();
 

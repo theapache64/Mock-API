@@ -106,6 +106,9 @@
             });
 
 
+            <%
+            if(project.isAllSmallRoutes()){
+                %>
             $("body").on('keyup', "input#route, input.iNames", function () {
                 if (!event.ctrlKey && !event.altKey) {
                     var oldVal = $(this).val();
@@ -113,6 +116,9 @@
                     $(this).val(newVal);
                 }
             });
+            <%
+        }
+        %>
 
 
             $("input#route").on('keyup', function () {
@@ -176,6 +182,7 @@
 
                 var packageName = $("input#iPackageName").val();
                 var baseOGAPIURL = $("input#iBaseOGAPIURL").val();
+                var isAllSmallRoutes = $("input#iallsmallroutes").is(":checked");
 
                 var dSettingsUpdateProgress = $("div#dSettingsUpdateProgress");
 
@@ -189,11 +196,13 @@
                     url: "v1/update_project",
                     data: {
                         package_name: packageName,
-                        base_og_api_url: baseOGAPIURL
+                        base_og_api_url: baseOGAPIURL,
+                        is_all_small_routes: isAllSmallRoutes
                     },
                     success: function (data) {
                         dSettingsUpdateProgress.slideUp(100);
                         $("div#settings").modal("hide");
+                        location.reload();
                     },
                     error: function () {
                         dSettingsUpdateProgress.slideUp(100);
@@ -1760,6 +1769,16 @@
                             <input id="iBaseOGAPIURL" class="form-control" value="<%=project.getBaseOgApiUrl()%>"
                                    name="<%=Projects.COLUMN_BASE_OG_API_URL%>" placeholder="Base OG API URL"/>
                         </div>
+
+
+                        <div class="form-group">
+
+                            <input type="checkbox" id="iAllSmallRoutes"
+
+                                   name="<%=Projects.COLUMN_IS_ALL_SMALL_ROUTES%>" <%=project.isAllSmallRoutes() ? "checked" : ""%>/>
+                            <label for="iAllSmallRoutes">Is All Small Routes</label>
+                        </div>
+
 
                         <div id="dSettingsUpdateProgress" style="display: none" class="progress">
                             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"

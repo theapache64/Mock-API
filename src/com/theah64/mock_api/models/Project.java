@@ -11,14 +11,20 @@ public class Project {
     private final String apiKey;
     private String baseOgApiUrl;
     private String packageName;
+    private boolean isAllSmallRoutes;
 
-    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl, String packageName) {
+    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl, String packageName, boolean isAllSmallRoutes) {
         this.id = id;
         this.name = name;
         this.passHash = passHash;
         this.apiKey = apiKey;
         this.baseOgApiUrl = baseOgApiUrl;
         this.packageName = packageName;
+        this.isAllSmallRoutes = isAllSmallRoutes;
+    }
+
+    public boolean isAllSmallRoutes() {
+        return isAllSmallRoutes;
     }
 
     public String getPackageName() {
@@ -55,5 +61,9 @@ public class Project {
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
+    }
+
+    public void setAllSmallRoutes(boolean allSmallRoutes) {
+        this.isAllSmallRoutes = allSmallRoutes;
     }
 }
