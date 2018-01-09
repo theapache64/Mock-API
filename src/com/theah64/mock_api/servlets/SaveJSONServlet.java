@@ -1,10 +1,14 @@
 package com.theah64.mock_api.servlets;
 
+import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.Param;
+import com.theah64.mock_api.models.Project;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.APIResponse;
+import com.theah64.mock_api.utils.MailHelper;
+import com.theah64.webengine.exceptions.MailException;
 import com.theah64.webengine.utils.CommonUtils;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
@@ -112,17 +116,50 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             final JSONObject joResp = new JSONObject();
             joResp.put(KEY_DUMMY_PARAMS, route.getDummyRequiredParams());
 
+            Project project = Projects.getInstance().get(Projects.COLUMN_ID, projectId);
+
+            String subject, message;
+
             if (routeId == null) {
+
                 //Route doesn't exist
                 routeId = Routes.getInstance().addv3(route);
                 joResp.put(Routes.COLUMN_ID, routeId);
+
+                subject = "Route established - " + project.getName();
+                message = "Route established : " + route.getName();
 
                 getWriter().write(new APIResponse("Route established ", joResp).getResponse());
             } else {
                 //Update the existing route
                 route.setId(routeId);
                 Routes.getInstance().update(route);
+
+                subject = "Route updated - " + project.getName();
+                message = "Route updated : " + route.getName();
+
+
                 getWriter().write(new APIResponse("Route updated", joResp).getResponse());
+            }
+
+            //Route established
+            if (project.getNotificationEmails() != null && !project.getNotificationEmails().trim().isEmpty()) {
+
+                new Thread(() -> {
+
+                    try {
+                        MailHelper.sendMail(
+                                project.getNotificationEmails(),
+                                subject,
+                                message,
+                                "MockAPI"
+                        );
+                    } catch (MailException e) {
+                        e.printStackTrace();
+                    }
+
+                }).start();
+
             }
         }
 

@@ -1,7 +1,7 @@
 package com.theah64.mock_api;
 
+import com.theah64.mock_api.utils.MailHelper;
 import com.theah64.mock_api.utils.SecretConstants;
-import com.theah64.webengine.utils.MailHelper;
 import com.theah64.webengine.utils.WebEngineConfig;
 import com.tinify.Tinify;
 

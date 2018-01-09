@@ -1327,7 +1327,7 @@
         }
 
 
-        input#iNotificationEmails_tag{
+        #iNotificationEmails_tag{
             width:80px !important;
         }
 
