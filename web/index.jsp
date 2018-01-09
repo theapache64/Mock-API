@@ -38,6 +38,13 @@
         var isAutoUpload = false;
         $(document).ready(function () {
 
+
+            $('#iNotificationEmails').tagsInput({
+                'placeholderColor': '#666666',
+                'width': '100%',
+                'defaultText': 'Add email '
+            });
+
             //Control + Alt + R
             function showRandomGenModal() {
                 $("#random").modal("show");
@@ -197,12 +204,17 @@
                     data: {
                         package_name: packageName,
                         base_og_api_url: baseOGAPIURL,
-                        is_all_small_routes: isAllSmallRoutes
+                        is_all_small_routes: isAllSmallRoutes,
+                        notification_emails: $("input#iNotificationEmails").val()
                     },
                     success: function (data) {
                         dSettingsUpdateProgress.slideUp(100);
-                        $("div#settings").modal("hide");
-                        location.reload();
+                        if (!data.error) {
+                            $("div#settings").modal("hide");
+                            location.reload();
+                        } else {
+                            alert(data.message);
+                        }
                     },
                     error: function () {
                         dSettingsUpdateProgress.slideUp(100);
@@ -1308,6 +1320,17 @@
             right: -13px;
         }
 
+        #iNotificationEmails_tagsinput {
+            width: 100%;
+            min-height: 100px;
+            border-radius: 3px;
+        }
+
+
+        input#iNotificationEmails_tag{
+            width:80px !important;
+        }
+
     </style>
 </head>
 <body>
@@ -1774,9 +1797,17 @@
                         <div class="form-group">
 
                             <input type="checkbox" id="iAllSmallRoutes"
-
                                    name="<%=Projects.COLUMN_IS_ALL_SMALL_ROUTES%>" <%=project.isAllSmallRoutes() ? "checked" : ""%>/>
-                            <label for="iAllSmallRoutes">Is All Small Routes</label>
+                            <label for="iAllSmallRoutes">Spelling inspector</label>
+                        </div>
+
+                        <%--Notification email--%>
+                        <div class="form-group">
+                            <label for="iNotificationEmails">Notification emails</label>
+                            <input id="iNotificationEmails" class="form-control"
+                                   value="<%=project.getNotificationEmails()!=null ? project.getNotificationEmails() : ""%>"
+                                   name="<%=Projects.COLUMN_NOTIFICATION_EMAILS%>"
+                                   placeholder="Notification emails (comma seperated)"/>
                         </div>
 
 

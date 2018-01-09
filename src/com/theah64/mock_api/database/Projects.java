@@ -22,6 +22,7 @@ public class Projects extends BaseTable<Project> {
     public static final String COLUMN_BASE_OG_API_URL = "base_og_api_url";
     public static final String COLUMN_PACKAGE_NAME = "package_name";
     public static final String COLUMN_IS_ALL_SMALL_ROUTES = "is_all_small_routes";
+    public static final String COLUMN_NOTIFICATION_EMAILS = "notification_emails";
 
     private Projects() {
         super("projects");
@@ -44,6 +45,7 @@ public class Projects extends BaseTable<Project> {
                 .set(COLUMN_PACKAGE_NAME, project.getPackageName())
                 .set(COLUMN_BASE_OG_API_URL, project.getBaseOgApiUrl())
                 .set(COLUMN_IS_ALL_SMALL_ROUTES, project.isAllSmallRoutes())
+                .set(COLUMN_NOTIFICATION_EMAILS, project.getNotificationEmails())
                 .where(COLUMN_ID, project.getId())
                 .build()
                 .done();
@@ -56,9 +58,9 @@ public class Projects extends BaseTable<Project> {
         final String query;
 
         if (column2 != null && value2 != null) {
-            query = String.format("SELECT id,name,api_key,is_all_small_routes,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
+            query = String.format("SELECT id,name,api_key,is_all_small_routes,notification_emails,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND %s = ? AND is_active = 1 LIMIT 1", tableName, column1, column2);
         } else {
-            query = String.format("SELECT id,name,api_key,is_all_small_routes,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND is_active = 1 LIMIT 1", tableName, column1);
+            query = String.format("SELECT id,name,api_key,is_all_small_routes,notification_emails,package_name,base_og_api_url,pass_hash FROM %s WHERE %s = ? AND is_active = 1 LIMIT 1", tableName, column1);
         }
         String resultValue = null;
         final java.sql.Connection con = Connection.getConnection();
@@ -82,8 +84,9 @@ public class Projects extends BaseTable<Project> {
                 final String packageName = rs.getString(COLUMN_PACKAGE_NAME);
                 final String baseOgApiUrl = rs.getString(COLUMN_BASE_OG_API_URL);
                 final boolean isAllSmallRoutes = rs.getBoolean(COLUMN_IS_ALL_SMALL_ROUTES);
+                final String notificationEmails = rs.getString(COLUMN_NOTIFICATION_EMAILS);
 
-                project = new Project(id, name, passHash, apiKey, baseOgApiUrl, packageName, isAllSmallRoutes);
+                project = new Project(id, name, passHash, apiKey, baseOgApiUrl, packageName, isAllSmallRoutes, notificationEmails);
             }
 
             rs.close();

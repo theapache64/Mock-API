@@ -12,8 +12,9 @@ public class Project {
     private String baseOgApiUrl;
     private String packageName;
     private boolean isAllSmallRoutes;
+    private String notificationEmails;
 
-    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl, String packageName, boolean isAllSmallRoutes) {
+    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl, String packageName, boolean isAllSmallRoutes, String notificationEmails) {
         this.id = id;
         this.name = name;
         this.passHash = passHash;
@@ -21,6 +22,12 @@ public class Project {
         this.baseOgApiUrl = baseOgApiUrl;
         this.packageName = packageName;
         this.isAllSmallRoutes = isAllSmallRoutes;
+        this.notificationEmails = notificationEmails;
+    }
+
+
+    public String getNotificationEmails() {
+        return notificationEmails;
     }
 
     public boolean isAllSmallRoutes() {
@@ -65,5 +72,9 @@ public class Project {
 
     public void setAllSmallRoutes(boolean allSmallRoutes) {
         this.isAllSmallRoutes = allSmallRoutes;
+    }
+
+    public void setNotificationEmails(String notificationEmails) {
+        this.notificationEmails = notificationEmails;
     }
 }
