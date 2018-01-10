@@ -2,14 +2,18 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.database.Responses;
+import com.theah64.mock_api.database.RouteUpdates;
 import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Project;
 import com.theah64.mock_api.models.Route;
+import com.theah64.mock_api.models.RouteUpdate;
 import com.theah64.mock_api.utils.APIResponse;
 import com.theah64.mock_api.utils.MailHelper;
+import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.exceptions.MailException;
 import com.theah64.webengine.utils.CommonUtils;
+import com.theah64.webengine.utils.RandomString;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -124,6 +128,8 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
                 //Route doesn't exist
                 routeId = Routes.getInstance().addv3(route);
+                route.setId(routeId);
+
                 joResp.put(Routes.COLUMN_ID, routeId);
 
                 subject = "Route established - " + project.getName();
@@ -140,6 +146,24 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
 
                 getWriter().write(new APIResponse("Route updated", joResp).getResponse());
+            }
+
+
+            final String updateKey = RandomString.get(50);
+
+            final StringBuilder routeParams = new StringBuilder();
+            for (Param param : route.getParams()) {
+                routeParams.append(param.getName()).append(" ").append(param.getDataType()).append("\n");
+            }
+
+            try {
+                RouteUpdates.getInstance().add(new RouteUpdate(null, updateKey, route.getId(), route.getMethod(), routeParams.toString(),
+                        route.getDelay() > 0 ? String.valueOf(route.getDelay()) : null,
+                        route.getDescription(), route.getDefaultResponse()
+                ));
+            } catch (QueryBuilderException e) {
+                e.printStackTrace();
+                throw new Request.RequestException(e.getMessage());
             }
 
             //Route established

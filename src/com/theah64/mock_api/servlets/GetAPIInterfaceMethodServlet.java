@@ -110,6 +110,11 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
     }
 
     private String getPrimitive(String dataType) {
+
+        if (dataType.equals("Integer")) {
+            return "int";
+        }
+
         if (!dataType.equals("String")) {
             return dataType.toLowerCase();
         }
