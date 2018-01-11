@@ -125,6 +125,8 @@
                     $(this).val(newVal);
                 }
             });
+
+
             <%
         }
         %>
@@ -975,7 +977,7 @@
                         startLoading(false);
                         request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
                     },
-                    url: "v1/delete_json",
+                    url: "v1/delete_route",
                     data: {id: selOption.val()},
                     success: function (data) {
                         stopLoading(false);

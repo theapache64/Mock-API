@@ -97,7 +97,7 @@ public class RandomResponseGenerator {
             new RandomResponse("{randomWords (\\d+)}") {
                 @Override
                 String getValue(int count) {
-                    return loremIpsum.getWords(count);
+                    return CodeGen.getFirstCharUppercase(loremIpsum.getWords(count));
                 }
             },
 
