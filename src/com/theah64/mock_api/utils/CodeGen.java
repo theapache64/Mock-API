@@ -89,6 +89,7 @@ public class CodeGen {
     public static String getFinalCode(final String packageName, String joString, String modelName, boolean isRetrofitModel) throws JSONException {
         final StringBuilder codeBuilder = new StringBuilder();
         hasList = false;
+        modelName = CodeGen.getFromFirstCapCharacter(SlashCutter.cut(modelName));
         CodeGen.getGenClassCode(true, false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
         codeBuilder.insert(0, String.format("<code>%s\n\n%s\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
                 "package " + packageName + ".api.responses;",
@@ -116,6 +117,7 @@ public class CodeGen {
             if (isRetrofitModel) {
                 codeBuilder.append(String.format("%s\t@SerializedName(\"%s\")\n", isNestedClass ? "\t" : "", property.getVariableName()));
             }
+
             String variableCamelCase = toCamelCase(property.getVariableName());
             final String a = String.format("%s %s", property.getDataType(), variableCamelCase);
             codeBuilder.append(String.format("%s\tprivate final %s;", isNestedClass ? "\t" : "", a)).append("\n").append(isRetrofitModel ? "\n" : "");
