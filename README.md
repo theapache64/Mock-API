@@ -17,5 +17,4 @@ A Web Application to build Mock API
 - Add param documentation to F4
 - Clear button shouldn't reload page
 - Add codemirror to Control + Alt+ M
-
-
+- History browse for routes
