@@ -4,6 +4,7 @@ import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.CodeGen;
+import com.theah64.mock_api.utils.SlashCutter;
 import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
@@ -70,8 +71,11 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                 codeBuilder.append("/**\n*").append(route.getDescription()).append("\n*/\n");
             }
 
+
             //@POST("add_address") Call<BaseAPIResponse<AddAddressResponse>> editAddress(
-            codeBuilder.append(String.format("@%s(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", route.getMethod(), route.getName(), responseClass, CodeGen.toCamelCase(route.getName())));
+
+            codeBuilder.append(String.format("@%s(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", route.getMethod(), route.getName(),
+                    CodeGen.getFromFirstCapCharacter(SlashCutter.cut(responseClass)), SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
 
             if (route.isSecure()) {
                 codeBuilder.append("\n@Header(KEY_AUTHORIZATION) String apiKey,");

@@ -190,6 +190,17 @@ public class CodeGen {
 
     }
 
+    public static String getFromFirstCapCharacter(String string) {
+        int pos = 0;
+        for (int i = 0; i < string.length(); i++) {
+            if (Character.isUpperCase(string.charAt(i))) {
+                pos = i;
+                break;
+            }
+        }
+        return string.substring(pos);
+    }
+
     static class Model {
         private final String name;
         private final List<Property> properties;

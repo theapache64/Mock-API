@@ -68,6 +68,10 @@
         .author {
             display: none;
         }
+
+        table {
+            font-size: 13px;
+        }
     </style>
 
 

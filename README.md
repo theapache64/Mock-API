@@ -18,3 +18,7 @@ A Web Application to build Mock API
 - Clear button shouldn't reload page
 - Add codemirror to Control + Alt+ M
 - Add mail notification on new route, update route, delete route
+- Add dynamic description generation from route name
+- Slash management to F4 as well as F8
+- Cap character for random word
+

@@ -5,6 +5,7 @@ import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.CodeGen;
 import com.theah64.mock_api.utils.Inflector;
+import com.theah64.mock_api.utils.SlashCutter;
 import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
@@ -45,7 +46,7 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
 
         final String projectName = getStringParameter(KEY_PROJECT_NAME);
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
-        final String responseClass = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response";
+        final String responseClass =  CodeGen.getFromFirstCapCharacter(SlashCutter.cut(CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response"));
 
         final Route route = Routes.getInstance().get(projectName, routeName);
         if (route != null) {
@@ -54,7 +55,7 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
             StringBuilder codeBuilder = new StringBuilder();
 
             //Basic
-            codeBuilder.append(String.format("RetrofitClient.getClient().create(APIInterface.class).%s(", CodeGen.toCamelCase(route.getName())));
+            codeBuilder.append(String.format("RetrofitClient.getClient().create(APIInterface.class).%s(", SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
 
             //Building param map
             for (Param param : route.getParams()) {
@@ -82,6 +83,8 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
                 final String x = codeBuilder.toString().substring(0, codeBuilder.length() - 1);
                 codeBuilder = new StringBuilder(x);
             }
+
+
 
             codeBuilder.append(String.format("\n).enqueue(new CustomRetrofitCallback<BaseAPIResponse<%s>, %s>(this, R.string.Loading){", responseClass, responseClass));
             codeBuilder.append("\n\t").append("@Override");
