@@ -1330,7 +1330,7 @@
 
 
         #iNotificationEmails_tag{
-            width:80px !important;
+            width:100% !important;
         }
 
     </style>

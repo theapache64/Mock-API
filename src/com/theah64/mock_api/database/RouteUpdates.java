@@ -91,8 +91,7 @@ public class RouteUpdates extends BaseTable<RouteUpdate> {
                         rs.getString(COLUMN_CREATED_AT));
             }
         }).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, COLUMN_CREATED_AT})
-                .where(column, value)
-                .where("id<", limitUpdateId)
+                .where(new String[]{column, "id<"}, new String[]{value, limitUpdateId})
                 .orderBy("id DESC")
                 .limit("1,1")
                 .build()

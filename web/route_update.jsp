@@ -41,7 +41,7 @@
     }
 
     if (oldRouteUpdate == null) {
-        StatusResponse.redirect(response, "Error", "No changes found");
+        StatusResponse.redirect(response, "Error", "No history found, better luck next time ;)");
         return;
     }
 
@@ -186,7 +186,7 @@
         <div class="navbar-header">
 
             <a class="navbar-brand" href="login.jsp">
-                <%=projectName+" / "+routeName%>
+                <%=projectName + " / " + routeName%>
             </a>
 
         </div>
@@ -203,9 +203,9 @@
 
     <%
         if (diffViews.isEmpty()) {
-            %>
-            <h2 class="text-center">No changes made</h2>
-            <%
+    %>
+    <h2 class="text-center">No changes made</h2>
+    <%
         }
     %>
 
