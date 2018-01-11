@@ -26,6 +26,8 @@
     <title><%=project.getName()%> / MockAPI
     </title>
     <%@include file="common_headers.jsp" %>
+    <script src="tags/jquery.tagsinput.js"></script>
+    <link rel="stylesheet" href="tags/jquery.tagsinput.css"/>
 
     <script>
 

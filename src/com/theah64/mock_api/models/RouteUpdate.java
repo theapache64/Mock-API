@@ -5,9 +5,9 @@ package com.theah64.mock_api.models;
  */
 public class RouteUpdate {
 
-    private final String id, key, routeId, method, params, delay, description, defaultResponse;
+    private final String id, key, routeId, method, params, delay, description, defaultResponse,createdAt;
 
-    public RouteUpdate(String id, String key, String routeId, String method, String params, String delay, String description, String defaultResponse) {
+    public RouteUpdate(String id, String key, String routeId, String method, String params, String delay, String description, String defaultResponse, String createdAt) {
         this.id = id;
         this.key = key;
         this.routeId = routeId;
@@ -16,6 +16,7 @@ public class RouteUpdate {
         this.delay = delay;
         this.description = description;
         this.defaultResponse = defaultResponse;
+        this.createdAt = createdAt;
     }
 
     public String getId() {
@@ -48,5 +49,23 @@ public class RouteUpdate {
 
     public String getDefaultResponse() {
         return defaultResponse;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "RouteUpdate{" +
+                "id='" + id + '\'' +
+                ", key='" + key + '\'' +
+                ", routeId='" + routeId + '\'' +
+                ", method='" + method + '\'' +
+                ", params='" + params + '\'' +
+                ", delay='" + delay + '\'' +
+                ", description='" + description + '\'' +
+                ", defaultResponse='" + defaultResponse + '\'' +
+                '}';
     }
 }

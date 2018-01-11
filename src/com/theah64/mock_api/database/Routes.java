@@ -222,6 +222,55 @@ public class Routes extends BaseTable<Route> {
         return route;
     }
 
+    public Route getRouteBy(String column, String value) throws SQLException {
+
+        String error = null;
+        Route route = null;
+        final String query = String.format("SELECT r.id,r.name, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE r.%s = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;", column);
+        final java.sql.Connection con = Connection.getConnection();
+        try {
+            final PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, value);
+            final ResultSet rs = ps.executeQuery();
+            if (rs.first()) {
+
+                final String id = rs.getString(COLUMN_ID);
+                final String routeName = rs.getString(COLUMN_NAME);
+                final String response = rs.getString(COLUMN_DEFAULT_RESPONSE);
+                final String description = rs.getString(COLUMN_DESCRIPTION);
+                final boolean isSecure = rs.getBoolean(COLUMN_IS_SECURE);
+                final long delay = rs.getLong(COLUMN_DELAY);
+                final String externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL);
+                final long updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS);
+                final String method = rs.getString(COLUMN_METHOD);
+
+                final List<Param> allParams = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, id);
+
+                route = new Route(id, null, routeName, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis);
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            error = e.getMessage();
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        manageError(error);
+
+        if (route == null) {
+            throw new SQLException("No response found for " + route);
+        }
+
+        return route;
+    }
+
     @Override
     public boolean update(Route route) {
         boolean isUpdated = false;
@@ -286,5 +335,10 @@ public class Routes extends BaseTable<Route> {
         }
 
         manageError(error);
+    }
+
+    @Override
+    public Route get(String column1, String value1, String column2, String value2) {
+        return super.get(column1, value1, column2, value2);
     }
 }

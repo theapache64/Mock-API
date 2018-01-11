@@ -48,7 +48,7 @@ public class ParamResponses extends BaseTable<ParamResponse> {
                 COLUMN_PARAM_VALUE,
                 COLUMN_RESPONSE_ID,
                 COLUMN_REL_OPT
-        }, new String[]{whereColumn}, new String[]{whereColumnValue}, -1, COLUMN_ID + " DESC").getAll();
+        }, new String[]{whereColumn}, new String[]{whereColumnValue}, SelectQueryBuilder.UNLIMITED, COLUMN_ID + " DESC").getAll();
     }
 
     /**

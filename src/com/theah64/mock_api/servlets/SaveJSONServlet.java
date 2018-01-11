@@ -15,6 +15,7 @@ import com.theah64.webengine.exceptions.MailException;
 import com.theah64.webengine.utils.CommonUtils;
 import com.theah64.webengine.utils.RandomString;
 import com.theah64.webengine.utils.Request;
+import com.theah64.webengine.utils.WebEngineConfig;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -124,6 +125,9 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
             String subject, message;
 
+
+            final String updateKey = RandomString.get(50);
+
             if (routeId == null) {
 
                 //Route doesn't exist
@@ -142,25 +146,27 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
                 Routes.getInstance().update(route);
 
                 subject = "Route updated - " + project.getName();
-                message = "Route updated : " + route.getName();
+                message = "Route updated : " + route.getName() + "<br>" + String.format(
+                        WebEngineConfig.getBaseURL() + "/route_update.jsp?key=%s&project_name=%s&route_name=%s",
+                        updateKey, project.getName(), route.getName()
+                );
 
 
                 getWriter().write(new APIResponse("Route updated", joResp).getResponse());
             }
 
 
-            final String updateKey = RandomString.get(50);
-
             final StringBuilder routeParams = new StringBuilder();
             for (Param param : route.getParams()) {
                 routeParams.append(param.getName()).append(" ").append(param.getDataType()).append("\n");
             }
 
+
             try {
                 RouteUpdates.getInstance().add(new RouteUpdate(null, updateKey, route.getId(), route.getMethod(), routeParams.toString(),
                         route.getDelay() > 0 ? String.valueOf(route.getDelay()) : null,
-                        route.getDescription(), route.getDefaultResponse()
-                ));
+                        route.getDescription(), route.getDefaultResponse(),
+                        null));
             } catch (QueryBuilderException e) {
                 e.printStackTrace();
                 throw new Request.RequestException(e.getMessage());

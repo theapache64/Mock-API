@@ -48,7 +48,7 @@ public class TinifyKeys extends BaseTable<TinifyKey> {
         }, new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_EMAIL, COLUMN_USAGE},
                 new String[]{COLUMN_IS_ACTIVE},
                 new String[]{TRUE},
-                1,
+                "1",
                 COLUMN_USAGE
         ).get();
     }
