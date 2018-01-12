@@ -144,6 +144,29 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             } else {
                 //Update the existing route
                 route.setId(routeId);
+
+                //Checking if the route had previous history
+                try {
+                    final boolean isHistoryExists = RouteUpdates.getInstance().get(RouteUpdates.COLUMN_ROUTE_ID, routeId) != null;
+                    if (!isHistoryExists) {
+                        //Add history
+                        final Route hRoute = Routes.getInstance().get(project.getName(), routeName);
+                        RouteUpdates.getInstance().add(new RouteUpdate(
+                                null,
+                                RandomString.get(50),
+                                hRoute.getId(),
+                                hRoute.getMethod(),
+                                toReadableString(hRoute),
+                                hRoute.getDelay() > 0 ? String.valueOf(hRoute.getDelay()) : null,
+                                hRoute.getDescription(),
+                                hRoute.getDefaultResponse(),
+                                null
+                        ));
+                    }
+                } catch (QueryBuilderException e) {
+                    e.printStackTrace();
+                }
+
                 Routes.getInstance().update(route);
 
                 subject = "Route updated - " + project.getName() + " / " + route.getName();
@@ -158,15 +181,8 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             }
 
 
-            //Adding update
-            final StringBuilder routeParams = new StringBuilder();
-            for (Param param : route.getParams()) {
-                routeParams.append(param.getName()).append(" ").append(param.getDataType()).append("\n");
-            }
-
-
             try {
-                RouteUpdates.getInstance().add(new RouteUpdate(null, updateKey, route.getId(), route.getMethod(), routeParams.toString(),
+                RouteUpdates.getInstance().add(new RouteUpdate(null, updateKey, route.getId(), route.getMethod(), toReadableString(route),
                         route.getDelay() > 0 ? String.valueOf(route.getDelay()) : null,
                         route.getDescription(), route.getDefaultResponse(),
                         null));
@@ -198,6 +214,15 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             }
         }
 
+    }
+
+    private String toReadableString(final Route route) {
+        //Adding update
+        final StringBuilder routeParams = new StringBuilder();
+        for (Param param : route.getParams()) {
+            routeParams.append(param.getName()).append(" ").append(param.getDataType()).append("\n");
+        }
+        return routeParams.toString();
     }
 
     private static final String MAIL_CONTENT = "<html style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <head style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <link href=\"https://fonts.googleapis.com/css?family=Roboto:400,500,700\" rel=\"stylesheet\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <style style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > * { margin: 0 auto; padding: 0; } p, a { font-family: 'Roboto', sans-serif; } body { background: #171717; } div#body { text-align: center; color: white; padding: 50px; height: 158px; } a { text-decoration: none; } a#link { background: #6ac045; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; color: white !important; padding: 8px 34px; font-weight: 800; } div#header { background-color: #1d1d1d; width: 100%; height: 80px; border-bottom: 1px solid #2f2f2f; } div#footer { background-color: #1d1d1d; width: 100%; text-align: center; border-top: 1px solid #2f2f2f; position: absolute; bottom: 0px; } p#credits { padding: 10px; color: #565656; } p#credits a { color: #565656; } p.title { color: #ffffff; font-size: 26px; padding: 26px; } p.title2 { color: #ffffff; font-size: 26px; padding: 26px; font-weight: 600; } span.sub_title { font-size: 15px; } </style> </head> <body style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;background-color:#171717;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;\" > <div id=\"header\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;background-color:#1d1d1d;width:100%;height:80px;border-bottom-width:1px;border-bottom-style:solid;border-bottom-color:#2f2f2f;\" > <p class=\"title\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;font-family:'Roboto', sans-serif;color:#ffffff;font-size:26px;padding-top:26px;padding-bottom:26px;padding-right:26px;padding-left:26px;\" >MockAPI <span id=\"sub_title\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" >- PROJECT_NAME</span></p></div> <div id=\"body\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:50px;padding-bottom:50px;padding-right:50px;padding-left:50px;text-align:center;color:white;height:158px;\" > <p class=\"title2\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;font-family:'Roboto', sans-serif;color:#ffffff;font-size:26px;padding-top:26px;padding-bottom:26px;padding-right:26px;padding-left:26px;font-weight:600;\" >MESSAGE_HEADING</p> <br style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <p id=\"verify_instruction\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;font-size:18px;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:'Roboto', sans-serif;\" > /ROUTE_NAME </p><br style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" ><br style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <a id=\"link\" href=\"EXTERNAL_LINK\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:8px;padding-bottom:8px;padding-right:34px;padding-left:34px;font-family:'Roboto', sans-serif;text-decoration:none;background-color:#6ac045;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;font-weight:800;color:white !important;\" >Watch!</a> </div> <div id=\"footer\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;background-color:#1d1d1d;width:100%;text-align:center;border-top-width:1px;border-top-style:solid;border-top-color:#2f2f2f;position:absolute;bottom:0px;\" > <p id=\"credits\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px;font-family:'Roboto', sans-serif;color:#565656;\" ><a target=\"_blank\" href=\"https://github.com/theapache64/Mock-API\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:'Roboto', sans-serif;text-decoration:none;color:#565656;\" > A Github Project</a></p></div> </body> </html>";
