@@ -8,6 +8,7 @@ import com.theah64.webengine.database.querybuilders.SelectQueryBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by theapache64 on 10/1/18.
@@ -73,6 +74,30 @@ public class RouteUpdates extends BaseTable<RouteUpdate> {
                 .limit(1)
                 .build()
                 .get();
+    }
+
+    @Override
+    public List<RouteUpdate> getAll(String whereColumn, String whereColumnValue) throws QueryBuilderException, SQLException {
+        return new SelectQueryBuilder.Builder<RouteUpdate>(getTableName(), new SelectQueryBuilder.Callback<RouteUpdate>() {
+            @Override
+            public RouteUpdate getNode(ResultSet rs) throws SQLException {
+                return new RouteUpdate(
+                        rs.getString(COLUMN_ID),
+                        rs.getString(COLUMN_KEY),
+                        rs.getString(COLUMN_ROUTE_ID),
+                        rs.getString(COLUMN_METHOD),
+                        rs.getString(COLUMN_PARAMS),
+                        rs.getString(COLUMN_DELAY),
+                        rs.getString(COLUMN_DESCRIPTION),
+                        rs.getString(COLUMN_DEFAULT_RESPONSE),
+                        rs.getString(COLUMN_CREATED_AT));
+            }
+        }).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE,
+                COLUMN_CREATED_AT})
+                .where(whereColumn, whereColumnValue)
+                .build()
+                .getAll();
+
     }
 
     public RouteUpdate getSecondLast(String limitUpdateId, String column, String value) throws QueryBuilderException, SQLException {

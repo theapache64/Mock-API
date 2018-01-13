@@ -6,6 +6,9 @@
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.theah64.webengine.utils.WebEngineConfig" %>
+<%@ page import="com.theah64.mock_api.database.Routes" %>
+<%@ page import="java.util.Collections" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -197,8 +200,36 @@
         </div>
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-calendar"></span> <%=newRouteUpdate.getCreatedAt()%>
-            </a></li>
+
+
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span
+                        class="glyphicon glyphicon-calendar"></span> <%=newRouteUpdate.getCreatedAt()%>
+                    <span class="caret"></span> </a>
+                <ul class="dropdown-menu">
+                    <%
+                        try {
+
+                            final List<RouteUpdate> routeUpdates = RouteUpdates.getInstance().getAll(RouteUpdates.COLUMN_ROUTE_ID, newRouteUpdate.getRouteId());
+                            routeUpdates.remove(0);
+                            Collections.reverse(routeUpdates);
+                            for (final RouteUpdate routeUpdate : routeUpdates) {
+                    %>
+
+                    <li>
+                        <a href="
+<%=String.format("route_update.jsp?key=%s&project_name=%s&route_name=%s",routeUpdate.getKey(), projectName, routeName)%>"><%=routeUpdate.getCreatedAt()%>
+                        </a></li>
+                    <%
+                            }
+
+                        } catch (QueryBuilderException | SQLException e) {
+                            e.printStackTrace();
+                        }
+                    %>
+                </ul>
+            </li>
+
         </ul>
 
     </div>
