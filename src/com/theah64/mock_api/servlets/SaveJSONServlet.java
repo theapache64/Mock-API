@@ -147,8 +147,11 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
                 //Checking if the route had previous history
                 try {
+
                     final boolean isHistoryExists = RouteUpdates.getInstance().get(RouteUpdates.COLUMN_ROUTE_ID, routeId) != null;
+
                     if (!isHistoryExists) {
+
                         //Add history
                         final Route hRoute = Routes.getInstance().get(project.getName(), routeName);
                         RouteUpdates.getInstance().add(new RouteUpdate(
@@ -163,6 +166,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
                                 null
                         ));
                     }
+
                 } catch (QueryBuilderException e) {
                     e.printStackTrace();
                 }
