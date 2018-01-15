@@ -67,14 +67,15 @@ public class RouteUpdates extends BaseTable<RouteUpdate> {
                         rs.getString(COLUMN_DELAY),
                         rs.getString(COLUMN_DESCRIPTION),
                         rs.getString(COLUMN_DEFAULT_RESPONSE),
-                        rs.getString(COLUMN_CREATED_AT));
+                        rs.getLong(COLUMN_CREATED_AT));
             }
-        }).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, COLUMN_CREATED_AT})
+        }).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)})
                 .where(column, value)
                 .limit(1)
                 .build()
                 .get();
     }
+
 
     @Override
     public List<RouteUpdate> getAll(String whereColumn, String whereColumnValue) throws QueryBuilderException, SQLException {
@@ -90,10 +91,10 @@ public class RouteUpdates extends BaseTable<RouteUpdate> {
                         rs.getString(COLUMN_DELAY),
                         rs.getString(COLUMN_DESCRIPTION),
                         rs.getString(COLUMN_DEFAULT_RESPONSE),
-                        rs.getString(COLUMN_CREATED_AT));
+                        rs.getLong(COLUMN_CREATED_AT));
             }
         }).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE,
-                COLUMN_CREATED_AT})
+                String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)})
                 .where(whereColumn, whereColumnValue)
                 .build()
                 .getAll();
@@ -113,9 +114,9 @@ public class RouteUpdates extends BaseTable<RouteUpdate> {
                         rs.getString(COLUMN_DELAY),
                         rs.getString(COLUMN_DESCRIPTION),
                         rs.getString(COLUMN_DEFAULT_RESPONSE),
-                        rs.getString(COLUMN_CREATED_AT));
+                        rs.getLong(COLUMN_CREATED_AT));
             }
-        }).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, COLUMN_CREATED_AT})
+        }).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)})
                 .where(new String[]{column, "id<"}, new String[]{value, limitUpdateId})
                 .orderBy("id DESC")
                 .limit("1,1")

@@ -163,7 +163,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
                                 hRoute.getDelay() > 0 ? String.valueOf(hRoute.getDelay()) : null,
                                 hRoute.getDescription(),
                                 hRoute.getDefaultResponse(),
-                                null
+                                -1
                         ));
                     }
 
@@ -189,7 +189,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
                 RouteUpdates.getInstance().add(new RouteUpdate(null, updateKey, route.getId(), route.getMethod(), toReadableString(route),
                         route.getDelay() > 0 ? String.valueOf(route.getDelay()) : null,
                         route.getDescription(), route.getDefaultResponse(),
-                        null));
+                        -1));
             } catch (QueryBuilderException e) {
                 e.printStackTrace();
                 throw new Request.RequestException(e.getMessage());
