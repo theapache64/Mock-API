@@ -81,7 +81,7 @@ public class Routes extends BaseTable<Route> {
     public List<Route> getAll(final String projectId) throws SQLException {
 
         final List<Route> jsonList = new ArrayList<>();
-        final String query = "SELECT id, name, external_api_url FROM routes WHERE project_id = ? AND is_active = 1 ORDER BY updated_at_in_millis DESC";
+        final String query = "SELECT id, name, external_api_url FROM routes WHERE project_id = ? AND is_active = 1 ORDER BY id DESC";
         String error = null;
         final java.sql.Connection con = Connection.getConnection();
         try {

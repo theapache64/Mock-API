@@ -888,7 +888,7 @@
                             if ('id' in data.data) {
 
                                 //Adding added route to select list
-                                $("select#routes").append("<option value=" + data.data.id + ">" + route + " </option>");
+                                $("select#routes option:eq(0)").after("<option value=" + data.data.id + ">" + route + " </option>");
 
                                 //alert("selecting : " + data.data.id);
                                 $("select#routes").val(data.data.id).trigger('change');
@@ -1330,9 +1330,8 @@
             border-radius: 3px;
         }
 
-
-        #iNotificationEmails_tag{
-            width:100% !important;
+        #iNotificationEmails_tag {
+            width: 100% !important;
         }
 
     </style>
@@ -1340,9 +1339,9 @@
 <body>
 
 <%
-    List<Route> jsonList = null;
+    List<Route> routes = null;
     try {
-        jsonList = Routes.getInstance().getAll(project.getId());
+        routes = Routes.getInstance().getAll(project.getId());
     } catch (SQLException e) {
         e.printStackTrace();
     }
@@ -1428,7 +1427,7 @@
 
             <div class="row">
 
-                <%--Available jsonList--%>
+                <%--Available routes--%>
                 <div class=" col-md-2">
 
 
@@ -1445,10 +1444,10 @@
                         <select id="routes" class="form-control" title="Routes">
                             <option value="">Select a route</option>
                             <%
-                                if (jsonList != null) {
-                                    for (final Route json : jsonList) {
+                                if (routes != null) {
+                                    for (final Route route : routes) {
                             %>
-                            <option value="<%=json.getId()%>"><%=json.getName()%>
+                            <option value="<%=route.getId()%>"><%=route.getName()%>
                             </option>
                             <%
                                     }
