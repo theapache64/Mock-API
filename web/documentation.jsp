@@ -206,7 +206,7 @@
                 <tbody>
                 <tr>
                     <td>
-                        <a href="<%=route.getExternalApiUrl()+"/"+route.getName()%>"><%=route.getExternalApiUrl() + "/" + route.getName()%>
+                        <a href="<%=route.getExternalApiUrl()%>"><%=route.getExternalApiUrl()%>
                         </a></td>
                     <td>Actual URL</td>
                 </tr>
@@ -251,7 +251,8 @@
                 <tr>
                     <td><code><%=param.getName()%>
                     </code></td>
-                    <td><span class="label pull-right label-<%=param.isRequired()?"success" : "warning"%>"><%=param.isRequired()%></span>
+                    <td><span
+                            class="label pull-right label-<%=param.isRequired()?"success" : "warning"%>"><%=param.isRequired()%></span>
                     </td>
                     <td><%=param.getDataType()%>
                     </td>
