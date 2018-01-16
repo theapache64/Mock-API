@@ -35,8 +35,65 @@
 <head>
     <title>API Documentation - <%=project.getName()%>
     </title>
+
     <%@include file="common_headers.jsp" %>
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var successEditor = CodeMirror.fromTextArea(document.getElementById("tDefaultSuccessResponse"), {
+                lineNumbers: true,
+                viewportMargin: Infinity,
+                mode: "application/json",
+                matchBrackets: true,
+                foldGutter: true,
+                extraKeys: {
+                    "Ctrl-Q": function (cm) {
+                        cm.foldCode(cm.getCursor());
+                    },
+                    "F11": function (cm) {
+                        isAlertResult = !cm.getOption("fullScreen");
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    },
+                    "Ctrl-Alt-L": function (cm) {
+                        cm.getDoc().setValue(JSON.stringify(JSON.parse(cm.getDoc().getValue()), undefined, 4));
+                    }
+                },
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+            });
+
+            successEditor.getDoc().setValue(JSON.stringify(JSON.parse(successEditor.getDoc().getValue()), undefined, 4));
+
+            var errorEditor = CodeMirror.fromTextArea(document.getElementById("tDefaultErrorResponse"), {
+                lineNumbers: true,
+                mode: "application/json",
+                matchBrackets: true,
+                foldGutter: true,
+                viewportMargin: Infinity,
+                extraKeys: {
+                    "Ctrl-Q": function (cm) {
+                        cm.foldCode(cm.getCursor());
+                    },
+                    "F11": function (cm) {
+                        isAlertResult = !cm.getOption("fullScreen");
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    },
+                    "Ctrl-Alt-L": function (cm) {
+                        cm.getDoc().setValue(JSON.stringify(JSON.parse(cm.getDoc().getValue()), undefined, 4));
+                    }
+                },
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+            });
+
+            errorEditor.getDoc().setValue(JSON.stringify(JSON.parse(errorEditor.getDoc().getValue()), undefined, 4));
+        });
+    </script>
     <style>
         body {
             background-color: #FFF;
@@ -101,35 +158,24 @@
     <%--Structure--%>
     <div class="row">
         <div class="col-md-8">
-            <table class="table table-bordered ">
-                <thead>
-                <tr>
-                    <th>Returned Key</th>
-                    <th>Description</th>
-                    <th>Example</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>error</td>
-                    <td>The returned status for the API call, can be either 'true' or 'false'</td>
-                    <td>true</td>
-                </tr>
-                <tr>
-                    <td>message</td>
-                    <td>Either the error message or the successful message</td>
-                    <td>OK</td>
-                </tr>
-                <tr>
-                    <td>data</td>
-                    <td>If 'error' is returned as 'false' the API query results will be inside 'data'</td>
-                    <td>data</td>
-                </tr>
-                </tbody>
-            </table>
+            <%=project.getBaseResponseStructure()%>
         </div>
     </div>
 
+
+    <div class="row">
+        <div class="col-md-9">
+            <h3>Success response format</h3>
+            <label for="tDefaultSuccessResponse"></label><textarea
+                id="tDefaultSuccessResponse"><%=project.getDefaultSuccessResponse()%></textarea>
+
+            <br>
+
+            <h3>Error response format</h3>
+            <label for="tDefaultErrorResponse"></label><textarea
+                id="tDefaultErrorResponse"><%=project.getDefaultErrorResponse()%></textarea>
+        </div>
+    </div>
 
     <%
         int i = 0;

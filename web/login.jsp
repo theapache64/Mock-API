@@ -1,5 +1,8 @@
+<%@ page import="com.theah64.mock_api.database.Preferences" %>
 <%@ page import="com.theah64.mock_api.database.Projects" %>
+<%@ page import="com.theah64.mock_api.models.Preference" %>
 <%@ page import="com.theah64.mock_api.models.Project" %>
+<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="com.theah64.webengine.utils.DarKnight" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.webengine.utils.RandomString" %>
@@ -90,11 +93,15 @@
 
                                 } else {
 
-                                    //Project doesn't exist
-                                    final String apiKey = RandomString.get(10);
-                                    project = new Project(null, name, passHash, apiKey, "http://baseapiurlgoeshere.com", "com.your.packagename", true, null);
 
                                     try {
+
+                                        //Project doesn't exist
+                                        final String apiKey = RandomString.get(10);
+                                        final Preference preference = Preferences.getInstance().get();
+                                        project = new Project(null, name, passHash, apiKey, "http://baseapiurlgoeshere.com", "com.your.packagename", true, null,
+                                                preference.getDefaultSuccessResponse(), preference.getDefaultErrorResponse(), preference.getBaseResponseStructure());
+
 
                                         final String projectId = projectsTable.addv3(project);
 
@@ -107,7 +114,7 @@
                                             throw new Request.RequestException("Failed to create project");
                                         }
 
-                                    } catch (SQLException | Request.RequestException e) {
+                                    } catch (SQLException | QueryBuilderException | Request.RequestException e) {
                                         e.printStackTrace();
                         %>
                         <div class="text-danger pull-left">

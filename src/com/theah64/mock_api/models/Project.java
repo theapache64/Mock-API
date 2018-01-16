@@ -13,8 +13,9 @@ public class Project {
     private String packageName;
     private boolean isAllSmallRoutes;
     private String notificationEmails;
+    private String defaultSuccessResponse, defaultErrorResponse, baseResponseStructure;
 
-    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl, String packageName, boolean isAllSmallRoutes, String notificationEmails) {
+    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl, String packageName, boolean isAllSmallRoutes, String notificationEmails, String defaultSuccessResponse, String defaultErrorResponse, String baseResponseStructure) {
         this.id = id;
         this.name = name;
         this.passHash = passHash;
@@ -23,8 +24,34 @@ public class Project {
         this.packageName = packageName;
         this.isAllSmallRoutes = isAllSmallRoutes;
         this.notificationEmails = notificationEmails;
+        this.defaultSuccessResponse = defaultSuccessResponse;
+        this.defaultErrorResponse = defaultErrorResponse;
+        this.baseResponseStructure = baseResponseStructure;
     }
 
+    public void setDefaultSuccessResponse(String defaultSuccessResponse) {
+        this.defaultSuccessResponse = defaultSuccessResponse;
+    }
+
+    public void setDefaultErrorResponse(String defaultErrorResponse) {
+        this.defaultErrorResponse = defaultErrorResponse;
+    }
+
+    public void setBaseResponseStructure(String baseResponseStructure) {
+        this.baseResponseStructure = baseResponseStructure;
+    }
+
+    public String getDefaultSuccessResponse() {
+        return defaultSuccessResponse;
+    }
+
+    public String getDefaultErrorResponse() {
+        return defaultErrorResponse;
+    }
+
+    public String getBaseResponseStructure() {
+        return baseResponseStructure;
+    }
 
     public String getNotificationEmails() {
         return notificationEmails;

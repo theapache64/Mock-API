@@ -19,7 +19,7 @@ import java.sql.SQLException;
  */
 public abstract class AdvancedBaseServlet extends HttpServlet {
 
-    protected static final String URL_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+    public static final String URL_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 
 
     public static final String VERSION_CODE = "/v1";

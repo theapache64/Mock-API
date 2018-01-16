@@ -27,14 +27,13 @@
                            href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
                     </li>
                     <li>
-                        <a id="aGenRandomText" href="#">Random Text <small class="text-muted menu_shortcut" >(Ctrl + Alt + R)</small></a>
+                        <a id="aGenRandomText" href="#">Random Text
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + R)</small>
+                        </a>
                     </li>
 
                 </ul>
             </li>
-
-
-
 
 
             <%=isHomePage ? "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#shortcuts\">Shortcuts</a></li>" : "" %>
@@ -52,7 +51,7 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <%=isHomePage ? "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#settings\"><span class=\"glyphicon glyphicon-cog\"></span> Settings</a></li>" : "" %>
+            <%=isHomePage ? "<li><a href=settings.jsp?api_key=" + project.getApiKey() + "><span class=\"glyphicon glyphicon-cog\"></span> Settings</a></li>" : "" %>
             <li><a href="logout.jsp"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>
     </div>

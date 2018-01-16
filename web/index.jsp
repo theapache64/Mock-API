@@ -26,8 +26,6 @@
     <title><%=project.getName()%> / MockAPI
     </title>
     <%@include file="common_headers.jsp" %>
-    <script src="tags/jquery.tagsinput.js"></script>
-    <link rel="stylesheet" href="tags/jquery.tagsinput.css"/>
 
     <script>
 
@@ -40,12 +38,6 @@
         var isAutoUpload = false;
         $(document).ready(function () {
 
-
-            $('#iNotificationEmails').tagsInput({
-                'placeholderColor': '#666666',
-                'width': '100%',
-                'defaultText': 'Add email '
-            });
 
             //Control + Alt + R
             function showRandomGenModal() {
@@ -186,45 +178,6 @@
                     });
                 }
 
-
-            });
-
-            $("#bSaveSettings").on('click', function () {
-
-                var packageName = $("input#iPackageName").val();
-                var baseOGAPIURL = $("input#iBaseOGAPIURL").val();
-                var isAllSmallRoutes = $("input#iallsmallroutes").is(":checked");
-
-                var dSettingsUpdateProgress = $("div#dSettingsUpdateProgress");
-
-                $.ajax({
-
-                    type: "POST",
-                    beforeSend: function (request) {
-                        dSettingsUpdateProgress.slideDown(100);
-                        request.setRequestHeader('Authorization', '<%=project.getApiKey()%>')
-                    },
-                    url: "v1/update_project",
-                    data: {
-                        package_name: packageName,
-                        base_og_api_url: baseOGAPIURL,
-                        is_all_small_routes: isAllSmallRoutes,
-                        notification_emails: $("input#iNotificationEmails").val()
-                    },
-                    success: function (data) {
-                        dSettingsUpdateProgress.slideUp(100);
-                        if (!data.error) {
-                            $("div#settings").modal("hide");
-                            location.reload();
-                        } else {
-                            alert(data.message);
-                        }
-                    },
-                    error: function () {
-                        dSettingsUpdateProgress.slideUp(100);
-                        alert("Failed to update settings");
-                    }
-                });
 
             });
 
@@ -513,8 +466,15 @@
 
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 78) {
-                    var successMsg = prompt("Success message", "This is a sample success message");
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": false, "message": "' + successMsg + '", "data": {} }'), undefined, 4));
+
+                    var successResponse = '<%=project.getDefaultSuccessResponse().replaceAll("[\r\n]+", " ")%>';
+
+                    if (successResponse.indexOf("SUCCESS_MESSAGE") != -1) {
+                        var successMsg = prompt("Success message", "This is a sample success message");
+                        editor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse.replace('SUCCESS_MESSAGE', successMsg)), undefined, 4));
+                    } else {
+                        editor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse), undefined, 4));
+                    }
                 }
 
 
@@ -532,8 +492,15 @@
 
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 69) {
-                    var errorMsg = prompt("Error message", "This is a sample error message");
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse('{ "error": true, "message": "' + errorMsg + '"}'), undefined, 4));
+
+                    var errorResponse = '<%=project.getDefaultErrorResponse().replaceAll("[\r\n]+", " ")%>';
+
+                    if (errorResponse.indexOf("ERROR_MESSAGE") != -1) {
+                        var errorMsg = prompt("Error message", "This is a sample error message");
+                        editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse.replace('ERROR_MESSAGE', errorMsg)), undefined, 4));
+                    } else {
+                        editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse), undefined, 4));
+                    }
                 }
 
                 //D
@@ -1281,28 +1248,6 @@
             right: -14px;
         }
 
-        .CodeMirror-fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: auto;
-            z-index: 9;
-        }
-
-        .CodeMirror {
-            border: 1px solid silver;
-        }
-
-        .CodeMirror-empty.CodeMirror-focused {
-            outline: none;
-        }
-
-        .CodeMirror pre.CodeMirror-placeholder {
-            color: #999;
-        }
-
         .randomItems {
             cursor: pointer;
         }
@@ -1772,63 +1717,6 @@
         </div>
     </div>
 
-    <%--Settings--%>
-    <div class="modal fade" id="settings" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Settings</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="fSettings">
-
-                        <%--package name--%>
-                        <div class="form-group">
-                            <label for="iPackageName">Package Name</label>
-                            <input id="iPackageName" class="form-control" value="<%=project.getPackageName()%>"
-                                   name="<%=Projects.COLUMN_PACKAGE_NAME%>" placeholder="Package name"/>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="iBaseOGAPIURL">Base OG API URL</label>
-                            <input id="iBaseOGAPIURL" class="form-control" value="<%=project.getBaseOgApiUrl()%>"
-                                   name="<%=Projects.COLUMN_BASE_OG_API_URL%>" placeholder="Base OG API URL"/>
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <input type="checkbox" id="iAllSmallRoutes"
-                                   name="<%=Projects.COLUMN_IS_ALL_SMALL_ROUTES%>" <%=project.isAllSmallRoutes() ? "checked" : ""%>/>
-                            <label for="iAllSmallRoutes">Spelling inspector</label>
-                        </div>
-
-                        <%--Notification email--%>
-                        <div class="form-group">
-                            <label for="iNotificationEmails">Notification emails</label>
-                            <input id="iNotificationEmails" class="form-control"
-                                   value="<%=project.getNotificationEmails()!=null ? project.getNotificationEmails() : ""%>"
-                                   name="<%=Projects.COLUMN_NOTIFICATION_EMAILS%>"
-                                   placeholder="Notification emails (comma seperated)"/>
-                        </div>
-
-
-                        <div id="dSettingsUpdateProgress" style="display: none" class="progress">
-                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
-                                 aria-valuemin="0" aria-valuemax="100" style="width:100%">
-                                Updating...
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="bSaveSettings" class="btn btn-success">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <%--Inset image--%>
     <div class="modal fade" id="dInsertImage" role="dialog">
