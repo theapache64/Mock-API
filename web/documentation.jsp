@@ -251,7 +251,7 @@
                 <tr>
                     <td><code><%=param.getName()%>
                     </code></td>
-                    <td><%=param.isRequired()%>
+                    <td><span class="label pull-right label-<%=param.isRequired()?"success" : "warning"%>"><%=param.isRequired()%></span>
                     </td>
                     <td><%=param.getDataType()%>
                     </td>
