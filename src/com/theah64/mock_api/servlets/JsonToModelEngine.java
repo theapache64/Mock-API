@@ -19,9 +19,9 @@ import java.sql.SQLException;
 @WebServlet(AdvancedBaseServlet.VERSION_CODE + "/json_to_model_engine")
 public class JsonToModelEngine extends AdvancedBaseServlet {
 
-    private static final String KEY_ROUTE_NAME = "route_name";
-    private static final String KEY_JO_STRING = "jo_string";
-    private static final String KEY_IS_RETROFIT_MODEL = "is_retrofit_model";
+    public static final String KEY_ROUTE_NAME = "route_name";
+    public static final String KEY_JO_STRING = "jo_string";
+    public static final String KEY_IS_RETROFIT_MODEL = "is_retrofit_model";
 
     @Override
     protected boolean isSecureServlet() {

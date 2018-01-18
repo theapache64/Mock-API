@@ -91,14 +91,14 @@ public class CodeGen {
         hasList = false;
         modelName = CodeGen.getFromFirstCapCharacter(SlashCutter.cut(modelName));
         CodeGen.getGenClassCode(true, false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
-        codeBuilder.insert(0, String.format("<code>%s\n\n%s\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
+        codeBuilder.insert(0, String.format("%s\n\n%s\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
                 "package " + packageName + ".api.responses;",
                 isRetrofitModel ? SERIALIZED_NAME_IMPORT : "",
                 hasList ? "import java.util.List;" : "",
                 new Date().toString(), modelName));
-        codeBuilder.append("\n\n}</code>");
+        codeBuilder.append("\n\n}");
 
-        return codeBuilder.toString().replaceAll("\\n", "<br>").replaceAll("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+        return codeBuilder.toString();
     }
 
     private static String genClassCode(boolean isNestedClass, String modelName, List<Model.Property> properties, boolean isRetrofitModel, boolean isJSONObject) {

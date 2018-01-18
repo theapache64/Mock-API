@@ -8,6 +8,7 @@
 <%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
 <%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
 <%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
+<%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.util.List" %>
@@ -417,43 +418,43 @@
 
                         var isRetrofitModel = confirm("Is this a retrofit model?");
 
-                        $.ajax({
-                            type: "POST",
-                            beforeSend: function () {
-                                startLoading(true);
-                            },
-                            headers: {
-                                "Authorization": '<%=project.getApiKey()%>'
-                            },
-                            data: {
-                                jo_string: selection,
-                                is_retrofit_model: isRetrofitModel,
-                                route_name: $("input#route").val()
-                            },
-                            url: "v1/json_to_model_engine",
-                            success: function (data) {
+                        /**
+                         * <input id="iJoString" name="jo_string"/>
+                         <input id="iIsRetrofitModel" name="is_retrofit_model"/>
+                         <input id="iRouteName" name="route_name"/>
+                         */
 
-                                stopLoading(true);
+                        $("input#iJoString").val(selection);
+                        $("input#iIsRetrofitModel").val(isRetrofitModel);
+                        $("input#iRouteName").val($("input#route").val());
+                        $("form#fJsonToModel").submit();
 
-                                if (!data.error) {
-                                    console.log(data.data.data);
-
-                                    var newWindow = window.open();
-                                    newWindow.document.write(data.data.data);
-
-                                } else {
-                                    alert(data.message);
-                                }
-
-
-                            },
-                            error: function () {
-                                stopLoading(true);
-                                $(resultDiv).addClass('alert-danger').removeClass('alert-success');
-                                $(resultDiv).html("<strong>Error! </strong> Please check your connection");
-                                $(resultDiv).show();
-                            }
-                        });
+                        /*$.ajax({
+                         type: "POST",
+                         beforeSend: function () {
+                         startLoading(true);
+                         },
+                         headers: {
+                         "Authorization": '
+                        <%=project.getApiKey()%>'
+                         },
+                         data: {
+                         jo_string: selection,
+                         is_retrofit_model: isRetrofitModel,
+                         route_name: $("input#route").val()
+                         },
+                         url: "json_to_model_engine.jsp",
+                         success: function (data) {
+                         var newWindow = window.open();
+                         newWindow.document.write(data);
+                         },
+                         error: function () {
+                         stopLoading(true);
+                         $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                         $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                         $(resultDiv).show();
+                         }
+                         });*/
 
 
                     }
@@ -1236,6 +1237,7 @@
                 e.stopPropagation();
             });
 
+
             //$("#image_viewer").modal("show");
 
         });
@@ -1311,6 +1313,30 @@
 --%>
 
 <div class="container">
+
+    <%--Hidden form--%>
+    <%--$.ajax({
+                            type: "POST",
+                            beforeSend: function () {
+                                startLoading(true);
+                            },
+                            headers: {
+                                "Authorization": '<%=project.getApiKey()%>'
+                            },
+                            data: {
+                                jo_string: selection,
+                                is_retrofit_model: isRetrofitModel,
+                                route_name: $("input#route").val()
+                            },
+                            url: "json_to_model_engine.jsp",--%>
+
+    <form id="fJsonToModel" action="json_to_model_engine.jsp" style="display: none" target="_blank" method="POST">
+        <input id="iAuthorization" name="Authorization" value="<%=project.getApiKey()%>"/>
+        <input id="iJoString" name="jo_string"/>
+        <input id="iIsRetrofitModel" name="is_retrofit_model"/>
+        <input id="iRouteName" name="route_name"/>
+        <input value="X" name="<%=Form.KEY_IS_SUBMITTED%>"/>
+    </form>
 
 
     <div class="modal fade" id="image_viewer" role="dialog">
