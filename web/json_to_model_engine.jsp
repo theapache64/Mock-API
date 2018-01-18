@@ -23,7 +23,6 @@
     });
 
 
-
     try {
 
         if (!form.isSubmitted()) {
@@ -70,6 +69,19 @@
         .CodeMirror {
             border: 1px solid #eee;
             height: auto;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden
         }
     </style>
     <script>
