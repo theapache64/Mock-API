@@ -1,3 +1,4 @@
+<%--suppress HtmlFormInputWithoutLabel --%>
 <%--suppress JSDuplicatedDeclaration --%>
 <%--suppress ALL --%>
 <%@ page import="com.theah64.mock_api.database.Images" %>
@@ -1353,8 +1354,7 @@
                                 margin-left: auto;
                                 margin-right: auto;
                                 max-width: 500px;
-                                max-height: 500px;"
-                         src="https://vignette.wikia.nocookie.net/dbxfanon/images/6/67/Iron_Man.png/revision/latest?cb=20160403042153"/>
+                                max-height: 500px;"/>
                 </div>
 
                 <div class="modal-footer">
