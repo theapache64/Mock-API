@@ -1247,7 +1247,7 @@
 
 
         .menu_shortcut {
-
+            float: right;
         }
 
         .randomItems {
@@ -1269,6 +1269,10 @@
             width: 56px;
             top: 7px;
             right: -13px;
+        }
+
+        ul.dropdown-menu li{
+            width: 304px;
         }
 
         #iNotificationEmails_tagsinput {

@@ -122,17 +122,23 @@
 
                     <li>
                         <a id="aPojo" target="_blank"
-                           href="#">POJO <small class="text-muted menu_shortcut">(Ctrl + Alt + M)</small></a>
+                           href="#">POJO
+                            <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + M)</small>
+                        </a>
                     </li>
 
                     <li>
                         <a id="aAPIInterfaceMethod" target="_blank"
-                           href="#">API Interface Method <small class="text-muted menu_shortcut">(F4)</small></a></a>
+                           href="#">API Interface Method
+                            <small class="text-muted menu_shortcut">(F4)</small>
+                        </a>
                     </li>
 
                     <li>
                         <a id="aAPICall" target="_blank"
-                           href="#">API Call <small class="text-muted menu_shortcut">(F8)</small></a></a>
+                           href="#">API Call
+                            <small class="text-muted menu_shortcut">(F8)</small>
+                        </a>
                     </li>
 
                     <li>
@@ -142,7 +148,6 @@
 
                 </ul>
             </li>
-
 
 
             <%--<li><a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare</a></li>--%>
