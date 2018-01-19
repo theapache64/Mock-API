@@ -213,62 +213,9 @@
                 }
 
                 if (event.ctrlKey && event.altKey && event.keyCode == 70) {
-
-                    var sValue = prompt("Search for response");
-                    if (sValue == null || sValue == "") {
-                        return;
-                    }
-
-                    $.ajax({
-                        type: "GET",
-                        beforeSend: function () {
-                            startLoading(true);
-                        },
-                        url: "v1/search?column=<%=Routes.COLUMN_DEFAULT_RESPONSE%>&value=" + sValue,
-                        headers: {"Authorization": "<%=project.getApiKey()%>"},
-                        success: function (data) {
-
-                            stopLoading(true);
-
-                            if (!data.error) {
-
-                                console.log(data.data.routes);
-
-                                //Clearing old data
-                                $("div#search_result_content").html("");
-                                $("div#search_result").modal("show");
-
-                                $.each(data.data.routes, function (key, value) {
-                                    $("div#search_result_content").append('<button class="btn btn-default btn-search-result">' + value + '</button> ');
-                                });
-
-                                $("button.btn-search-result").on('click', function () {
-                                    var routeName = $(this).text();
-
-                                    $("select#routes option").filter(function () {
-                                        return this.text == routeName;
-                                    }).attr('selected', true).trigger("change");
-
-                                    $("div#search_result").modal("hide");
-                                });
-
-                                $("#search_result_title").text("Search result for '" + sValue + "'");
-                                $("div#search_result").modal("show");
-
-                            } else {
-                                alert(data.message);
-                            }
-
-
-                        },
-                        error: function () {
-                            stopLoading(true);
-                            $(resultDiv).addClass('alert-danger').removeClass('alert-success');
-                            $(resultDiv).html("<strong>Error! </strong> Please check your connection");
-                            $(resultDiv).show();
-                        }
-                    });
+                    findInDefaultResponse();
                 }
+
 
                 if (event.keyCode == 112) {
                     event.preventDefault();
@@ -316,6 +263,63 @@
                 var imageUrl = $(this).parent().parent().find("img").attr('src');
                 editor.replaceSelection('"' + imageUrl + '"');
             });
+
+            function findInDefaultResponse() {
+                var sValue = prompt("Search for response");
+                if (sValue == null || sValue == "") {
+                    return;
+                }
+
+                $.ajax({
+                    type: "GET",
+                    beforeSend: function () {
+                        startLoading(true);
+                    },
+                    url: "v1/search?column=<%=Routes.COLUMN_DEFAULT_RESPONSE%>&value=" + sValue,
+                    headers: {"Authorization": "<%=project.getApiKey()%>"},
+                    success: function (data) {
+
+                        stopLoading(true);
+
+                        if (!data.error) {
+
+                            console.log(data.data.routes);
+
+                            //Clearing old data
+                            $("div#search_result_content").html("");
+                            $("div#search_result").modal("show");
+
+                            $.each(data.data.routes, function (key, value) {
+                                $("div#search_result_content").append('<button class="btn btn-default btn-search-result">' + value + '</button> ');
+                            });
+
+                            $("button.btn-search-result").on('click', function () {
+                                var routeName = $(this).text();
+
+                                $("select#routes option").filter(function () {
+                                    return this.text == routeName;
+                                }).attr('selected', true).trigger("change");
+
+                                $("div#search_result").modal("hide");
+                            });
+
+                            $("#search_result_title").text("Search result for '" + sValue + "'");
+                            $("div#search_result").modal("show");
+
+                        } else {
+                            alert(data.message);
+                        }
+
+
+                    },
+                    error: function () {
+                        stopLoading(true);
+                        $(resultDiv).addClass('alert-danger').removeClass('alert-success');
+                        $(resultDiv).html("<strong>Error! </strong> Please check your connection");
+                        $(resultDiv).show();
+                    }
+                });
+            }
 
             //Editor shortcuts
             editor.on('keyup', function () {
@@ -1238,6 +1242,10 @@
                 e.stopPropagation();
             });
 
+            $("a#aFindInDefRes").on('click', function () {
+                findInDefaultResponse();
+            });
+
 
             //$("#image_viewer").modal("show");
 
@@ -1271,7 +1279,7 @@
             right: -13px;
         }
 
-        ul.dropdown-menu li{
+        ul.dropdown-menu li {
             width: 304px;
         }
 
