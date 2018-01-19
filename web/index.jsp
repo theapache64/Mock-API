@@ -183,28 +183,59 @@
 
             });
 
+            function findRoute() {
+
+                var routeToSearch = prompt("Search route");
+                console.log("x:" + routeToSearch);
+                $("select#routes option").filter(function () {
+                    console.log("text: " + this.text + ":" + routeToSearch);
+                    return this.text == routeToSearch || this.text.indexOf(routeToSearch) > 0;
+                }).attr('selected', true).trigger("change");
+            }
 
             //Global shortcut listener
-            $(window).keydown(function (event) {
+            function genApiInterfaceMethod() {
+                var route = $.trim($("select#routes option:selected").text());
+                if (route === "") {
+                    alert("Please select a route first");
+                } else {
+                    window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>");
+                }
+            }
 
+            function genApiCall() {
+                var route = $.trim($("select#routes option:selected").text());
+                if (route === "") {
+                    alert("Please select a route first");
+                } else {
+                    window.open('v1/get_api_call?name=' + route + "&project_name=<%=project.getName()%>");
+                }
+            }
+
+            function addParams() {
+
+                var params = prompt("Type params comma sep", "param1,param2");
+                var paramArr = params.split(",");
+                for (var i = 0; i < paramArr.length; i++) {
+                    var paramRow = $("div#dParamRow");
+                    var oldVal = paramArr[i];
+                    var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/g, '_'));
+                    $(paramRow).find("input.iNames").attr('value', newVal);
+
+                    if (newVal.startsWith("is_")) {
+                        //TODO: Preselected boolean value
+                    }
+
+                    $("form#fParam").append(paramRow.html());
+                }
+
+            }
+
+            $(window).keydown(function (event) {
 
                 //F10
                 if (event.keyCode == 121) {
-                    var params = prompt("Type params comma sep", "param1,param2");
-                    var paramArr = params.split(",");
-                    for (var i = 0; i < paramArr.length; i++) {
-                        var paramRow = $("div#dParamRow");
-                        var oldVal = paramArr[i];
-                        var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/g, '_'));
-                        $(paramRow).find("input.iNames").attr('value', newVal);
-
-                        if (newVal.startsWith("is_")) {
-                            //TODO: Preselected boolean value
-                        }
-
-                        $("form#fParam").append(paramRow.html());
-                    }
-
+                    addParams();
                 }
 
                 //F7
@@ -218,40 +249,19 @@
 
 
                 if (event.keyCode == 112) {
-                    event.preventDefault();
-
-                    var routeToSearch = prompt("Search route");
-                    console.log("x:" + routeToSearch);
-                    $("select#routes option").filter(function () {
-                        console.log("text: " + this.text + ":" + routeToSearch);
-                        return this.text == routeToSearch || this.text.indexOf(routeToSearch) > 0;
-                    }).attr('selected', true).trigger("change");
-
+                    findRoute();
                 }
 
 
                 //F4
                 if (event.keyCode == 115) {
-
-                    var route = $.trim($("select#routes option:selected").text());
-                    if (route === "") {
-                        alert("Please select a route first");
-                    } else {
-                        window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>");
-                    }
-
+                    genApiInterfaceMethod();
                 }
 
                 //F8
                 if (event.keyCode == 119) {
 
-                    var route = $.trim($("select#routes option:selected").text());
-                    if (route === "") {
-                        alert("Please select a route first");
-                    } else {
-                        window.open('v1/get_api_call?name=' + route + "&project_name=<%=project.getName()%>");
-                    }
-
+                    genApiCall();
                 }
 
             });
@@ -322,63 +332,71 @@
             }
 
             //Editor shortcuts
+            function insertRandomImage() {
+
+                //TODO:
+                var keyword = prompt("Insert random image, enter keyword");
+                console.log(keyword);
+                if (keyword !== null) {
+
+                    $.ajax({
+                        type: "POST",
+                        beforeSend: function () {
+                            startLoading(false);
+                            dProgressChild.text("Searching for '" + keyword + "' image");
+                            dProgress.slideDown(100);
+                        },
+                        data: {
+                            keyword: keyword
+                        },
+                        url: "v1/search_images",
+                        success: function (data) {
+                            stopLoading(false);
+                            dProgress.slideUp(200);
+
+                            if (!data.error) {
+                                var entry = data.data.images[Math.floor(Math.random() * data.data.images.length)];
+
+                                var imageViewer = $("#image_viewer");
+                                imageViewer
+                                    .find("img")
+                                    .attr('src', entry.image_url);
+
+                                imageViewer.modal("show");
+
+                            } else {
+                                alert(data.message);
+                            }
+                        },
+                        error: function (e) {
+                            dProgress.slideUp(200);
+                            stopLoading(false);
+                            alert("Network error occurred, please check your connection");
+                        }
+                    });
+
+                }
+
+            }
+
+            function uploadImage() {
+                isAutoUpload = true;
+                $("input#iFile").trigger('click');
+            }
+
             editor.on('keyup', function () {
 
                 console.log(event.keyCode);
 
                 //Control + Alt+  O
                 if (event.keyCode === 120) {
-
-                    //TODO:
-                    var keyword = prompt("Insert random image, enter keyword");
-                    console.log(keyword);
-                    if (keyword !== null) {
-
-                        $.ajax({
-                            type: "POST",
-                            beforeSend: function () {
-                                startLoading(false);
-                                dProgressChild.text("Searching for '" + keyword + "' image");
-                                dProgress.slideDown(100);
-                            },
-                            data: {
-                                keyword: keyword
-                            },
-                            url: "v1/search_images",
-                            success: function (data) {
-                                stopLoading(false);
-                                dProgress.slideUp(200);
-
-                                if (!data.error) {
-                                    var entry = data.data.images[Math.floor(Math.random() * data.data.images.length)];
-
-                                    var imageViewer = $("#image_viewer");
-                                    imageViewer
-                                        .find("img")
-                                        .attr('src', entry.image_url);
-
-                                    imageViewer.modal("show");
-
-                                } else {
-                                    alert(data.message);
-                                }
-                            },
-                            error: function (e) {
-                                dProgress.slideUp(200);
-                                stopLoading(false);
-                                alert("Network error occurred, please check your connection");
-                            }
-                        });
-
-                    }
-
+                    insertRandomImage();
                 }
 
 
                 //Control + Alt + U
                 if (event.ctrlKey && event.altKey && event.keyCode === 85) {
-                    isAutoUpload = true;
-                    $("input#iFile").trigger('click');
+                    uploadImage();
                 }
 
                 //Control + Alt + I
@@ -1246,6 +1264,9 @@
                 findInDefaultResponse();
             });
 
+            $("a#aFindRoute").on('click', function () {
+
+            });
 
             //$("#image_viewer").modal("show");
 

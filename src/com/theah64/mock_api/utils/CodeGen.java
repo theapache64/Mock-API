@@ -40,6 +40,9 @@ public class CodeGen {
                 String dataType = getDataType(joModel, variableName);
                 if (dataType.equals("JSONArray") || dataType.equals("JSONObject")) {
 
+                    if (dataType.equals("JSONArray")) {
+                        System.out.println(variableName + ":" + joModel.getJSONArray(variableName));
+                    }
                     final Object joModel1 = dataType.equals("JSONArray") ? joModel.getJSONArray(variableName).get(0) : joModel.getJSONObject(variableName);
                     final boolean isJsonArray = dataType.equals("JSONArray");
 

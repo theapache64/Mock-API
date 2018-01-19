@@ -32,7 +32,7 @@
                     <%--Find route--%>
                     <li>
                         <a id="aFindRoute" href="#">Find Route
-                            <small class="text-muted menu_shortcut">(Ctrl + Alt + F)</small>
+                            <small class="text-muted menu_shortcut">(F1)</small>
                         </a>
                     </li>
 
@@ -150,8 +150,19 @@
             </li>
 
 
-            <%--<li><a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare</a></li>--%>
-            <li><a href="images.jsp?api_key=<%=project.getApiKey()%>">Images</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Images
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a id="aUploadImage"
+                           href="#">Upload Image
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + U)</small>
+                        </a>
+                    </li>
+                    <li><a href="images.jsp?api_key=<%=project.getApiKey()%>">Browse Images</a></li>
+                </ul>
+            </li>
 
 
             <%--More--%>
