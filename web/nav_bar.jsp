@@ -7,14 +7,112 @@
     <div class="container-fluid">
         <div class="navbar-header">
 
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="index.jsp?api_key=<%=project.getApiKey()%>">
                 <%=project.getName()%>
             </a>
 
         </div>
 
         <ul class="nav navbar-nav">
-            <li><a href="index.jsp?api_key=<%=project.getApiKey()%>"> Home </a></li>
+
+
+            <%--File--%>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">File
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+
+                    <%--Find in default response--%>
+                    <li>
+                        <a id="aFindInDefRes" href="#">Find In Default Response
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + F)</small>
+                        </a>
+                    </li>
+
+                    <%--Find route--%>
+                    <li>
+                        <a id="aFindRoute" href="#">Find Route
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + F)</small>
+                        </a>
+                    </li>
+
+                    <%--Save Route--%>
+                    <li>
+                        <a id="aSaveRoute" href="#">Save Route
+                            <small class="text-muted menu_shortcut">(F7)</small>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </li>
+
+            <%--Insert--%>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Insert
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+
+                    <li>
+                        <a id="aGenRandomText" href="#">Random Text
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + R)</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="aDefSucResp" href="#">Default Success Response
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + N)</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="aDefErrResp" href="#">Default Error Response
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + E)</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="aDuplicate" href="#">Duplicate
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + D)</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="aJsonKeyValue" href="#">JSON Key-Value
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + S)</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="aRandomImageURL" href="#">Random Image URL
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + I)</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="aAddParams" href="#">Add Parameters
+                            <small class="text-muted menu_shortcut">(F10)</small>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <%--Edit--%>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Edit
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+
+                    <li>
+                        <a id="aFormatResponse" href="#">Format Response
+                            <small class="text-muted menu_shortcut">(Ctrl + Alt + L)</small>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
 
             <%--Generate--%>
             <li class="dropdown">
@@ -23,29 +121,40 @@
                 <ul class="dropdown-menu">
 
                     <li>
+                        <a id="aPojo" target="_blank"
+                           href="#">POJO <small class="text-muted menu_shortcut">(Ctrl + Alt + M)</small></a>
+                    </li>
+
+                    <li>
+                        <a id="aAPIInterfaceMethod" target="_blank"
+                           href="#">API Interface Method <small class="text-muted menu_shortcut">(F4)</small></a></a>
+                    </li>
+
+                    <li>
+                        <a id="aAPICall" target="_blank"
+                           href="#">API Call <small class="text-muted menu_shortcut">(F8)</small></a></a>
+                    </li>
+
+                    <li>
                         <a target="_blank"
                            href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
-                    </li>
-                    <li>
-                        <a id="aGenRandomText" href="#">Random Text
-                            <small class="text-muted menu_shortcut">(Ctrl + Alt + R)</small>
-                        </a>
                     </li>
 
                 </ul>
             </li>
 
 
-            <%=isHomePage ? "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#shortcuts\">Shortcuts</a></li>" : "" %>
+
             <%--<li><a href="compare.jsp?api_key=<%=project.getApiKey()%>">Compare</a></li>--%>
             <li><a href="images.jsp?api_key=<%=project.getApiKey()%>">Images</a></li>
 
 
             <%--More--%>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">More
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu">
+                    <%=isHomePage ? "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#shortcuts\">Shortcuts</a></li>" : "" %>
                     <li><a href="donate_tinify_key.jsp?api_key=<%=project.getApiKey()%>">Donate Tinify Key</a></li>
                 </ul>
             </li>
