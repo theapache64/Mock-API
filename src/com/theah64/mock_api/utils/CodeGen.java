@@ -38,12 +38,16 @@ public class CodeGen {
 
                 final String variableName = (String) iterator.next();
                 String dataType = getDataType(joModel, variableName);
+
                 if (dataType.equals("JSONArray") || dataType.equals("JSONObject")) {
 
-                    if (dataType.equals("JSONArray")) {
-                        System.out.println(variableName + ":" + joModel.getJSONArray(variableName));
+                    Object joModel1 = null;
+                    if (dataType.equals("JSONArray") && joModel.getJSONArray(variableName).length() == 0) {
+                        joModel1 = new JSONObject();
+                    } else {
+                        joModel1 = dataType.equals("JSONArray") ? joModel.getJSONArray(variableName).get(0) : joModel.getJSONObject(variableName);
                     }
-                    final Object joModel1 = dataType.equals("JSONArray") ? joModel.getJSONArray(variableName).get(0) : joModel.getJSONObject(variableName);
+
                     final boolean isJsonArray = dataType.equals("JSONArray");
 
                     //Capital first letter
