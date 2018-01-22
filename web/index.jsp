@@ -332,9 +332,8 @@
             }
 
             //Editor shortcuts
-            function insertRandomImage() {
+            function insertGoogleImages() {
 
-                //TODO:
                 var keyword = prompt("Insert random image, enter keyword");
                 console.log(keyword);
                 if (keyword !== null) {
@@ -384,13 +383,35 @@
                 $("input#iFile").trigger('click');
             }
 
+            function insertPicsumImages() {
+                var dimen = prompt("Enter dimension", "500x500");
+                dimen = dimen.split("x");
+                if (dimen.length === 2) {
+
+                    var imgCount = prompt("Enter number of images", "1");
+                    var imageUrls = "";
+                    for (var j = 0; j < imgCount; j++) {
+                        var min = 1;
+                        var max = 1084;
+                        var imageId = Math.floor(Math.random() * (max - min + 1)) + min;
+                        var imageUrl = "https://picsum.photos/" + dimen[0] + "/" + dimen[1] + "/?image=" + imageId;
+                        imageUrls += '"' + imageUrl + '",';
+                    }
+
+                    editor.replaceSelection(imageUrls.substring(0, imageUrls.length - 1));
+
+                } else {
+                    alert("Invalid dimension format " + dimen);
+                }
+            }
+
             editor.on('keyup', function () {
 
                 console.log(event.keyCode);
 
                 //Control + Alt+  O
                 if (event.keyCode === 120) {
-                    insertRandomImage();
+                    insertGoogleImages();
                 }
 
 
@@ -401,26 +422,7 @@
 
                 //Control + Alt + I
                 if (event.ctrlKey && event.altKey && event.keyCode === 73) {
-                    var dimen = prompt("Enter dimension", "500x500");
-                    dimen = dimen.split("x");
-                    if (dimen.length === 2) {
-
-                        var imgCount = prompt("Enter number of images", "1");
-                        var imageUrls = "";
-                        for (var j = 0; j < imgCount; j++) {
-                            var min = 1;
-                            var max = 1084;
-                            var imageId = Math.floor(Math.random() * (max - min + 1)) + min;
-                            var imageUrl = "https://picsum.photos/" + dimen[0] + "/" + dimen[1] + "/?image=" + imageId;
-                            imageUrls += '"' + imageUrl + '",';
-                        }
-
-                        editor.replaceSelection(imageUrls.substring(0, imageUrls.length - 1));
-
-                    } else {
-                        alert("Invalid dimension format " + dimen);
-                    }
-
+                    insertPicsumImages();
                 }
 
 
