@@ -405,6 +405,95 @@
                 }
             }
 
+            function generatePOJO() {
+                var selection = editor.getSelection();
+
+                if (selection.length > 0) {
+
+                    var isRetrofitModel = confirm("Is this a retrofit model?");
+
+                    $("input#iJoString").val(selection);
+                    $("input#iIsRetrofitModel").val(isRetrofitModel);
+                    $("input#iRouteName").val($("input#route").val());
+                    $("form#fJsonToModel").submit();
+
+                }
+            }
+
+            function insertSuccessResponse() {
+                var successResponse = '<%=project.getDefaultSuccessResponse().replaceAll("[\r\n]+", " ")%>';
+
+                if (successResponse.indexOf("SUCCESS_MESSAGE") !== -1) {
+                    var successMsg = prompt("Success message", "This is a sample success message");
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse.replace('SUCCESS_MESSAGE', successMsg)), undefined, 4));
+                } else {
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse), undefined, 4));
+                }
+            }
+
+            function insertErrorResponse() {
+
+                var errorResponse = '<%=project.getDefaultErrorResponse().replaceAll("[\r\n]+", " ")%>';
+
+                if (errorResponse.indexOf("ERROR_MESSAGE") != -1) {
+                    var errorMsg = prompt("Error message", "This is a sample error message");
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse.replace('ERROR_MESSAGE', errorMsg)), undefined, 4));
+                } else {
+                    editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse), undefined, 4));
+                }
+
+            }
+
+            function insertKeyValue() {
+
+                var key = prompt("Key for the object");
+                if (key) {
+                    var value = prompt("Value for " + key);
+                    //check if the data int or not
+                    editor.replaceSelection('"' + key + '":' + (isNaN(value) ? '"' + value + '"' : value));
+                } else {
+                    alert("Can't accept empty key");
+                }
+
+            }
+
+            function generateDuplicate() {
+
+                var selection = editor.getSelection();
+
+                if (selection.length > 0) {
+
+                    var n = prompt("Number of nodes? ", 1);
+
+                    if (n) {
+                        var builder = "";
+                        var temp = selection;
+
+                        var isIntFound = false;
+
+                        for (var i = 1; i < n; i++) {
+                            temp = temp.replace(/\.*\((\d+)\)\.*/g, function (fullMatch, n) {
+                                isIntFound = true;
+                                return "(" + (Number(n) + 1) + ")";
+                            });
+                            builder += temp + "\n";
+                        }
+
+
+                        if (isIntFound) {
+                            selection = selection.replace(/\(/g, "");
+                            selection = selection.replace(/\)/g, "");
+
+                            builder = builder.replace(/\(/g, "");
+                            builder = builder.replace(/\)/g, "");
+                        }
+
+                        editor.replaceSelection(selection + "\n" + builder);
+                    }
+                }
+                
+            }
+
             editor.on('keyup', function () {
 
                 console.log(event.keyCode);
@@ -436,134 +525,31 @@
 
                 //Control + Alt + M
                 if (event.ctrlKey && event.altKey && event.keyCode === 77) {
-
-                    var selection = editor.getSelection();
-
-                    if (selection.length > 0) {
-
-                        var isRetrofitModel = confirm("Is this a retrofit model?");
-
-                        /**
-                         * <input id="iJoString" name="jo_string"/>
-                         <input id="iIsRetrofitModel" name="is_retrofit_model"/>
-                         <input id="iRouteName" name="route_name"/>
-                         */
-
-                        $("input#iJoString").val(selection);
-                        $("input#iIsRetrofitModel").val(isRetrofitModel);
-                        $("input#iRouteName").val($("input#route").val());
-                        $("form#fJsonToModel").submit();
-
-                        /*$.ajax({
-                         type: "POST",
-                         beforeSend: function () {
-                         startLoading(true);
-                         },
-                         headers: {
-                         "Authorization": '
-                        <%=project.getApiKey()%>'
-                         },
-                         data: {
-                         jo_string: selection,
-                         is_retrofit_model: isRetrofitModel,
-                         route_name: $("input#route").val()
-                         },
-                         url: "json_to_model_engine.jsp",
-                         success: function (data) {
-                         var newWindow = window.open();
-                         newWindow.document.write(data);
-                         },
-                         error: function () {
-                         stopLoading(true);
-                         $(resultDiv).addClass('alert-danger').removeClass('alert-success');
-                         $(resultDiv).html("<strong>Error! </strong> Please check your connection");
-                         $(resultDiv).show();
-                         }
-                         });*/
-
-
-                    }
-
+                    generatePOJO();
                 }
 
-                if (event.ctrlKey && event.altKey && event.keyCode == 76) {
+                if (event.ctrlKey && event.altKey && event.keyCode === 76) {
                     formatJSON();
                 }
 
 
-                if (event.ctrlKey && event.altKey && event.keyCode == 78) {
-
-                    var successResponse = '<%=project.getDefaultSuccessResponse().replaceAll("[\r\n]+", " ")%>';
-
-                    if (successResponse.indexOf("SUCCESS_MESSAGE") != -1) {
-                        var successMsg = prompt("Success message", "This is a sample success message");
-                        editor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse.replace('SUCCESS_MESSAGE', successMsg)), undefined, 4));
-                    } else {
-                        editor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse), undefined, 4));
-                    }
+                if (event.ctrlKey && event.altKey && event.keyCode === 78) {
+                    insertSuccessResponse();
                 }
 
 
-                if (event.ctrlKey && event.altKey && event.keyCode == 83) {
-                    //'S' Pressed along with control and alt
-                    var key = prompt("Key for the object");
-                    if (key) {
-                        var value = prompt("Value for " + key);
-                        //check if the data int or not
-                        editor.replaceSelection('"' + key + '":' + (isNaN(value) ? '"' + value + '"' : value));
-                    } else {
-                        alert("Can't accept empty key");
-                    }
+                if (event.ctrlKey && event.altKey && event.keyCode === 83) {
+                    insertKeyValue();
                 }
 
 
-                if (event.ctrlKey && event.altKey && event.keyCode == 69) {
-
-                    var errorResponse = '<%=project.getDefaultErrorResponse().replaceAll("[\r\n]+", " ")%>';
-
-                    if (errorResponse.indexOf("ERROR_MESSAGE") != -1) {
-                        var errorMsg = prompt("Error message", "This is a sample error message");
-                        editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse.replace('ERROR_MESSAGE', errorMsg)), undefined, 4));
-                    } else {
-                        editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse), undefined, 4));
-                    }
+                if (event.ctrlKey && event.altKey && event.keyCode === 69) {
+                    insertErrorResponse();
                 }
 
                 //D
-                if (event.ctrlKey && event.altKey && event.keyCode == 68) {
-
-                    var selection = editor.getSelection();
-
-                    if (selection.length > 0) {
-
-                        var n = prompt("Number of nodes? ", 1);
-
-                        if (n) {
-                            var builder = "";
-                            var temp = selection;
-
-                            var isIntFound = false;
-
-                            for (var i = 1; i < n; i++) {
-                                temp = temp.replace(/\.*\((\d+)\)\.*/g, function (fullMatch, n) {
-                                    isIntFound = true;
-                                    return "(" + (Number(n) + 1) + ")";
-                                });
-                                builder += temp + "\n";
-                            }
-
-
-                            if (isIntFound) {
-                                selection = selection.replace(/\(/g, "");
-                                selection = selection.replace(/\)/g, "");
-
-                                builder = builder.replace(/\(/g, "");
-                                builder = builder.replace(/\)/g, "");
-                            }
-
-                            editor.replaceSelection(selection + "\n" + builder);
-                        }
-                    }
+                if (event.ctrlKey && event.altKey && event.keyCode === 68) {
+                    generateDuplicate();
                 }
 
             });
