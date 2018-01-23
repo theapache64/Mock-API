@@ -1060,7 +1060,10 @@
             });
 
             $("#fParam").on('click', 'a.aCloseParam', function () {
-                $(this).parent().parent().remove();
+                var childCount = $("form#fParam > div").length;
+                if (childCount > 1) {
+                    $(this).parent().parent().remove();
+                }
             });
 
 
