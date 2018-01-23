@@ -189,7 +189,7 @@
                 console.log("x:" + routeToSearch);
                 $("select#routes option").filter(function () {
                     console.log("text: " + this.text + ":" + routeToSearch);
-                    return this.text == routeToSearch || this.text.indexOf(routeToSearch) > 0;
+                    return this.text === routeToSearch || this.text.indexOf(routeToSearch) > 0;
                 }).attr('selected', true).trigger("change");
             }
 
@@ -234,32 +234,32 @@
             $(window).keydown(function (event) {
 
                 //F10
-                if (event.keyCode == 121) {
+                if (event.keyCode === 121) {
                     addParams();
                 }
 
                 //F7
-                if (event.keyCode == 118) {
+                if (event.keyCode === 118) {
                     $("button#bSubmit").click();
                 }
 
-                if (event.ctrlKey && event.altKey && event.keyCode == 70) {
+                if (event.ctrlKey && event.altKey && event.keyCode === 70) {
                     findInDefaultResponse();
                 }
 
 
-                if (event.keyCode == 112) {
+                if (event.keyCode === 112) {
                     findRoute();
                 }
 
 
                 //F4
-                if (event.keyCode == 115) {
+                if (event.keyCode === 115) {
                     genApiInterfaceMethod();
                 }
 
                 //F8
-                if (event.keyCode == 119) {
+                if (event.keyCode === 119) {
 
                     genApiCall();
                 }
@@ -276,7 +276,7 @@
 
             function findInDefaultResponse() {
                 var sValue = prompt("Search for response");
-                if (sValue == null || sValue == "") {
+                if (sValue === null || sValue === "") {
                     return;
                 }
 
@@ -307,7 +307,7 @@
                                 var routeName = $(this).text();
 
                                 $("select#routes option").filter(function () {
-                                    return this.text == routeName;
+                                    return this.text === routeName;
                                 }).attr('selected', true).trigger("change");
 
                                 $("div#search_result").modal("hide");
@@ -491,7 +491,7 @@
                         editor.replaceSelection(selection + "\n" + builder);
                     }
                 }
-                
+
             }
 
             editor.on('keyup', function () {
@@ -653,7 +653,7 @@
 
                 var selIndex = $(this).prop('selectedIndex');
 
-                if (selIndex != 0) {
+                if (selIndex !== 0) {
 
                     var selOption = $(this).find(":selected");
                     var route = $.trim(selOption.text());
@@ -1010,7 +1010,7 @@
 
                 var randomWhat = $(this).serializeArray()[0].value;
                 var count = 1;
-                if (randomWhat == 'words' || randomWhat == 'paragraphs') {
+                if (randomWhat === 'words' || randomWhat === 'paragraphs') {
                     count = prompt("How many?", count);
                 }
 
@@ -1248,13 +1248,70 @@
                 e.stopPropagation();
             });
 
-            $("a#aFindInDefRes").on('click', function () {
-                findInDefaultResponse();
+            $("nav.navbar a").on('click', function () {
+                var clickedAnchorId = $(this).attr('id');
+
+                switch (clickedAnchorId) {
+                    case "aFindInDefRes":
+                        findInDefaultResponse();
+                        break;
+
+                    case "aFindRoute":
+                        findRoute();
+                        break;
+
+                    case "aSaveRoute":
+                        $("button#bSubmit").click();
+                        break;
+
+                    case "aGenRandomText":
+                        showRandomGenModal();
+                        break;
+
+                    case "aDefSucResp":
+                        insertSuccessResponse();
+                        break;
+
+                    case "aDefErrResp":
+                        insertErrorResponse();
+                        break;
+
+                    case "aDuplicate":
+                        generateDuplicate();
+                        break;
+
+                    case "aJsonKeyValue":
+                        insertKeyValue();
+                        break;
+
+                    case "aRandomImageURL":
+                        insertPicsumImages();
+                        break;
+                    case "aAddParams":
+                        addParams();
+                        break;
+
+                    case "aFormatResponse":
+                        formatJSON();
+                        break;
+                    case "aPojo":
+                        generatePOJO();
+                        break;
+                    case "aAPIInterfaceMethod":
+                        genApiInterfaceMethod();
+                        break;
+
+                    case "aAPICall":
+                        genApiCall();
+                        break;
+
+                    case "aUploadImage":
+                        uploadImage();
+                        break;
+
+                }
             });
 
-            $("a#aFindRoute").on('click', function () {
-
-            });
 
             //$("#image_viewer").modal("show");
 

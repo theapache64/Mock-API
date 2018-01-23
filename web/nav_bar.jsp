@@ -15,7 +15,6 @@
 
         <ul class="nav navbar-nav">
 
-
             <%--File--%>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">File
@@ -31,7 +30,7 @@
 
                     <%--Find route--%>
                     <li>
-                        <a id="aFindRoute" href="#">Find Route
+                        <a onclick="findRoute();" id="aFindRoute" href="#">Find Route
                             <small class="text-muted menu_shortcut">(F1)</small>
                         </a>
                     </li>
