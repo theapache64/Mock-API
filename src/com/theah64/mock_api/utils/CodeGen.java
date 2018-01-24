@@ -39,6 +39,7 @@ public class CodeGen {
                 final String variableName = (String) iterator.next();
                 String dataType = getDataType(joModel, variableName);
 
+
                 if (dataType.equals("JSONArray") || dataType.equals("JSONObject")) {
 
                     Object joModel1 = null;
@@ -184,12 +185,11 @@ public class CodeGen {
     private static String getDataType(final JSONObject joModel, String variableName) throws JSONException {
 
         final Object data = joModel.get(variableName);
-
         if (data instanceof Integer) {
             return "int";
         } else if (data instanceof Double) {
             return "double";
-        } else if (data instanceof String) {
+        } else if (data instanceof String || data.toString().equals("null")) {
             return "String";
         } else if (data instanceof Boolean) {
             return "boolean";

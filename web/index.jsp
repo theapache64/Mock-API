@@ -1252,6 +1252,7 @@
             });
 
             $("nav.navbar a").on('click', function () {
+
                 var clickedAnchorId = $(this).attr('id');
 
                 switch (clickedAnchorId) {
