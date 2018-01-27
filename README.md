@@ -16,3 +16,4 @@ A Web Application to build Mock API
 - Clear button shouldn't reload page
 - Add selection check to shortcuts
 - Image delete check - existing in routes.
+- Add bulk-edit params
