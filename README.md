@@ -9,7 +9,6 @@ A Web Application to build Mock API
 
 ### TODOs
 
-- Add toolbar menu for shortcuts (Insert like)
 - Add feature 'Download all class as zip' => Control + Alt + M
 - Add JSON error on validation -> control + alt + l
 - Add param documentation to F4
