@@ -231,7 +231,21 @@
 
             }
 
+            function genActCode() {
+                var route = $.trim($("select#routes option:selected").text());
+                if (route === "") {
+                    alert("Please select a route first");
+                } else {
+                    window.open('gen_activity_code.jsp?route_name=' + route + "&project_name=<%=project.getName()%>");
+                }
+            }
+
             $(window).keydown(function (event) {
+
+                //F2
+                if (event.keyCode === 113) {
+                    genActCode();
+                }
 
                 //F10
                 if (event.keyCode === 121) {

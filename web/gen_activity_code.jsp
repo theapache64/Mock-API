@@ -1,11 +1,8 @@
-<%@ page import="com.theah64.mock_api.database.Projects" %>
-<%@ page import="com.theah64.mock_api.servlets.JsonToModelEngine" %>
-<%@ page import="com.theah64.mock_api.utils.CodeGen" %>
+<%@ page import="com.theah64.mock_api.utils.ActivityCodeGen" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.webengine.utils.Request" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
-<%@ page import="org.json.JSONException" %>
-<%@ page import="com.theah64.mock_api.utils.ActivityCodeGen" %>
+<%@ page import="java.sql.SQLException" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -17,33 +14,34 @@
 
 <%
     Form form = new Form(request, new String[]{
-            ActivityCodeGen.KEY_API_KEY,
-            ActivityCodeGen.KEY_ROUTE_ID
+            ActivityCodeGen.KEY_PROJECT_NAME,
+            ActivityCodeGen.KEY_ROUTE_NAME
     });
 
 
     try {
-
-        if (!form.isSubmitted()) {
-            throw new Request.RequestException("Bad Request");
-        }
-
         form.isAllRequiredParamsAvailable();
-
     } catch (Request.RequestException e) {
         e.printStackTrace();
         StatusResponse.redirect(response, "Error", e.getMessage());
         return;
     }
 
-    final String apiKey = form.getString(ActivityCodeGen.KEY_API_KEY);
-    final String routeId = form.getString(ActivityCodeGen.KEY_ROUTE_ID);
+    final String projectName = form.getString(ActivityCodeGen.KEY_PROJECT_NAME);
+    final String routeName = form.getString(ActivityCodeGen.KEY_ROUTE_NAME);
 
-    final ActivityCodeGen.ActivityCode activityCode = ActivityCodeGen.generate(apiKey, routeId);
+    final ActivityCodeGen.ActivityCode activityCode;
+    try {
+        activityCode = ActivityCodeGen.generate(projectName, routeName);
+    } catch (SQLException | Request.RequestException e) {
+        e.printStackTrace();
+        StatusResponse.redirect(response, "Error", e.getMessage());
+        return;
+    }
 %>
 <html>
 <head>
-    <title><%=activityCode.getRouteName() +" / "+ activityCode.getProjectName()%>
+    <title><%=routeName + " / " + projectName%>
     </title>
     <%@include file="common_headers.jsp" %>
 
@@ -92,36 +90,7 @@
     </script>
 </head>
 <body>
-<%--
 
-    private static final String KEY_CODE = "code";
-    private static final String KEY_FROM_DATE = "from_date";
-    private static final String KEY_TO_DATE = "to_date";
-    private static final String KEY_TYPE = "type";
-
-    @Override
-    protected Call<BaseAPIResponse<GeneralLedgerReportResponse>> getCall(APIInterface apiInterface) {
-        return apiInterface.getGeneralLedgerReport(
-                App.getCompany().getApiKey(),
-                getString(KEY_CODE),
-                getString(KEY_FROM_DATE),
-                getString(KEY_TO_DATE),
-                getString(KEY_TYPE)
-        );
-    }
-
-
-    public static void start(Context context, String pageTitle, String code, String fromDate, String toDate, String type, String[] ghostKeys) {
-        final Intent i = new Intent(context, GeneralLedgerReportResultActivity.class);
-        i.putExtra(KEY_GHOST_KEYS, ghostKeys);
-        i.putExtra(KEY_CODE, code);
-        i.putExtra(KEY_FROM_DATE, fromDate);
-        i.putExtra(KEY_TO_DATE, toDate);
-        i.putExtra(KEY_TYPE, type);
-        context.startActivity(i);
-    }
-
---%>
-<textarea id="jCode"><%=output%></textarea>
+<textarea id="jCode"><%=activityCode.toString()%></textarea>
 </body>
 </html>

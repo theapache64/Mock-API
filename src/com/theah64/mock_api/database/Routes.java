@@ -214,10 +214,11 @@ public class Routes extends BaseTable<Route> {
                 e.printStackTrace();
             }
         }
+
         manageError(error);
 
         if (route == null) {
-            throw new SQLException("No response found for " + route);
+            throw new SQLException("No response found for " + projectName + ":" + routeName);
         }
         return route;
     }

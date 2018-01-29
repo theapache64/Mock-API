@@ -160,7 +160,7 @@ public class CodeGen {
         return Inflector.getInstance().singularize(modelName);
     }
 
-    private static String toGetterName(String dataType, String input) {
+    public static String toGetterName(String dataType, String input) {
         return (dataType.equals("boolean") ? "is" : "get") + getFirstCharUppercase(input) + "()";
     }
 
