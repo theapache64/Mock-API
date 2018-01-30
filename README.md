@@ -1,6 +1,6 @@
 # Mock-API
 
-A Web Application to build Mock API
+A web based tool to save and retrieve JSONs intelligently
 
 #demo
 
