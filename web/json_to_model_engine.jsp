@@ -43,7 +43,7 @@
     final boolean isRetrofitModel = form.getBoolean(JsonToModelEngine.KEY_IS_RETROFIT_MODEL);
 
     final String apiKey = form.getString("Authorization");
-    System.out.println(apiKey);
+
     final String packageName = Projects.getInstance().get(Projects.COLUMN_API_KEY, apiKey, Projects.COLUMN_PACKAGE_NAME, false);
     String output = null;
     try {

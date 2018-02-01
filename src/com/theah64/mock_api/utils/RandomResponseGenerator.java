@@ -136,13 +136,13 @@ public class RandomResponseGenerator {
                         .replaceAll("\\{", "\\\\{")
                         .replaceAll("\\}", "\\\\}");
 
-                System.out.println("SP:" + splitter);
+
 
                 final String[] jsonRespArr = jsonResp.split(
                         splitter
                 );
 
-                System.out.println(jsonRespArr.length);
+
                 final StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < jsonRespArr.length; i++) {
                     final String aJsonRespArr = jsonRespArr[i];

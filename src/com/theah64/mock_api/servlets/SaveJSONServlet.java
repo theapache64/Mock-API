@@ -97,7 +97,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
                     final String paramDescription = paramDescriptions[i];
 
                     boolean isRequired = paramIsRequired[i].equals("true");
-                    System.out.println(paramName + ":" + paramIsRequired[i]);
+
 
                     if (!paramName.trim().isEmpty()) {
                         params.add(new Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired));

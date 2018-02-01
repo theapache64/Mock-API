@@ -37,8 +37,8 @@
 
     try {
         oldRouteUpdate = RouteUpdates.getInstance().getSecondLast(newRouteUpdate.getId(), RouteUpdates.COLUMN_ROUTE_ID, newRouteUpdate.getRouteId());
-        System.out.println("New:" + newRouteUpdate);
-        System.out.println("Old:" + oldRouteUpdate);
+
+
     } catch (QueryBuilderException | SQLException e) {
         e.printStackTrace();
     }

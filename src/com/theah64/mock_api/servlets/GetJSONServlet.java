@@ -68,7 +68,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
         if (route.getDelay() > 0) {
             try {
-                System.out.println("Sleep for " + route.getDelay() + "ms");
+
                 Thread.sleep(route.getDelay() * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();

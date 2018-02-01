@@ -281,7 +281,7 @@ public class Routes extends BaseTable<Route> {
             final PreparedStatement ps = con.prepareStatement(query);
 
             String r = route.getDefaultResponse() == null ? get(COLUMN_ID, route.getId(), COLUMN_DEFAULT_RESPONSE, true) : route.getDefaultResponse();
-            System.out.println("R is : " + r);
+
             ps.setString(1, r);
             ps.setString(2, route.getDescription());
             ps.setBoolean(3, route.isSecure());

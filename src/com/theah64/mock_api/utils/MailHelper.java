@@ -27,10 +27,10 @@ public class MailHelper {
             throw new IllegalArgumentException("Gmail username and password shouldn't be null");
         }
 
-        System.out.println("Sending email to " + to);
 
-        System.out.println("u:" + gmailUsername);
-        System.out.println("p:" + gmailPassword);
+
+
+
 
 
         final Properties properties = new Properties();

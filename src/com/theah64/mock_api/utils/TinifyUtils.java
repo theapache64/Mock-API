@@ -43,7 +43,7 @@ public class TinifyUtils {
                 if (isCompress) {
 
                     try {
-                        System.out.println("Download link : " + imageUrl);
+
                         final String tempCmpPath = filePath + "_cmp";
                         //Tinify.fromUrl("https://images-na.ssl-images-amazon.com/images/I/91-k8Ex-KCL._RI_SX200_.jpg").toFile(tempCmpPath);
                         Tinify.fromUrl(imageUrl).toFile(tempCmpPath);
@@ -66,7 +66,7 @@ public class TinifyUtils {
 
                             //Changing image url if it's from external website
                             if (!imageUrl.startsWith(WebEngineConfig.getBaseURL())) {
-                                System.out.println("From external, changing to self-host");
+
 
                                 String fileDownloadPath = imageFile.getAbsolutePath().split("/html")[1];
                                 String newImageUrl = (
@@ -80,7 +80,7 @@ public class TinifyUtils {
                             imagesTable.update(image1);
                         } else {
                             //Delete the file
-                            System.out.println("Deleted compressed file");
+
                             imageFile.delete();
                         }
 

@@ -69,7 +69,7 @@ public class CodeGen2 {
                 .append(constructorInitializer).append("\n\t}");
 
 
-        System.out.println(pojoBuilder);
+
         save(pojoBuilder.toString());
     }
 

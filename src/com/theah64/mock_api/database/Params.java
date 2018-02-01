@@ -64,8 +64,6 @@ public class Params extends BaseTable<Param> {
             ps1.setString(5, param.getDefaultValue());
             ps1.setString(6, param.getDescription());
             ps1.executeUpdate();
-
-            System.out.println("Added: " + param.toStringAll());
         }
 
 
@@ -85,7 +83,7 @@ public class Params extends BaseTable<Param> {
             ps1.setString(6, param.getName());
             ps1.executeUpdate();
 
-            System.out.println("Updated: " + param.toStringAll());
+
         }
 
 
@@ -166,11 +164,11 @@ public class Params extends BaseTable<Param> {
             }
         }
 
-        System.out.println("---------------------------------");
-        System.out.println("OLDPARAMS: " + oldParams);
-        System.out.println("NEWPARAMS: " + newParams);
-        System.out.println("UPDATEPARAMS: " + updatedParams);
-        System.out.println("---------------------------------");
+
+
+
+
+
 
         java.sql.Connection con = Connection.getConnection();
 
