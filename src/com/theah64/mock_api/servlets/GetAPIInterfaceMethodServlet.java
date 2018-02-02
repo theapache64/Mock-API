@@ -90,7 +90,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                         hasFileParam = true;
                         codeBuilder.append(String.format("\n\t@Part MultipartBody.Part %s,", CodeGen.toCamelCase(param.getName())));
                     } else {
-                        codeBuilder.append(String.format("\n\t@Query(\"%s\") %s %s,", param, getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
+                        codeBuilder.append(String.format("\n\t@Query(\"%s\") %s %s %s,", param.getName(), param.isRequired() ? "@NotNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
                     }
                 }
 
