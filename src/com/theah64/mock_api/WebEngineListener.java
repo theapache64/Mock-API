@@ -17,7 +17,6 @@ public class WebEngineListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        
         WebEngineConfig.init("jdbc/mock_api", "jdbc/mock_api", false, "http://localhost:8080/mock_api",
                 "http://theapache64.com/mock_api");
 

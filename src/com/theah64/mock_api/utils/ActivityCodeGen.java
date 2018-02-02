@@ -67,7 +67,7 @@ public class ActivityCodeGen {
             final String camelCase = CodeGen.toCamelCase(param.getName());
             activityCallSignatureBuilder.append(", String ").append(camelCase);
             activityCallBodyBuilder.append(String.format("\n\ti.putExtra(%s, %s);", constName, camelCase));
-            apiCall.append(String.format("\n\t\t%s(%s),", param.isRequired() ? "getStringOrThrow" : "getStringOrThrow", constName));
+            apiCall.append(String.format("\n\t\t%s(%s),", param.isRequired() ? "getStringOrThrow" : "getString", constName));
         }
 
         String apiCallString = apiCall.toString();
