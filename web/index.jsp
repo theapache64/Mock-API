@@ -1265,6 +1265,25 @@
                 e.stopPropagation();
             });
 
+            function addParamsFromURL() {
+
+                var url = prompt("Enter your URL", "http://google.com/login?username=myUsername&password=1234");
+                //http://google.com/login?username=myUsername&password=1234
+                var params = url.substr(url.indexOf("?") + 1);
+                var keyValues = params.split("&");
+                $.each(keyValues, function (key, val) {
+
+                    var paramName = val.split("=")[0];
+
+                    var paramRow = $("div#dParamRow");
+                    console.log(paramName);
+                    $(paramRow).find("input.iNames").attr('value',paramName);
+                    $("form#fParam").append(paramRow.html());
+
+                });
+
+            }
+
             $("nav.navbar a").on('click', function () {
 
                 var clickedAnchorId = $(this).attr('id');
@@ -1272,6 +1291,10 @@
                 switch (clickedAnchorId) {
                     case "aFindInDefRes":
                         findInDefaultResponse();
+                        break;
+
+                    case "aParamFromURL":
+                        addParamsFromURL();
                         break;
 
                     case "aFindRoute":

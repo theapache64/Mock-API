@@ -145,6 +145,10 @@
                            href="documentation.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation</a>
                     </li>
 
+                    <li>
+                        <a id="aParamFromURL" href="#">Params From URL</a>
+                    </li>
+
                 </ul>
             </li>
 
