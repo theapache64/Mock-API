@@ -7,6 +7,7 @@ import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.database.querybuilders.SelectQueryBuilder;
 import com.theah64.webengine.database.querybuilders.UpdateQueryBuilder;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -50,17 +51,32 @@ public class Images extends BaseTable<Image> {
     public List<Image> getAll(String whereColumn, String whereColumnValue) throws QueryBuilderException, SQLException {
         return new SelectQueryBuilder<>(
                 getTableName(),
-                rs -> new Image(
-                        rs.getString(COLUMN_ID),
-                        rs.getString(COLUMN_PROJECT_ID),
-                        rs.getString(COLUMN_TINIFY_KEY_ID),
-                        rs.getString(COLUMN_IMAGE_URL),
-                        rs.getString(COLUMN_THUMB_URL),
-                        rs.getString(COLUMN_FILE_PATH),
-                        rs.getBoolean(COLUMN_IS_COMPRESSED)),
+                this::getImageFromResultSet,
                 new String[]{COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED},
                 new String[]{whereColumn}, new String[]{whereColumnValue}, SelectQueryBuilder.UNLIMITED, COLUMN_ID + " DESC"
         ).getAll();
+    }
+
+    @Override
+    public Image get(String column1, String value1, String column2, String value2) throws QueryBuilderException, SQLException {
+        return new SelectQueryBuilder<Image>(
+                getTableName(),
+                this::getImageFromResultSet,
+                new String[]{COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED},
+                new String[]{column1, column2}, new String[]{value1, value2}, "1", COLUMN_ID + " DESC"
+
+        ).get();
+    }
+
+    private Image getImageFromResultSet(ResultSet rs) throws SQLException {
+        return new Image(
+                rs.getString(COLUMN_ID),
+                rs.getString(COLUMN_PROJECT_ID),
+                rs.getString(COLUMN_TINIFY_KEY_ID),
+                rs.getString(COLUMN_IMAGE_URL),
+                rs.getString(COLUMN_THUMB_URL),
+                rs.getString(COLUMN_FILE_PATH),
+                rs.getBoolean(COLUMN_IS_COMPRESSED));
     }
 
     @Override
