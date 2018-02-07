@@ -11,7 +11,6 @@ A web based tool to save and retrieve JSONs intelligently
 
 - Add feature 'Download all class as zip' => Control + Alt + M
 - Add JSON error on validation -> control + alt + l
-- Add param documentation to F4
 - Clear button shouldn't reload page
 - Add selection check to shortcuts
 - Image delete check - existing in routes.
