@@ -49,33 +49,22 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
         final String responseClass = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response";
 
         final Route route = Routes.getInstance().get(projectName, routeName);
+
         if (route != null) {
+
             getHttpServletResponse().setContentType("text/plain");
 
-            /**
-             * @POST("add_address") Call<BaseAPIResponse<AddAddressResponse>> editAddress(
-             @Header(KEY_AUTHORIZATION) String apiKey,
-             @Query("address_id") String addressId,
-             @Query("name") String name,
-             @Query("mobile") String mobile,
-             @Query("landmark") String landmark,
-             @Query("address") String address,
-             @Query("city") String city,
-             @Query("postal_code") String postalCode
-             );
-             */
             StringBuilder codeBuilder = new StringBuilder();
-
+            final StringBuilder descriptionBuilder = new StringBuilder();
 
             if (route.getDescription() != null && !route.getDescription().trim().isEmpty()) {
-                codeBuilder.append("/**\n*").append(route.getDescription()).append("\n*/\n");
+                descriptionBuilder.append("* ").append(route.getDescription()).append("\n\n");
             }
 
 
-            //@POST("add_address") Call<BaseAPIResponse<AddAddressResponse>> editAddress(
-
+            final String returnClassName = CodeGen.getFromFirstCapCharacter(SlashCutter.cut(responseClass));
             codeBuilder.append(String.format("@%s(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", route.getMethod(), route.getName(),
-                    CodeGen.getFromFirstCapCharacter(SlashCutter.cut(responseClass)), SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
+                    returnClassName, SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
 
             if (route.isSecure()) {
                 codeBuilder.append("\n@Header(KEY_AUTHORIZATION) String apiKey,");
@@ -86,9 +75,14 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
                 final List<Param> params = route.getParams();
                 for (final Param param : params) {
+
+                    final String camelCaseParamName = CodeGen.toCamelCase(param.getName());
+                    descriptionBuilder.append("* @param ").append(camelCaseParamName).append(" <p>").append(param.getDescription()).append("</p>\n");
+
                     if (param.getDataType().equals(Param.DATA_TYPE_FILE)) {
                         hasFileParam = true;
-                        codeBuilder.append(String.format("\n\t@Part MultipartBody.Part %s,", CodeGen.toCamelCase(param.getName())));
+
+                        codeBuilder.append(String.format("\n\t@Part MultipartBody.Part %s,", camelCaseParamName));
                     } else {
                         codeBuilder.append(String.format("\n\t@Query(\"%s\") %s %s %s,", param.getName(), param.isRequired() ? "@NotNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
                     }
@@ -97,12 +91,21 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                 codeBuilder = new StringBuilder(codeBuilder.substring(0, codeBuilder.length() - 1));
             }
 
+            descriptionBuilder.append("* @return ").append(returnClassName);
+
             if (hasFileParam) {
                 final int index = codeBuilder.indexOf("@" + route.getMethod());
                 codeBuilder.insert(index, "@Multipart\n");
             }
 
             codeBuilder.append(");");
+
+            //Adding multiline comment
+            descriptionBuilder.insert(0, "/**\n");
+            descriptionBuilder.append("\n*/\n");
+
+            //description
+            codeBuilder.insert(0, descriptionBuilder.toString());
 
             getWriter().write(codeBuilder.toString());
 

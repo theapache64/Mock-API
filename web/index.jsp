@@ -195,21 +195,27 @@
 
             //Global shortcut listener
             function genApiInterfaceMethod() {
-                var route = $.trim($("select#routes option:selected").text());
-                if (route === "") {
+
+                var selIndex = $("select#routes").prop('selectedIndex');
+
+                if (selIndex == 0) {
                     alert("Please select a route first");
                 } else {
+                    var route = $.trim($("select#routes option:selected").text());
                     window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>");
                 }
             }
 
             function genApiCall() {
-                var route = $.trim($("select#routes option:selected").text());
-                if (route === "") {
+
+                var selIndex = $("select#routes").prop('selectedIndex');
+                if (selIndex == 0) {
                     alert("Please select a route first");
                 } else {
+                    var route = $.trim($("select#routes option:selected").text());
                     window.open('v1/get_api_call?name=' + route + "&project_name=<%=project.getName()%>");
                 }
+
             }
 
             function addParams() {
@@ -221,21 +227,18 @@
                     var oldVal = paramArr[i];
                     var newVal = $.trim(oldVal.toLowerCase().replace(/(\s+)/g, '_'));
                     $(paramRow).find("input.iNames").attr('value', newVal);
-
-                    if (newVal.startsWith("is_")) {
-                        //TODO: Preselected boolean value
-                    }
-
                     $("form#fParam").append(paramRow.html());
                 }
 
             }
 
             function genActCode() {
-                var route = $.trim($("select#routes option:selected").text());
-                if (route === "") {
+
+                var selIndex = $("select#routes").prop('selectedIndex');
+                if (selIndex == 0) {
                     alert("Please select a route first");
                 } else {
+                    var route = $.trim($("select#routes option:selected").text());
                     window.open('gen_activity_code.jsp?route_name=' + route + "&project_name=<%=project.getName()%>");
                 }
             }
@@ -420,9 +423,10 @@
             }
 
             function generatePOJO() {
+
                 var selection = editor.getSelection();
 
-                if (selection.length > 0) {
+                if (selection.trim().length > 0) {
 
                     var isRetrofitModel = confirm("Is this a retrofit model?");
 
@@ -431,6 +435,8 @@
                     $("input#iRouteName").val($("input#route").val());
                     $("form#fJsonToModel").submit();
 
+                } else {
+                    alert("No JSON text selected!");
                 }
             }
 
@@ -504,6 +510,8 @@
 
                         editor.replaceSelection(selection + "\n" + builder);
                     }
+                } else {
+                    alert("Please select some text");
                 }
 
             }
@@ -1016,6 +1024,10 @@
             }
 
 
+            $("button#bGenRandomFromModel").on('click', function () {
+                $("#fRandom").submit();
+            });
+
             $("#fRandom").submit(function (e) {
                 e.preventDefault();
 
@@ -1277,7 +1289,7 @@
 
                     var paramRow = $("div#dParamRow");
                     console.log(paramName);
-                    $(paramRow).find("input.iNames").attr('value',paramName);
+                    $(paramRow).find("input.iNames").attr('value', paramName);
                     $("form#fParam").append(paramRow.html());
 
                 });
@@ -1289,6 +1301,7 @@
                 var clickedAnchorId = $(this).attr('id');
 
                 switch (clickedAnchorId) {
+
                     case "aFindInDefRes":
                         findInDefaultResponse();
                         break;
@@ -1338,6 +1351,7 @@
                     case "aPojo":
                         generatePOJO();
                         break;
+
                     case "aAPIInterfaceMethod":
                         genApiInterfaceMethod();
                         break;
@@ -1811,6 +1825,9 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="bGenRandomFromModel" type="button" class="btn btn-primary" data-dismiss="modal">
+                        Generate
+                    </button>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
 import com.theah64.webengine.database.BaseTable;
 import com.theah64.webengine.database.Connection;
+import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -339,7 +340,7 @@ public class Routes extends BaseTable<Route> {
     }
 
     @Override
-    public Route get(String column1, String value1, String column2, String value2) {
+    public Route get(String column1, String value1, String column2, String value2) throws QueryBuilderException, SQLException {
         return super.get(column1, value1, column2, value2);
     }
 }

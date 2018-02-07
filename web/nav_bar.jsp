@@ -15,6 +15,10 @@
 
         <ul class="nav navbar-nav">
 
+            <%
+                if (isHomePage) {
+            %>
+
             <%--File--%>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">File
@@ -45,6 +49,7 @@
 
                 </ul>
             </li>
+
 
             <%--Insert--%>
             <li class="dropdown">
@@ -120,21 +125,21 @@
                 <ul class="dropdown-menu">
 
                     <li>
-                        <a id="aPojo" target="_blank"
+                        <a id="aPojo"
                            href="#">POJO
                             <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + M)</small>
                         </a>
                     </li>
 
                     <li>
-                        <a id="aAPIInterfaceMethod" target="_blank"
+                        <a id="aAPIInterfaceMethod"
                            href="#">API Interface Method
                             <small class="text-muted menu_shortcut">(F4)</small>
                         </a>
                     </li>
 
                     <li>
-                        <a id="aAPICall" target="_blank"
+                        <a id="aAPICall"
                            href="#">API Call
                             <small class="text-muted menu_shortcut">(F8)</small>
                         </a>
@@ -166,6 +171,10 @@
                     <li><a href="images.jsp?api_key=<%=project.getApiKey()%>">Browse Images</a></li>
                 </ul>
             </li>
+
+            <%
+                }
+            %>
 
 
             <%--More--%>
