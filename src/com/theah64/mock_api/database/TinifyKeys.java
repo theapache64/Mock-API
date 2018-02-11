@@ -35,17 +35,12 @@ public class TinifyKeys extends BaseTable<TinifyKey> {
     }
 
     public TinifyKey getLeastUsedKey() throws QueryBuilderException, SQLException {
-        return new SelectQueryBuilder<TinifyKey>(getTableName(), new SelectQueryBuilder.Callback<TinifyKey>() {
-            @Override
-            public TinifyKey getNode(ResultSet rs) throws SQLException {
-                return new TinifyKey(
-                        rs.getString(COLUMN_ID),
-                        rs.getString(COLUMN_KEY),
-                        rs.getString(COLUMN_EMAIL),
-                        rs.getString(COLUMN_USAGE)
-                );
-            }
-        }, new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_EMAIL, COLUMN_USAGE},
+        return new SelectQueryBuilder<TinifyKey>(getTableName(), rs -> new TinifyKey(
+                rs.getString(COLUMN_ID),
+                rs.getString(COLUMN_KEY),
+                rs.getString(COLUMN_EMAIL),
+                rs.getString(COLUMN_USAGE)
+        ), new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_EMAIL, COLUMN_USAGE},
                 new String[]{COLUMN_IS_ACTIVE},
                 new String[]{TRUE},
                 "1",
