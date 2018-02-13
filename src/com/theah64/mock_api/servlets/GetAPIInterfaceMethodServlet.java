@@ -63,7 +63,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
 
             final String returnClassName = CodeGen.getFromFirstCapCharacter(SlashCutter.cut(responseClass));
-            codeBuilder.append(String.format("%s\n@%s(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", route.getMethod().equals("POST") ? "@FormUrlEncoded" : "", route.getMethod(), route.getName(),
+            codeBuilder.append(String.format("%s\n@%s(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", (route.getMethod().equals("POST") && !route.getParams().isEmpty()) ? "@FormUrlEncoded" : "", route.getMethod(), route.getName(),
                     returnClassName, SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
 
             if (route.isSecure()) {
