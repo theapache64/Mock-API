@@ -46,7 +46,7 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
 
         final String projectName = getStringParameter(KEY_PROJECT_NAME);
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
-        final String responseClass =  CodeGen.getFromFirstCapCharacter(SlashCutter.cut(CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response"));
+        final String responseClass = CodeGen.getFromFirstCapCharacter(SlashCutter.cut(CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response"));
 
         final Route route = Routes.getInstance().get(projectName, routeName);
         if (route != null) {
@@ -56,6 +56,10 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
 
             //Basic
             codeBuilder.append(String.format("RetrofitClient.getClient().create(APIInterface.class).%s(", SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
+
+            if (route.isSecure()) {
+                codeBuilder.append("App.getUser().getApiKey(),");
+            }
 
             //Building param map
             for (Param param : route.getParams()) {
@@ -78,17 +82,16 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
                 }
             }
 
-            if (!route.getParams().isEmpty()) {
+            if (!route.getParams().isEmpty() || route.isSecure()) {
                 //removing last comma
                 final String x = codeBuilder.toString().substring(0, codeBuilder.length() - 1);
                 codeBuilder = new StringBuilder(x);
             }
 
 
-
             codeBuilder.append(String.format("\n).enqueue(new CustomRetrofitCallback<BaseAPIResponse<%s>, %s>(this, R.string.Loading){", responseClass, responseClass));
             codeBuilder.append("\n\t").append("@Override");
-            codeBuilder.append("\n\t").append(String.format("protected void onSuccess(%s data) {", responseClass));
+            codeBuilder.append("\n\t").append(String.format("protected void onSuccess(final String message, %s data) {", responseClass));
             codeBuilder.append("\n\t}");
             codeBuilder.append("\n});");
             /*
