@@ -271,6 +271,7 @@
                         <input type="checkbox" id="iAllSmallRoutes"
                                name="<%=Projects.COLUMN_IS_ALL_SMALL_ROUTES%>" <%=project.isAllSmallRoutes() ? "checked" : "" %>
                         />
+
                         <label for="iAllSmallRoutes">Spelling inspector</label>
                     </div>
                 </div>

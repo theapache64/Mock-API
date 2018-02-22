@@ -14,3 +14,4 @@ A web based tool to save and retrieve JSONs intelligently
 - Clear button shouldn't reload page
 - Add selection check to shortcuts
 - Image delete check - existing in routes.
+- Index block
