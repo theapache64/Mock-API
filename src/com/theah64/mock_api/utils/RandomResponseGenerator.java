@@ -28,22 +28,22 @@ public class RandomResponseGenerator {
             //random number
             new RandomResponse("{randomNumber (\\d+)}") {
                 @Override
-                String getValue(int count) {
-                    return RandomString.getRandomNumber(count);
+                String getValue(String count) {
+                    return RandomString.getRandomNumber(Integer.parseInt(count));
                 }
             },
 
             //random name
             new RandomResponse("{randomName}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return loremIpsum.getName();
                 }
             },
 
             new RandomResponse("{randomFirstName}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return loremIpsum.getFirstName();
                 }
             },
@@ -51,21 +51,21 @@ public class RandomResponseGenerator {
 
             new RandomResponse("{randomPhone}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return loremIpsum.getPhone();
                 }
             },
 
             new RandomResponse("{randomCity}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return loremIpsum.getCity();
                 }
             },
 
             new RandomResponse("{randomState}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return loremIpsum.getStateFull();
                 }
             },
@@ -73,7 +73,7 @@ public class RandomResponseGenerator {
 
             new RandomResponse("{randomCountry}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return loremIpsum.getCountry();
                 }
             },
@@ -81,71 +81,72 @@ public class RandomResponseGenerator {
 
             new RandomResponse("{randomZipCode}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return loremIpsum.getZipCode();
                 }
             },
 
             new RandomResponse("{randomURL}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return loremIpsum.getUrl();
                 }
             },
 
             new RandomResponse("{randomTitle (\\d+)}") {
                 @Override
-                String getValue(int count) {
-                    return loremIpsum.getTitle(count);
+                String getValue(String count) {
+                    return loremIpsum.getTitle(Integer.parseInt(count));
                 }
             },
 
             new RandomResponse("{randomWords (\\d+)}") {
                 @Override
-                String getValue(int count) {
-                    return CodeGen.getFirstCharUppercase(loremIpsum.getWords(count));
+                String getValue(String count) {
+                    return CodeGen.getFirstCharUppercase(loremIpsum.getWords(Integer.parseInt(count)));
                 }
             },
 
             new RandomResponse("{randomParas (\\d+)}") {
                 @Override
-                String getValue(int count) {
-                    return loremIpsum.getParagraphs(count, count);
+                String getValue(String count) {
+                    int intCount = Integer.parseInt(count);
+                    return loremIpsum.getParagraphs(intCount, intCount);
                 }
             },
 
             new RandomResponse("{currentTimeMillis}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return String.valueOf(System.currentTimeMillis());
                 }
             },
 
             new RandomResponse("{currentDateTime}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return dateWithTimeFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
             new RandomResponse("{currentDate}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return dateFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
             new RandomResponse("{currentTime}") {
                 @Override
-                String getValue(int count) {
+                String getValue(String count) {
                     return timeFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
-            new RandomResponse("{SimpleDateFormat:%s}") {
+            new RandomResponse("{SimpleDateFormat (\\w+)}") {
                 @Override
-                String getValue(int param1) {
-                    return null;
+                String getValue(String param1) {
+                    return new SimpleDateFormat(param1).format(new Date(System.currentTimeMillis()));
                 }
             }
     };
@@ -163,7 +164,7 @@ public class RandomResponseGenerator {
             return key;
         }
 
-        abstract String getValue(int param1);
+        abstract String getValue(String param1);
     }
 
     public static String generate(String jsonResp) {
@@ -172,6 +173,8 @@ public class RandomResponseGenerator {
         for (final RandomResponse randomResponse : randomResponses) {
 
             if (jsonResp.contains(randomResponse.getKey())) {
+
+                //No param random response
 
                 final String splitter = randomResponse.getKey()
                         .replaceAll("\\{", "\\\\{")
@@ -186,7 +189,7 @@ public class RandomResponseGenerator {
                 final StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < jsonRespArr.length; i++) {
                     final String aJsonRespArr = jsonRespArr[i];
-                    final String data = randomResponse.getValue(1);
+                    final String data = randomResponse.getValue("1");
                     sb.append(aJsonRespArr);
 
                     if (i < (jsonRespArr.length - 1)) {
@@ -197,6 +200,9 @@ public class RandomResponseGenerator {
                 jsonResp = sb.toString();
             } else {
 
+                //Param response
+
+
                 String randomRegEx = randomResponse.getKey();
                 randomRegEx = randomRegEx.replace("{", "\\{");
                 randomRegEx = randomRegEx.replace("}", "\\}");
@@ -206,9 +212,23 @@ public class RandomResponseGenerator {
 
                 if (matcher.find()) {
 
+
+                    System.out.println("Param response for " + randomResponse.getKey());
+
                     do {
-                        final int count = Integer.parseInt(matcher.group(1));
-                        String newRandomRegEx = randomRegEx.replace("(\\d+)", count + "");
+
+                        final String param1 = matcher.group(1);
+                        String newRandomRegEx = null;
+                        try {
+                            final int count = Integer.parseInt(param1);
+                            newRandomRegEx = randomRegEx.replace("(\\d+)", count + "");
+
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+
+                            //Param is a string
+                            newRandomRegEx = randomRegEx.replace("(\\w+)", param1);
+                        }
 
                         //Regex matching
                         final String[] jsonRespArr = jsonResp.split(
@@ -218,7 +238,7 @@ public class RandomResponseGenerator {
                         final StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < jsonRespArr.length; i++) {
 
-                            String data = randomResponse.getValue(count);
+                            String data = randomResponse.getValue(param1);
                             data = data.replace("\n", "\\n");
                             sb.append(jsonRespArr[i]);
 
@@ -229,6 +249,7 @@ public class RandomResponseGenerator {
                         }
 
                         jsonResp = sb.toString();
+
                     } while (matcher.find());
 
                 }
