@@ -3,10 +3,17 @@ package com.theah64.mock_api.utils;
 import com.theah64.webengine.utils.RandomString;
 import com.thedeanda.lorem.LoremIpsum;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RandomResponseGenerator {
+
+    private static final DateFormat dateWithTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private static final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 
     //First name throw back
@@ -17,7 +24,6 @@ public class RandomResponseGenerator {
     }
 
     public static final RandomResponse[] randomResponses = new RandomResponse[]{
-
 
             //random number
             new RandomResponse("{randomNumber (\\d+)}") {
@@ -106,6 +112,41 @@ public class RandomResponseGenerator {
                 String getValue(int count) {
                     return loremIpsum.getParagraphs(count, count);
                 }
+            },
+
+            new RandomResponse("{currentTimeMillis}") {
+                @Override
+                String getValue(int count) {
+                    return String.valueOf(System.currentTimeMillis());
+                }
+            },
+
+            new RandomResponse("{currentDateTime}") {
+                @Override
+                String getValue(int count) {
+                    return dateWithTimeFormat.format(new Date(System.currentTimeMillis()));
+                }
+            },
+
+            new RandomResponse("{currentDate}") {
+                @Override
+                String getValue(int count) {
+                    return dateFormat.format(new Date(System.currentTimeMillis()));
+                }
+            },
+
+            new RandomResponse("{currentTime}") {
+                @Override
+                String getValue(int count) {
+                    return timeFormat.format(new Date(System.currentTimeMillis()));
+                }
+            },
+
+            new RandomResponse("{SimpleDateFormat:%s}") {
+                @Override
+                String getValue(int param1) {
+                    return null;
+                }
             }
     };
 
@@ -135,7 +176,6 @@ public class RandomResponseGenerator {
                 final String splitter = randomResponse.getKey()
                         .replaceAll("\\{", "\\\\{")
                         .replaceAll("\\}", "\\\\}");
-
 
 
                 final String[] jsonRespArr = jsonResp.split(
