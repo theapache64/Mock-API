@@ -13,11 +13,10 @@ import java.sql.SQLException;
 public class Preferences extends BaseTable<Preference> {
 
     private static final Preferences instance = new Preferences();
-    private static final String COLUMN_KEY = "_key";
-    private static final String COLUMN_VALUE = "_value";
     private static final String COLUMN_DEFAULT_SUCCESS_RESPONSE = "default_success_response";
     private static final String COLUMN_DEFAULT_ERROR_RESPONSE = "default_error_response";
     private static final String COLUMN_BASE_RESPONSE_STRUCTURE = "base_response_structure";
+    private static final String COLUMN_IS_ONLINE = "is_online";
 
     private Preferences() {
         super("preferences");
@@ -31,8 +30,9 @@ public class Preferences extends BaseTable<Preference> {
         return new SelectQueryBuilder.Builder<Preference>(getTableName(), rs -> new Preference(
                 rs.getString(COLUMN_DEFAULT_SUCCESS_RESPONSE),
                 rs.getString(COLUMN_DEFAULT_ERROR_RESPONSE),
-                rs.getString(COLUMN_BASE_RESPONSE_STRUCTURE)
-        )).select(new String[]{COLUMN_DEFAULT_SUCCESS_RESPONSE, COLUMN_DEFAULT_ERROR_RESPONSE, COLUMN_BASE_RESPONSE_STRUCTURE})
+                rs.getString(COLUMN_BASE_RESPONSE_STRUCTURE),
+                rs.getBoolean(COLUMN_IS_ONLINE)
+        )).select(new String[]{COLUMN_DEFAULT_SUCCESS_RESPONSE, COLUMN_DEFAULT_ERROR_RESPONSE, COLUMN_BASE_RESPONSE_STRUCTURE,COLUMN_IS_ONLINE})
                 .limit("1")
                 .build()
                 .get();

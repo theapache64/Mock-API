@@ -2,14 +2,17 @@
 <%--suppress JSDuplicatedDeclaration --%>
 <%--suppress ALL --%>
 <%@ page import="com.theah64.mock_api.database.Images" %>
+<%@ page import="com.theah64.mock_api.database.Preferences" %>
 <%@ page import="com.theah64.mock_api.database.Routes" %>
 <%@ page import="com.theah64.mock_api.models.Image" %>
+<%@ page import="com.theah64.mock_api.models.Preference" %>
 <%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="com.theah64.mock_api.servlets.SaveJSONServlet" %>
 <%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
 <%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
 <%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
+<%@ page import="com.theah64.webengine.utils.StatusResponse" %>
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.util.List" %>
@@ -28,6 +31,20 @@
     <title><%=project.getName()%> / MockAPI
     </title>
     <%@include file="common_headers.jsp" %>
+
+    <%
+        try {
+
+            final Preference preference = Preferences.getInstance().get();
+
+            if (!preference.isOnline()) {
+                StatusResponse.redirect(response, "Maintenance Mode");
+                return;
+            }
+        } catch (QueryBuilderException | SQLException e) {
+            e.printStackTrace();
+        }
+    %>
 
     <script>
 

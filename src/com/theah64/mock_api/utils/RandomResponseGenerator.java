@@ -201,8 +201,6 @@ public class RandomResponseGenerator {
             } else {
 
                 //Param response
-
-
                 String randomRegEx = randomResponse.getKey();
                 randomRegEx = randomRegEx.replace("{", "\\{");
                 randomRegEx = randomRegEx.replace("}", "\\}");
@@ -210,13 +208,8 @@ public class RandomResponseGenerator {
                 final Pattern pattern = Pattern.compile(randomRegEx);
                 final Matcher matcher = pattern.matcher(jsonResp);
 
-                System.out.println("RegEx:" + randomRegEx);
-                System.out.println("Data:" + jsonResp);
-
                 if (matcher.find()) {
 
-
-                    System.out.println("Param response for " + randomResponse.getKey());
 
                     do {
 
