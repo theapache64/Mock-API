@@ -143,7 +143,7 @@ public class RandomResponseGenerator {
                 }
             },
 
-            new RandomResponse("{SimpleDateFormat (\\w+)}") {
+            new RandomResponse("{SimpleDateFormat (.+)}") {
                 @Override
                 String getValue(String param1) {
                     return new SimpleDateFormat(param1).format(new Date(System.currentTimeMillis()));
@@ -210,6 +210,9 @@ public class RandomResponseGenerator {
                 final Pattern pattern = Pattern.compile(randomRegEx);
                 final Matcher matcher = pattern.matcher(jsonResp);
 
+                System.out.println("RegEx:" + randomRegEx);
+                System.out.println("Data:" + jsonResp);
+
                 if (matcher.find()) {
 
 
@@ -227,8 +230,10 @@ public class RandomResponseGenerator {
                             e.printStackTrace();
 
                             //Param is a string
-                            newRandomRegEx = randomRegEx.replace("(\\w+)", param1);
+                            newRandomRegEx = randomRegEx.replace("(.+)", param1);
+                            System.out.println("New random regex : " + newRandomRegEx);
                         }
+
 
                         //Regex matching
                         final String[] jsonRespArr = jsonResp.split(

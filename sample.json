@@ -1,0 +1,12 @@
+{
+  "error": false,
+  "message": "This is a sample success message",
+  "data": {
+    "time_in_millis": "1519462253184",
+    "date_time": "2018/02/24 14:20:53",
+    "date": "2018/02/24",
+    "time": "14:20:53",
+    "custom": "{SimpleDateFormat yyyyDD}",
+    "test": "Contentiones"
+  }
+}

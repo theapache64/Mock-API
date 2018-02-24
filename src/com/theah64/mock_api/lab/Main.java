@@ -1,9 +1,13 @@
 package com.theah64.mock_api.lab;
 
-import com.theah64.mock_api.utils.CodeGen;
 import org.json.JSONException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by theapache64 on 4/1/18.
@@ -20,20 +24,9 @@ public class Main {
         }
         br.close();
 
-        final String output = CodeGen.getFinalCode("com.your.package", jsonString.toString(), "Sample", true);
-        save(output);
-    }
-
-    private static void save(String data) {
-        //Finally writing it to a file
-        final File javaFile = new File("Sample.html");
-        try {
-            final BufferedWriter bw = new BufferedWriter(new FileWriter(javaFile));
-            bw.write(data);
-            bw.flush();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        final Matcher pattern = Pattern.compile("\\{SimpleDateFormat (.+)\\}").matcher(jsonString);
+        if (pattern.find()) {
+            System.out.println(pattern.group(1));
         }
     }
 
