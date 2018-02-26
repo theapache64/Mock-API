@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RandomResponseGenerator {
+public class DynamicResponseGenerator {
 
     private static final DateFormat dateWithTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");

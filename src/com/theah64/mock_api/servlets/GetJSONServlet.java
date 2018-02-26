@@ -8,7 +8,7 @@ import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.ParamResponse;
 import com.theah64.mock_api.models.Route;
 import com.theah64.mock_api.utils.HeaderSecurity;
-import com.theah64.mock_api.utils.RandomResponseGenerator;
+import com.theah64.mock_api.utils.DynamicResponseGenerator;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.utils.CommonUtils;
 import com.theah64.webengine.utils.PathInfo;
@@ -139,7 +139,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
             }
 
 
-            jsonResp = RandomResponseGenerator.generate(jsonResp);
+            jsonResp = DynamicResponseGenerator.generate(jsonResp);
 
             //Validation
             if (CommonUtils.isJSONValid(jsonResp)) {

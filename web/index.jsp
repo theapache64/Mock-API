@@ -9,7 +9,7 @@
 <%@ page import="com.theah64.mock_api.models.Route" %>
 <%@ page import="com.theah64.mock_api.servlets.SaveJSONServlet" %>
 <%@ page import="com.theah64.mock_api.servlets.UploadImageServlet" %>
-<%@ page import="com.theah64.mock_api.utils.RandomResponseGenerator" %>
+<%@ page import="com.theah64.mock_api.utils.DynamicResponseGenerator" %>
 <%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
@@ -1711,7 +1711,7 @@
 
             <div class="row text-center" style="line-height: 3">
                 <%
-                    for (final RandomResponseGenerator.RandomResponse randomResponse : RandomResponseGenerator.randomResponses) {
+                    for (final DynamicResponseGenerator.RandomResponse randomResponse : DynamicResponseGenerator.randomResponses) {
                 %>
                 <span class="randomItems label label-primary"><%=randomResponse.getKey()%></span>
                 <%
