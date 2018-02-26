@@ -119,6 +119,13 @@
                     } else {
                         x = "";
                     }
+                } else if (x.indexOf("(.+)") !== -1) {
+                    var text = prompt("Enter the replacement text");
+                    if (text != null) {
+                        x = x.replace("(.+)", text);
+                    } else {
+                        x = "";
+                    }
                 }
 
                 editor.replaceSelection(x);

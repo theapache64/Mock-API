@@ -16,3 +16,4 @@ A web based tool to save and retrieve JSONs intelligently
 - Image delete check - existing in routes.
 - GET route auth pass
 - Fix 'Primitive type members cannot be annotated'
+- Conditioned response in json
