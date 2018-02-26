@@ -23,140 +23,157 @@ public class DynamicResponseGenerator {
         return loremIpsum;
     }
 
-    public static final RandomResponse[] randomResponses = new RandomResponse[]{
+    public static final DynamicResponse[] randomResponses = new DynamicResponse[]{
 
             //random number
-            new RandomResponse("{randomNumber (\\d+)}") {
+            new DynamicResponse("{randomNumber (\\d+)}") {
                 @Override
-                String getValue(String count) {
-                    return RandomString.getRandomNumber(Integer.parseInt(count));
+                String getValue(String[] count) {
+                    return RandomString.getRandomNumber(Integer.parseInt(count[0]));
                 }
             },
 
             //random name
-            new RandomResponse("{randomName}") {
+            new DynamicResponse("{randomName}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return loremIpsum.getName();
                 }
             },
 
-            new RandomResponse("{randomFirstName}") {
+            new DynamicResponse("{randomFirstName}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return loremIpsum.getFirstName();
                 }
             },
 
 
-            new RandomResponse("{randomPhone}") {
+            new DynamicResponse("{randomPhone}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return loremIpsum.getPhone();
                 }
             },
 
-            new RandomResponse("{randomCity}") {
+            new DynamicResponse("{randomCity}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return loremIpsum.getCity();
                 }
             },
 
-            new RandomResponse("{randomState}") {
+            new DynamicResponse("{randomState}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return loremIpsum.getStateFull();
                 }
             },
 
 
-            new RandomResponse("{randomCountry}") {
+            new DynamicResponse("{randomCountry}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return loremIpsum.getCountry();
                 }
             },
 
 
-            new RandomResponse("{randomZipCode}") {
+            new DynamicResponse("{randomZipCode}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return loremIpsum.getZipCode();
                 }
             },
 
-            new RandomResponse("{randomURL}") {
+            new DynamicResponse("{randomURL}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return loremIpsum.getUrl();
                 }
             },
 
-            new RandomResponse("{randomTitle (\\d+)}") {
+            new DynamicResponse("{randomTitle (\\d+)}") {
                 @Override
-                String getValue(String count) {
-                    return loremIpsum.getTitle(Integer.parseInt(count));
+                String getValue(String[] count) {
+                    return loremIpsum.getTitle(Integer.parseInt(count[0]));
                 }
             },
 
-            new RandomResponse("{randomWords (\\d+)}") {
+            new DynamicResponse("{randomWords (\\d+)}") {
                 @Override
-                String getValue(String count) {
-                    return CodeGen.getFirstCharUppercase(loremIpsum.getWords(Integer.parseInt(count)));
+                String getValue(String[] count) {
+                    return CodeGen.getFirstCharUppercase(loremIpsum.getWords(Integer.parseInt(count[0])));
                 }
             },
 
-            new RandomResponse("{randomParas (\\d+)}") {
+            new DynamicResponse("{randomParas (\\d+)}") {
                 @Override
-                String getValue(String count) {
-                    int intCount = Integer.parseInt(count);
+                String getValue(String[] count) {
+                    int intCount = Integer.parseInt(count[0]);
                     return loremIpsum.getParagraphs(intCount, intCount);
                 }
             },
 
-            new RandomResponse("{currentTimeMillis}") {
+            new DynamicResponse("{currentTimeMillis}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return String.valueOf(System.currentTimeMillis());
                 }
             },
 
-            new RandomResponse("{currentDateTime}") {
+            new DynamicResponse("{currentDateTime}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return dateWithTimeFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
-            new RandomResponse("{currentDate}") {
+            new DynamicResponse("{currentDate}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return dateFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
-            new RandomResponse("{currentTime}") {
+            new DynamicResponse("{currentTime}") {
                 @Override
-                String getValue(String count) {
+                String getValue(String[] count) {
                     return timeFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
-            new RandomResponse("{SimpleDateFormat (.+)}") {
+            new DynamicResponse("{SimpleDateFormat (.+)}") {
                 @Override
-                String getValue(String param1) {
-                    return new SimpleDateFormat(param1).format(new Date(System.currentTimeMillis()));
+                String getValue(String[] params) {
+                    return new SimpleDateFormat(params[0]).format(new Date(System.currentTimeMillis()));
+                }
+            },
+
+            new DynamicResponse("{(.+)\\s*(==|===|!=|>|<|>=|<=)\\s*(.+)\\s*\\?\\s*(.+)\\:\\s*(.+)}") {
+                @Override
+                String getValue(String[] params) {
+
+                    String val1 = params[0];
+                    String operator = params[1];
+                    String val2 = params[2];
+                    String ifTrue = params[3];
+                    String ifFalse = params[4];
+
+
+                    return "matched!";
                 }
             }
+
+
     };
 
 
-    public abstract static class RandomResponse {
+    public abstract static class DynamicResponse {
         private final String key;
 
 
-        RandomResponse(String key) {
+        DynamicResponse(String key) {
             this.key = key;
         }
 
@@ -164,15 +181,17 @@ public class DynamicResponseGenerator {
             return key;
         }
 
-        abstract String getValue(String param1);
+        abstract String getValue(String... params);
     }
 
     public static String generate(String jsonResp) {
 
 
-        for (final RandomResponse randomResponse : randomResponses) {
+        for (final DynamicResponse randomResponse : randomResponses) {
+
 
             if (jsonResp.contains(randomResponse.getKey())) {
+
 
                 //No param random response
 
@@ -208,47 +227,57 @@ public class DynamicResponseGenerator {
                 final Pattern pattern = Pattern.compile(randomRegEx);
                 final Matcher matcher = pattern.matcher(jsonResp);
 
+                System.out.println("RegEx:" + randomRegEx);
+                System.out.println("Data:" + jsonResp);
+
                 if (matcher.find()) {
 
-
-                    do {
-
-                        final String param1 = matcher.group(1);
-                        String newRandomRegEx = null;
-                        try {
-                            final int count = Integer.parseInt(param1);
-                            newRandomRegEx = randomRegEx.replace("(\\d+)", count + "");
-
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-
-                            //Param is a string
-                            newRandomRegEx = randomRegEx.replace("(.+)", param1);
-                            System.out.println("New random regex : " + newRandomRegEx);
-                        }
+                    System.out.println("MATCHED! : " + matcher.groupCount());
 
 
-                        //Regex matching
-                        final String[] jsonRespArr = jsonResp.split(
-                                newRandomRegEx
-                        );
+                    if (matcher.groupCount() == 1) {
+                        do {
 
-                        final StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < jsonRespArr.length; i++) {
+                            final String[] param = new String[matcher.groupCount()];
+                            for (int i = 1; i <= matcher.groupCount(); i++) {
+                                param[i - 1] = matcher.group(i);
+                            }
+                            String newRandomRegEx = null;
+                            try {
+                                final int count = Integer.parseInt(param[0]);
+                                newRandomRegEx = randomRegEx.replace("(\\d+)", count + "");
 
-                            String data = randomResponse.getValue(param1);
-                            data = data.replace("\n", "\\n");
-                            sb.append(jsonRespArr[i]);
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
 
-                            if (i < (jsonRespArr.length - 1)) {
-                                sb.append(data);
+                                //Param is a string
+                                newRandomRegEx = randomRegEx.replace("(.+)", param[0]);
+                                System.out.println("New random regex : " + newRandomRegEx);
                             }
 
-                        }
 
-                        jsonResp = sb.toString();
+                            //Regex matching
+                            final String[] jsonRespArr = jsonResp.split(
+                                    newRandomRegEx
+                            );
 
-                    } while (matcher.find());
+                            final StringBuilder sb = new StringBuilder();
+                            for (int i = 0; i < jsonRespArr.length; i++) {
+
+                                String data = randomResponse.getValue(param);
+                                data = data.replace("\n", "\\n");
+                                sb.append(jsonRespArr[i]);
+
+                                if (i < (jsonRespArr.length - 1)) {
+                                    sb.append(data);
+                                }
+
+                            }
+
+                            jsonResp = sb.toString();
+
+                        } while (matcher.find());
+                    }
 
                 }
             }

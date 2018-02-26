@@ -1711,7 +1711,7 @@
 
             <div class="row text-center" style="line-height: 3">
                 <%
-                    for (final DynamicResponseGenerator.RandomResponse randomResponse : DynamicResponseGenerator.randomResponses) {
+                    for (final DynamicResponseGenerator.DynamicResponse randomResponse : DynamicResponseGenerator.randomResponses) {
                 %>
                 <span class="randomItems label label-primary"><%=randomResponse.getKey()%></span>
                 <%
