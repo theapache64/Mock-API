@@ -2,9 +2,6 @@ package com.theah64.mock_api.lab;
 
 import org.json.JSONException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,20 +11,29 @@ import java.util.regex.Pattern;
  */
 public class Main {
 
+    private static final String CONDITIONED_PATTERN = "(\\{(?:.+)\\s*(?:==|===|!=|>|<|>=|<=)\\s*(?:.+)\\s*\\?\\s*(?:.+)\\:\\s*(?:.+)\\})";
+
     public static void main(String[] args) throws IOException, JSONException {
 
-        final StringBuilder jsonString = new StringBuilder();
-        final BufferedReader br = new BufferedReader(new FileReader(new File("sample.json")));
-        String line = null;
-        while ((line = br.readLine()) != null) {
-            jsonString.append(line).append("\n");
-        }
-        br.close();
+        String jsonResp = "{ \"error\": false, \"message\": \"Bridgett Carroll 52\", \"dyn\":\"She is {10>3 ? trueVal : falseVal}\",  \"dyn\":\"She is {10>3 ? trueVal : falseVal}\",\"data\": {} }";
 
-        final Matcher pattern = Pattern.compile("\\{SimpleDateFormat (.+)\\}").matcher(jsonString);
-        if (pattern.find()) {
-            System.out.println(pattern.group(1));
+
+        //Checking if conditioned response
+        final Pattern pattern = Pattern.compile(CONDITIONED_PATTERN, Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(jsonResp);
+
+        if (matcher.find()) {
+            do {
+
+
+                //{10>3 ? young : old}
+                System.out.println(matcher.group());
+
+
+            } while (matcher.find());
         }
+
+
     }
 
 

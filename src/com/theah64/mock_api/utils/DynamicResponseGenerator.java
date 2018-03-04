@@ -28,22 +28,22 @@ public class DynamicResponseGenerator {
             //random number
             new DynamicResponse("{randomNumber (\\d+)}") {
                 @Override
-                String getValue(String[] count) {
-                    return RandomString.getRandomNumber(Integer.parseInt(count[0]));
+                String getValue(String count) {
+                    return RandomString.getRandomNumber(Integer.parseInt(count));
                 }
             },
 
             //random name
             new DynamicResponse("{randomName}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return loremIpsum.getName();
                 }
             },
 
             new DynamicResponse("{randomFirstName}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return loremIpsum.getFirstName();
                 }
             },
@@ -51,21 +51,21 @@ public class DynamicResponseGenerator {
 
             new DynamicResponse("{randomPhone}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return loremIpsum.getPhone();
                 }
             },
 
             new DynamicResponse("{randomCity}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return loremIpsum.getCity();
                 }
             },
 
             new DynamicResponse("{randomState}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return loremIpsum.getStateFull();
                 }
             },
@@ -73,7 +73,7 @@ public class DynamicResponseGenerator {
 
             new DynamicResponse("{randomCountry}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return loremIpsum.getCountry();
                 }
             },
@@ -81,76 +81,76 @@ public class DynamicResponseGenerator {
 
             new DynamicResponse("{randomZipCode}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return loremIpsum.getZipCode();
                 }
             },
 
             new DynamicResponse("{randomURL}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return loremIpsum.getUrl();
                 }
             },
 
             new DynamicResponse("{randomTitle (\\d+)}") {
                 @Override
-                String getValue(String[] count) {
-                    return loremIpsum.getTitle(Integer.parseInt(count[0]));
+                String getValue(String count) {
+                    return loremIpsum.getTitle(Integer.parseInt(count));
                 }
             },
 
             new DynamicResponse("{randomWords (\\d+)}") {
                 @Override
-                String getValue(String[] count) {
-                    return CodeGen.getFirstCharUppercase(loremIpsum.getWords(Integer.parseInt(count[0])));
+                String getValue(String count) {
+                    return CodeGen.getFirstCharUppercase(loremIpsum.getWords(Integer.parseInt(count)));
                 }
             },
 
             new DynamicResponse("{randomParas (\\d+)}") {
                 @Override
-                String getValue(String[] count) {
-                    int intCount = Integer.parseInt(count[0]);
+                String getValue(String count) {
+                    int intCount = Integer.parseInt(count);
                     return loremIpsum.getParagraphs(intCount, intCount);
                 }
             },
 
             new DynamicResponse("{currentTimeMillis}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return String.valueOf(System.currentTimeMillis());
                 }
             },
 
             new DynamicResponse("{currentDateTime}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return dateWithTimeFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
             new DynamicResponse("{currentDate}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return dateFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
             new DynamicResponse("{currentTime}") {
                 @Override
-                String getValue(String[] count) {
+                String getValue(String count) {
                     return timeFormat.format(new Date(System.currentTimeMillis()));
                 }
             },
 
             new DynamicResponse("{SimpleDateFormat (.+)}") {
                 @Override
-                String getValue(String[] params) {
-                    return new SimpleDateFormat(params[0]).format(new Date(System.currentTimeMillis()));
+                String getValue(String params) {
+                    return new SimpleDateFormat(params).format(new Date(System.currentTimeMillis()));
                 }
             },
 
-            new DynamicResponse("{(.+)\\s*(==|===|!=|>|<|>=|<=)\\s*(.+)\\s*\\?\\s*(.+)\\:\\s*(.+)}") {
+            /*new DynamicResponse("{(.+)\\s*(==|===|!=|>|<|>=|<=)\\s*(.+)\\s*\\?\\s*(.+)\\:\\s*(.+)}") {
                 @Override
                 String getValue(String[] params) {
 
@@ -163,7 +163,7 @@ public class DynamicResponseGenerator {
 
                     return "matched!";
                 }
-            }
+            }*/
 
 
     };
@@ -181,7 +181,7 @@ public class DynamicResponseGenerator {
             return key;
         }
 
-        abstract String getValue(String... params);
+        abstract String getValue(String param);
     }
 
     public static String generate(String jsonResp) {
@@ -227,31 +227,23 @@ public class DynamicResponseGenerator {
                 final Pattern pattern = Pattern.compile(randomRegEx);
                 final Matcher matcher = pattern.matcher(jsonResp);
 
-                System.out.println("RegEx:" + randomRegEx);
-                System.out.println("Data:" + jsonResp);
-
                 if (matcher.find()) {
-
-                    System.out.println("MATCHED! : " + matcher.groupCount());
 
 
                     if (matcher.groupCount() == 1) {
                         do {
 
-                            final String[] param = new String[matcher.groupCount()];
-                            for (int i = 1; i <= matcher.groupCount(); i++) {
-                                param[i - 1] = matcher.group(i);
-                            }
+                            final String param = matcher.group(1);
                             String newRandomRegEx = null;
                             try {
-                                final int count = Integer.parseInt(param[0]);
+                                final int count = Integer.parseInt(param);
                                 newRandomRegEx = randomRegEx.replace("(\\d+)", count + "");
 
                             } catch (NumberFormatException e) {
                                 e.printStackTrace();
 
                                 //Param is a string
-                                newRandomRegEx = randomRegEx.replace("(.+)", param[0]);
+                                newRandomRegEx = randomRegEx.replace("(.+)", param);
                                 System.out.println("New random regex : " + newRandomRegEx);
                             }
 
