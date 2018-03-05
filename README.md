@@ -18,3 +18,4 @@ A web based tool to save and retrieve JSONs intelligently
 - Fix 'Primitive type members cannot be annotated'
 - Conditioned response in json
 - Route updates in main screen
+- Authorization fix for get_json

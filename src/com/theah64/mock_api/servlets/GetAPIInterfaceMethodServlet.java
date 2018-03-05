@@ -71,6 +71,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
             }
 
             boolean hasFileParam = false;
+
             if (!route.getParams().isEmpty()) {
 
                 final List<Param> params = route.getParams();
@@ -87,7 +88,10 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                         codeBuilder.append(String.format("\n\t@%s(\"%s\") %s %s %s,", route.getMethod().equals("POST") ? "Field" : "Query", param.getName(), param.isRequired() ? "@NotNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
                     }
                 }
+            }
 
+            if (!route.getParams().isEmpty() || route.isSecure()) {
+                //Removing last comma
                 codeBuilder = new StringBuilder(codeBuilder.substring(0, codeBuilder.length() - 1));
             }
 
