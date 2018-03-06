@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, JSONException {
 
-        String jsonResp = "Here's some text {10 > 3 ? trueVallGoesHere : falseValGoesHere} and some other text";
+        String jsonResp = "Here's some text {10 > 3 ? trueVallGoesHere : falseValGoesHere} and some other text {10 > 3 ? trueVallGoesHere : falseValGoesHere} and few other text";
 
 
         //Checking if conditioned response
@@ -27,7 +27,13 @@ public class Main {
 
 
                 //{10>3 ? young : old}
-                System.out.println(matcher.group(1));
+                System.out.println("------------------------------");
+                System.out.println("Val 1 : " + matcher.group("val1"));
+                System.out.println("Val 2 : " + matcher.group("val2"));
+                System.out.println("Operator : " + matcher.group("operator"));
+                System.out.println("True Val : " + matcher.group("trueVal"));
+                System.out.println("False Val : " + matcher.group("falseVal"));
+
 
 
             } while (matcher.find());
