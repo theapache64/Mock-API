@@ -11,18 +11,22 @@ import java.util.regex.Pattern;
  */
 public class Main {
 
-    private static final String CONDITIONED_PATTERN = "\\{(?<val1>.+)\\s*(?<operator>==|===|!=|>|<|>=|<=)\\s*(?<val2>.+)\\s*\\?\\s*(?<trueVal>.+)\\:\\s*(?<falseVal>.+)\\}";
+    private static final String CONDITIONED_PATTERN = "\\{(?<val1>\\w+)\\s*(?<operator>==|===|!=|>|<|>=|<=)\\s*(?<val2>\\w+)\\s*\\?\\s*(?<trueVal>\\w+)\\s*:\\s*(?<falseVal>\\w+)\\}";
 
     public static void main(String[] args) throws IOException, JSONException {
 
-        String jsonResp = "Here's some text {10 > 3 ? trueVallGoesHere : falseValGoesHere} and some other text {10 > 3 ? trueVallGoesHere : falseValGoesHere} and few other text";
+        String jsonResp = "Here's some text {10 > 3 ? trueVallGoesHere : falseValGoesHere} and some other text {9 > 2 ? trueVallGoesHere1 : falseValGoesHere1} and few other text";
 
 
         //Checking if conditioned response
         final Pattern pattern = Pattern.compile(CONDITIONED_PATTERN, Pattern.MULTILINE);
-        final Matcher matcher = pattern.matcher(jsonResp);
+        Matcher matcher = pattern.matcher(jsonResp);
+
+        String a = null;
+        StringBuffer sb = new StringBuffer();
 
         if (matcher.find()) {
+            int i = 0;
             do {
 
 
@@ -34,10 +38,12 @@ public class Main {
                 System.out.println("True Val : " + matcher.group("trueVal"));
                 System.out.println("False Val : " + matcher.group("falseVal"));
 
-
+                matcher.appendReplacement(sb, "ok" + (++i));
 
             } while (matcher.find());
         }
+
+        System.out.println(sb);
 
 
     }
