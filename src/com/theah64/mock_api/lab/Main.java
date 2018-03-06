@@ -11,11 +11,11 @@ import java.util.regex.Pattern;
  */
 public class Main {
 
-    private static final String CONDITIONED_PATTERN = "(\\{(?:.+)\\s*(?:==|===|!=|>|<|>=|<=)\\s*(?:.+)\\s*\\?\\s*(?:.+)\\:\\s*(?:.+)\\})";
+    private static final String CONDITIONED_PATTERN = "\\{(?<val1>.+)\\s*(?<operator>==|===|!=|>|<|>=|<=)\\s*(?<val2>.+)\\s*\\?\\s*(?<trueVal>.+)\\:\\s*(?<falseVal>.+)\\}";
 
     public static void main(String[] args) throws IOException, JSONException {
 
-        String jsonResp = "{ \"error\": false, \"message\": \"Bridgett Carroll 52\", \"dyn\":\"She is {10>3 ? trueVal : falseVal}\",  \"dyn\":\"She is {10>3 ? trueVal : falseVal}\",\"data\": {} }";
+        String jsonResp = "Here's some text {10 > 3 ? trueVallGoesHere : falseValGoesHere} and some other text";
 
 
         //Checking if conditioned response
@@ -27,7 +27,7 @@ public class Main {
 
 
                 //{10>3 ? young : old}
-                System.out.println(matcher.group());
+                System.out.println(matcher.group(1));
 
 
             } while (matcher.find());
