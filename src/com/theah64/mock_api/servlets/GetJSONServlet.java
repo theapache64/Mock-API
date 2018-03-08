@@ -15,6 +15,7 @@ import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,12 +29,10 @@ import java.util.regex.Pattern;
  * Created by theapache64 on 14/5/17.
  */
 @WebServlet(urlPatterns = {"/get_json/*"})
+@MultipartConfig
 public class GetJSONServlet extends AdvancedBaseServlet {
 
     private Route route;
-
-    private static final String CONDITIONED_PATTERN = "\\{(.+)\\s*(==|===|!=|>|<|>=|<=)\\s*(.+)\\s*\\?\\s*(.+)\\:\\s*(.+)\\}";
-
 
     @Override
     protected boolean isSecureServlet() {
@@ -145,61 +144,6 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
 
             jsonResp = DynamicResponseGenerator.generate(jsonResp);
-
-            //Checking if conditioned response
-            final Pattern pattern = Pattern.compile(CONDITIONED_PATTERN, Pattern.MULTILINE);
-            final Matcher matcher = pattern.matcher(jsonResp);
-
-            if (matcher.find()) {
-                do {
-
-                    //{10>3 ? young : old}
-                    final String val1 = matcher.group(1);
-                    final String operator = matcher.group(2);
-                    final String val2 = matcher.group(3);
-                    final String trueVal = matcher.group(4);
-                    final String falseVal = matcher.group(5);
-
-
-
-                    /*final String param = matcher.group(1);
-                    String newRandomRegEx = null;
-                    try {
-                        final int count = Integer.parseInt(param);
-                        newRandomRegEx = randomRegEx.replace("(\\d+)", count + "");
-
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-
-                        //Param is a string
-                        newRandomRegEx = randomRegEx.replace("(.+)", param);
-                        System.out.println("New random regex : " + newRandomRegEx);
-                    }
-
-
-                    //Regex matching
-                    final String[] jsonRespArr = jsonResp.split(
-                            newRandomRegEx
-                    );
-
-                    final StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < jsonRespArr.length; i++) {
-
-                        String data = randomResponse.getValue(param);
-                        data = data.replace("\n", "\\n");
-                        sb.append(jsonRespArr[i]);
-
-                        if (i < (jsonRespArr.length - 1)) {
-                            sb.append(data);
-                        }
-
-                    }*//*
-
-                    jsonResp = sb.toString();*/
-
-
-                } while (matcher.find());
-            }
 
             //Validation
             if (CommonUtils.isJSONValid(jsonResp)) {

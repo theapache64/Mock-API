@@ -24,6 +24,7 @@ import java.util.List;
 public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
     private static final String KEY_PROJECT_NAME = "project_name";
+    private static final String MULTIPART_KEY = "@Part MultipartBody.Part";
 
     @Override
     protected boolean isSecureServlet() {
@@ -37,7 +38,10 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
     @Override
     protected String[] getRequiredParameters() throws Request.RequestException {
-        return new String[]{KEY_PROJECT_NAME, Routes.COLUMN_NAME};
+        return new String[]{
+                KEY_PROJECT_NAME,
+                Routes.COLUMN_NAME
+        };
     }
 
     @Override
@@ -83,9 +87,9 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                     if (param.getDataType().equals(Param.DATA_TYPE_FILE)) {
                         hasFileParam = true;
 
-                        codeBuilder.append(String.format("\n\t@Part MultipartBody.Part %s,", camelCaseParamName));
+                        codeBuilder.append(String.format("\n\t%s %s,", MULTIPART_KEY, camelCaseParamName));
                     } else {
-                        codeBuilder.append(String.format("\n\t@%s(\"%s\") %s %s %s,", route.getMethod().equals("POST") ? "Field" : "Query", param.getName(), param.isRequired() ? "@NotNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
+                        codeBuilder.append(String.format("\n\t@%s(\"%s\") %s %s %s,", route.getMethod().equals("POST") && codeBuilder.indexOf(MULTIPART_KEY) == -1 ? "Field" : "Query", param.getName(), param.isRequired() ? "@NotNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
                     }
                 }
             }
