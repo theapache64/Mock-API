@@ -6,7 +6,7 @@ package com.theah64.mock_api.models;
 public class Project {
     public static final String KEY = "project";
     private String id;
-    private final String name;
+    private String name;
     private final String passHash;
     private final String apiKey;
     private String baseOgApiUrl;
@@ -27,6 +27,10 @@ public class Project {
         this.defaultSuccessResponse = defaultSuccessResponse;
         this.defaultErrorResponse = defaultErrorResponse;
         this.baseResponseStructure = baseResponseStructure;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setDefaultSuccessResponse(String defaultSuccessResponse) {

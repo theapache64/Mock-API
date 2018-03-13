@@ -45,6 +45,7 @@ public class Projects extends BaseTable<Project> {
     public boolean update(Project project) throws SQLException, QueryBuilderException {
 
         return new UpdateQueryBuilder.Builder(getTableName())
+                .set(COLUMN_NAME, project.getName())
                 .set(COLUMN_PACKAGE_NAME, project.getPackageName())
                 .set(COLUMN_BASE_OG_API_URL, project.getBaseOgApiUrl())
                 .set(COLUMN_IS_ALL_SMALL_ROUTES, project.isAllSmallRoutes())

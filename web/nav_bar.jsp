@@ -184,6 +184,7 @@
                 <ul class="dropdown-menu">
                     <%=isHomePage ? "<li><a href=\"#\" data-toggle=\"modal\" data-target=\"#shortcuts\">Shortcuts</a></li>" : "" %>
                     <li><a href="donate_tinify_key.jsp?api_key=<%=project.getApiKey()%>">Donate Tinify Key</a></li>
+                    <li><a id="duplicateProject" href="#">Duplicate Project</a></li>
                 </ul>
             </li>
         </ul>

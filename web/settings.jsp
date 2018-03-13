@@ -4,7 +4,6 @@
 <%@ page import="com.theah64.webengine.utils.CommonUtils" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.webengine.utils.Request" %>
-<%@ page import="org.json.JSONException" %>
 <%@ page import="java.sql.SQLException" %>
 <%--suppress JSDuplicatedDeclaration --%>
 <%--suppress ALL --%>
@@ -152,6 +151,7 @@
 
             <%
                 final Form form = new Form(request, new String[]{
+                        Projects.COLUMN_NAME,
                         Projects.COLUMN_PACKAGE_NAME,
                         Projects.COLUMN_BASE_OG_API_URL,
                         Projects.COLUMN_DEFAULT_SUCCESS_RESPONSE,
@@ -162,6 +162,7 @@
                     if (form.isSubmitted() && form.isAllRequiredParamsAvailable()) {
 
 
+                        final String projectName = form.getString(Projects.COLUMN_NAME);
                         final String packageName = form.getString(Projects.COLUMN_PACKAGE_NAME);
                         final String baseOgAPIUrl = form.getString(Projects.COLUMN_BASE_OG_API_URL);
                         final boolean isAllSmallRoutes = form.getBoolean(Projects.COLUMN_IS_ALL_SMALL_ROUTES);
@@ -211,6 +212,7 @@
                             project.setBaseResponseStructure(brs);
 
                             //Setting new values
+                            project.setName(projectName);
                             project.setBaseOgApiUrl(baseOgAPIUrl);
                             project.setPackageName(packageName);
                             project.setAllSmallRoutes(isAllSmallRoutes);
@@ -230,7 +232,7 @@
                     }
 
                 }
-            } catch (Request.RequestException  | SQLException | QueryBuilderException e) {
+            } catch (Request.RequestException | SQLException | QueryBuilderException e) {
                 e.printStackTrace();
             %>
             <div class="alert alert-danger">
@@ -240,6 +242,18 @@
             <%
                 }
             %>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <%--package name--%>
+                    <div class="form-group">
+                        <label for="iProjectName">Project Name</label>
+                        <input id="iProjectName" class="form-control" value="<%=project.getName()%>"
+                               name="<%=Projects.COLUMN_NAME%>" placeholder="Project name" required/>
+                    </div>
+
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-md-4">
@@ -272,7 +286,7 @@
                                name="<%=Projects.COLUMN_IS_ALL_SMALL_ROUTES%>" <%=project.isAllSmallRoutes() ? "checked" : "" %>
                         />
 
-                        <label for="iAllSmallRoutes">Spelling inspector</label>
+                        <label for="iAllSmallRoutes">Strict Mode</label>
                     </div>
                 </div>
 
@@ -315,8 +329,8 @@
             </div>
 
             <input name="<%=Form.KEY_IS_SUBMITTED%>" class="pull-right btn btn-primary" type="submit" value="Save">
-        <br>
-        <br>
+            <br>
+            <br>
 
         </form>
 
