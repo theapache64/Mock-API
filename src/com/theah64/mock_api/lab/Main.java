@@ -1,6 +1,5 @@
 package com.theah64.mock_api.lab;
 
-import com.theah64.mock_api.models.ParamResponse;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -14,16 +13,18 @@ public class Main {
 
     public static void main(String[] args) throws IOException, JSONException {
 
-        String jsonResp = "Here's some text {10 == 10 ? trueVallGoesHere : falseValGoesHere} and some other text {9 > 2 ? trueVallGoesHere1 : falseValGoesHere1} and few other text";
-        jsonResp = ConditionedResponse.generate(jsonResp);
-        System.out.println("-------------------");
+        final String jsonResp = "{ \"error\": false, \"message\": \"ok `10 > 3 ? trueVal : falseVal` ok \", \"`8 > 4 ? trueVal : falseVal`\": {} }";
         System.out.println(jsonResp);
+        System.out.println(ConditionedResponse.generate(jsonResp));
+
+        /*jsonResp = ConditionedResponse.generate(jsonResp);
+        System.out.println("-------------------");
+        System.out.println(jsonResp);*/
     }
 
-    static class ConditionedResponse {
+    public static class ConditionedResponse {
 
-        private static final String CONDITIONED_PATTERN = "\\{(?<val1>[^=!><]+)\\s*(?<operator>==|!=|>|<|>=|<=)\\s*(?<val2>[^?]+)\\s*\\?\\s*(?<trueVal>[^:]+)\\s*:\\s*(?<falseVal>[^}]+)\\}";
-
+        private static final String CONDITIONED_PATTERN = "`(?<val1>[^=!><]+)\\s*(?<operator>==|!=|>|<|>=|<=)\\s*(?<val2>[^?]+)\\s*\\?\\s*(?<trueVal>[^:]+)\\s*:\\s*(?<falseVal>[^`]+)`";
         private static final String OPERATOR_EQUAL_TO = "==";
         private static final String OPERATOR_NOT_EQUAL_TO = "!=";
         private static final String OPERATOR_GREATER_THAN = ">";
@@ -31,14 +32,18 @@ public class Main {
         private static final String OPERATOR_LESS_THAN = "<";
         private static final String OPERATOR_LESS_THAN_OR_EQUAL_TO = "<=";
 
-        static String generate(String jsonResp) {
+        public static String generate(String jsonResp) {
+
+            final StringBuilder stringBuilder = new StringBuilder();
+            final String[] arr = jsonResp.split(CONDITIONED_PATTERN);
+
 
             //Checking if conditioned response
             final Pattern pattern = Pattern.compile(CONDITIONED_PATTERN, Pattern.MULTILINE);
             Matcher matcher = pattern.matcher(jsonResp);
 
 
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
             if (matcher.find()) {
                 int i = 0;
@@ -87,13 +92,13 @@ public class Main {
                     System.out.println("False Val : " + matcher.group("falseVal"));
 
                     if (isMatchFound) {
-                        matcher.appendReplacement(sb, result ? trueVal : falseVal);
+                        sb.append(arr[i++]).append(result ? trueVal : falseVal);
                     }
 
                 } while (matcher.find());
             }
 
-            return sb.length() == 0 ? jsonResp : sb.toString();
+            return sb.length() == 0 ? jsonResp : sb.append(arr[arr.length - 1]).toString();
         }
 
         private static boolean isInteger(String val1) {

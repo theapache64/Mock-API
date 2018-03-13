@@ -4,6 +4,7 @@ import com.theah64.mock_api.database.ParamResponses;
 import com.theah64.mock_api.database.Params;
 import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.Routes;
+import com.theah64.mock_api.lab.Main;
 import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.ParamResponse;
 import com.theah64.mock_api.models.Route;
@@ -22,8 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by theapache64 on 14/5/17.
@@ -144,6 +143,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
 
             jsonResp = DynamicResponseGenerator.generate(jsonResp);
+            jsonResp = Main.ConditionedResponse.generate(jsonResp);
 
             //Validation
             if (CommonUtils.isJSONValid(jsonResp)) {

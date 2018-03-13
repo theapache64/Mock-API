@@ -20,3 +20,4 @@ A web based tool to save and retrieve JSONs intelligently
 - Route updates in main screen
 - Authorization fix for get_json
 - Random number between range
+- Add feature - duplicate project
