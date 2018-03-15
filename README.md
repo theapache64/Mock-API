@@ -16,7 +16,7 @@ A web based tool to save and retrieve JSONs intelligently
 - Image delete check - existing in routes.
 - GET route auth pass
 - Fix 'Primitive type members cannot be annotated'
-- Conditioned response in json
+- Kotlin like syntax for conditioned response and random responses
 - Route updates in main screen
 - Authorization fix for get_json
 - Random number between range
