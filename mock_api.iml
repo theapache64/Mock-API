@@ -23,5 +23,6 @@
     <orderEntry type="module" module-name="webengine" />
     <orderEntry type="library" name="jmsm" level="application" />
     <orderEntry type="library" name="com.tinify:tinify:1.5.1" level="project" />
+    <orderEntry type="library" name="commons-io-2.6" level="project" />
   </component>
 </module>

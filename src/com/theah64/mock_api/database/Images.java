@@ -49,7 +49,7 @@ public class Images extends BaseTable<Image> {
 
     @Override
     public List<Image> getAll(String whereColumn, String whereColumnValue) throws QueryBuilderException, SQLException {
-        return new SelectQueryBuilder<>(
+        return new SelectQueryBuilder<Image>(
                 getTableName(),
                 this::getImageFromResultSet,
                 new String[]{COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED},
