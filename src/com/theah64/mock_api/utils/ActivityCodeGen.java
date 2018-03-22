@@ -65,7 +65,7 @@ public class ActivityCodeGen {
             final String constName = String.format("KEY_%s", toConstant(param.getName()));
             constantsBuilder.append(String.format("private static final String %s = \"%s\";", constName, param.getName())).append("\n");
             final String camelCase = CodeGen.toCamelCase(param.getName());
-            activityCallSignatureBuilder.append(String.format(", %s String ", param.isRequired() ? "@NotNull" : "@Nullable")).append(camelCase);
+            activityCallSignatureBuilder.append(String.format(", %s String ", param.isRequired() ? "@NonNull" : "@Nullable")).append(camelCase);
             activityCallBodyBuilder.append(String.format("\n\ti.putExtra(%s, %s);", constName, camelCase));
             apiCall.append(String.format("\n\t\t%s(%s),", param.isRequired() ? "getStringOrThrow" : "getString", constName));
         }

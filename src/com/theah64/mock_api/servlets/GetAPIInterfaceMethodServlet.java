@@ -89,7 +89,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
                         codeBuilder.append(String.format("\n\t%s %s,", MULTIPART_KEY, camelCaseParamName));
                     } else {
-                        codeBuilder.append(String.format("\n\t@%s(\"%s\") %s %s %s,", route.getMethod().equals("POST") && codeBuilder.indexOf(MULTIPART_KEY) == -1 ? "Field" : "Query", param.getName(), param.isRequired() ? "@NotNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
+                        codeBuilder.append(String.format("\n\t@%s(\"%s\") %s %s %s,", route.getMethod().equals("POST") && codeBuilder.indexOf(MULTIPART_KEY) == -1 ? "Field" : "Query", param.getName(), param.isRequired() ? "@NonNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
                     }
                 }
             }
