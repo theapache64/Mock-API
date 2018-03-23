@@ -62,7 +62,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
 
-        if (route.isSecure()) {
+        if (!getBooleanParameter("is_skip_auth") && route.isSecure()) {
             final String authorization = getHttpServletRequest().getHeader(HeaderSecurity.KEY_AUTHORIZATION);
             if (authorization == null) {
                 throw new Request.RequestException("Authorization header missing");

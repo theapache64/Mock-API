@@ -107,6 +107,7 @@ public class Route {
         for (final String param : filterRequiredParams()) {
             dummyParamBuilder.append(param).append("=").append(DynamicResponseGenerator.getLoremIpsum().getWords(1)).append("&");
         }
+        dummyParamBuilder.append("is_skip_auth=true");
         return dummyParamBuilder.toString();
     }
 
