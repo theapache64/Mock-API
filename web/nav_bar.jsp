@@ -117,27 +117,19 @@
                 </ul>
             </li>
 
-
-            <%--Generate--%>
+            <%--Java--%>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Generate
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Java
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu">
 
                     <li>
                         <a id="aPojo"
-                           href="#">POJO (Java)
+                           href="#">POJO
                             <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + M)</small>
                         </a>
                     </li>
 
-
-                    <li>
-                        <a id="aPojoJS"
-                           href="#">POJO (JavaScript)
-                            <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + J)</small>
-                        </a>
-                    </li>
 
                     <li>
                         <a id="aAPIInterfaceMethod"
@@ -152,6 +144,40 @@
                             <small class="text-muted menu_shortcut">(F8)</small>
                         </a>
                     </li>
+
+                </ul>
+            </li>
+
+            <%--JavaScript--%>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">JavaScript
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+
+
+                    <li>
+                        <a id="aPojoJS"
+                           href="#">POJO
+                            <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + J)</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="aReduxDuck"
+                           href="#">Redux Duck
+                            <small class="text-muted menu_shortcut">(F8)</small>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+
+            <%--Generate--%>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Generate
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
 
                     <li>
                         <a target="_blank"

@@ -219,22 +219,20 @@
             }
 
             //Global shortcut listener
-            function genApiInterfaceMethod() {
+            function genReduxDuck() {
 
-                var selIndex = $("select#routes").prop('selectedIndex');
-
-                if (selIndex == 0) {
+                if ($("select#routes").prop('selectedIndex') === 0) {
                     alert("Please select a route first");
                 } else {
                     var route = $.trim($("select#routes option:selected").text());
-                    window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>");
+                    window.open('v1/gen_redux_duck?name=' + route + "&project_name=<%=project.getName()%>");
                 }
             }
 
             function genApiCall() {
 
                 var selIndex = $("select#routes").prop('selectedIndex');
-                if (selIndex == 0) {
+                if (selIndex === 0) {
                     alert("Please select a route first");
                 } else {
                     var route = $.trim($("select#routes option:selected").text());
@@ -1404,6 +1402,10 @@
 
                     case "aAPIInterfaceMethod":
                         genApiInterfaceMethod();
+                        break;
+
+                    case "aReduxDuck":
+                        genReduxDuck();
                         break;
 
                     case "aAPICall":
