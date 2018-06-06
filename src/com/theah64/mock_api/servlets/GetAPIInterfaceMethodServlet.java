@@ -3,7 +3,7 @@ package com.theah64.mock_api.servlets;
 import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
-import com.theah64.mock_api.utils.CodeGen;
+import com.theah64.mock_api.utils.CodeGenJava;
 import com.theah64.mock_api.utils.SlashCutter;
 import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
@@ -50,7 +50,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
         final String projectName = getStringParameter(KEY_PROJECT_NAME);
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
-        final String responseClass = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response";
+        final String responseClass = CodeGenJava.getFirstCharUppercase(CodeGenJava.toCamelCase(routeName)) + "Response";
 
         final Route route = Routes.getInstance().get(projectName, routeName);
 
@@ -66,9 +66,9 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
             }
 
 
-            final String returnClassName = CodeGen.getFromFirstCapCharacter(SlashCutter.cut(responseClass));
+            final String returnClassName = CodeGenJava.getFromFirstCapCharacter(SlashCutter.cut(responseClass));
             codeBuilder.append(String.format("%s\n@%s(\"%s\")\nCall<BaseAPIResponse<%s>> %s(", (route.getMethod().equals("POST") && !route.getParams().isEmpty()) ? "@FormUrlEncoded" : "", route.getMethod(), route.getName(),
-                    returnClassName, SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
+                    returnClassName, SlashCutter.cut(CodeGenJava.toCamelCase(route.getName()))));
 
             if (route.isSecure()) {
                 codeBuilder.append("\n@Header(KEY_AUTHORIZATION) String apiKey,");
@@ -81,7 +81,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
                 final List<Param> params = route.getParams();
                 for (final Param param : params) {
 
-                    final String camelCaseParamName = CodeGen.toCamelCase(param.getName());
+                    final String camelCaseParamName = CodeGenJava.toCamelCase(param.getName());
                     descriptionBuilder.append("* @param ").append(camelCaseParamName).append(" <p>").append(param.getDescription()).append("</p>\n");
 
                     if (param.getDataType().equals(Param.DATA_TYPE_FILE)) {
@@ -89,7 +89,7 @@ public class GetAPIInterfaceMethodServlet extends AdvancedBaseServlet {
 
                         codeBuilder.append(String.format("\n\t%s %s,", MULTIPART_KEY, camelCaseParamName));
                     } else {
-                        codeBuilder.append(String.format("\n\t@%s(\"%s\") %s %s %s,", route.getMethod().equals("POST") && codeBuilder.indexOf(MULTIPART_KEY) == -1 ? "Field" : "Query", param.getName(), param.isRequired() ? "@NonNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGen.toCamelCase(param.getName())));
+                        codeBuilder.append(String.format("\n\t@%s(\"%s\") %s %s %s,", route.getMethod().equals("POST") && codeBuilder.indexOf(MULTIPART_KEY) == -1 ? "Field" : "Query", param.getName(), param.isRequired() ? "@NonNull" : "@Nullable", getPrimitive(param.getDataType()), CodeGenJava.toCamelCase(param.getName())));
                     }
                 }
             }

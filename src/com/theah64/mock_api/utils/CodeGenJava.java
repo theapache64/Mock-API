@@ -1,5 +1,6 @@
 package com.theah64.mock_api.utils;
 
+import com.theah64.mock_api.servlets.JsonToModelEngine;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Created by theapache64 on 22/11/17.
  */
-public class CodeGen {
+public class CodeGenJava {
 
 
     private static final String SERIALIZED_NAME_IMPORT = "import com.google.gson.annotations.SerializedName;";
@@ -97,15 +98,14 @@ public class CodeGen {
     public static String getFinalCode(final String packageName, String joString, String modelName, boolean isRetrofitModel) throws JSONException {
         final StringBuilder codeBuilder = new StringBuilder();
         hasList = false;
-        modelName = CodeGen.getFromFirstCapCharacter(SlashCutter.cut(modelName));
-        CodeGen.getGenClassCode(true, false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
+        modelName = CodeGenJava.getFromFirstCapCharacter(SlashCutter.cut(modelName));
+        CodeGenJava.getGenClassCode(true, false, codeBuilder, new JSONObject(joString), modelName, isRetrofitModel);
         codeBuilder.insert(0, String.format("%s\n\n%s\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/ \npublic class %s {\n\n",
                 "package " + packageName + ".api.responses;",
                 isRetrofitModel ? SERIALIZED_NAME_IMPORT : "",
                 hasList ? "import java.util.List;" : "",
                 new Date().toString(), modelName));
         codeBuilder.append("\n\n}");
-
         return codeBuilder.toString();
     }
 

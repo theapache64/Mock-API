@@ -56,15 +56,15 @@ public class ActivityCodeGen {
         final StringBuilder activityCallBodyBuilder = new StringBuilder("\n\tfinal Intent i = new Intent(context, Activity.class);");
         final StringBuilder apiCall = new StringBuilder();
         apiCall.append("@Override");
-        final String entityName = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName));
+        final String entityName = CodeGenJava.getFirstCharUppercase(CodeGenJava.toCamelCase(routeName));
         apiCall.append(String.format("\nprotected Call<BaseAPIResponse<%sResponse>> getCall(APIInterface apiInterface) {", SlashCutter.cut(entityName)));
-        apiCall.append(String.format("\n\treturn apiInterface.%s(", SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
+        apiCall.append(String.format("\n\treturn apiInterface.%s(", SlashCutter.cut(CodeGenJava.toCamelCase(route.getName()))));
 
         for (final Param param : route.getParams()) {
 
             final String constName = String.format("KEY_%s", toConstant(param.getName()));
             constantsBuilder.append(String.format("private static final String %s = \"%s\";", constName, param.getName())).append("\n");
-            final String camelCase = CodeGen.toCamelCase(param.getName());
+            final String camelCase = CodeGenJava.toCamelCase(param.getName());
             activityCallSignatureBuilder.append(String.format(", %s String ", param.isRequired() ? "@NonNull" : "@Nullable")).append(camelCase);
             activityCallBodyBuilder.append(String.format("\n\ti.putExtra(%s, %s);", constName, camelCase));
             apiCall.append(String.format("\n\t\t%s(%s),", param.isRequired() ? "getStringOrThrow" : "getString", constName));

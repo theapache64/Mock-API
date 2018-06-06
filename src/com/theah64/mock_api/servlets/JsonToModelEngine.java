@@ -2,7 +2,7 @@ package com.theah64.mock_api.servlets;
 
 import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.utils.APIResponse;
-import com.theah64.mock_api.utils.CodeGen;
+import com.theah64.mock_api.utils.CodeGenJava;
 import com.theah64.webengine.utils.PathInfo;
 import com.theah64.webengine.utils.Request;
 import org.json.JSONException;
@@ -21,7 +21,11 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
 
     public static final String KEY_ROUTE_NAME = "route_name";
     public static final String KEY_JO_STRING = "jo_string";
+    public static final String KEY_TARGET_LANG = "target_lang";
     public static final String KEY_IS_RETROFIT_MODEL = "is_retrofit_model";
+
+    public static final String LANGUAGE_JAVASCRIPT = "javascript";
+    public static final String LANGUAGE_JAVA = "java";
 
     @Override
     protected boolean isSecureServlet() {
@@ -41,12 +45,12 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException {
 
         final String routeName = getStringParameter(KEY_ROUTE_NAME);
-        final String modelName = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response";
+        final String modelName = CodeGenJava.getFirstCharUppercase(CodeGenJava.toCamelCase(routeName)) + "Response";
         final String joString = getStringParameter(KEY_JO_STRING);
         final boolean isRetrofitModel = getBooleanParameter(KEY_IS_RETROFIT_MODEL);
 
         final String packageName = Projects.getInstance().get(Projects.COLUMN_ID, getHeaderSecurity().getProjectId(), Projects.COLUMN_PACKAGE_NAME, false);
-        getWriter().write(new APIResponse("Done", "data", CodeGen.getFinalCode(packageName, joString, modelName, isRetrofitModel)).getResponse());
+        getWriter().write(new APIResponse("Done", "data", CodeGenJava.getFinalCode(packageName, joString, modelName, isRetrofitModel)).getResponse());
     }
 
 

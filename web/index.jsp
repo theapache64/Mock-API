@@ -16,6 +16,7 @@
 <%@ page import="java.sql.SQLException" %>
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.theah64.mock_api.servlets.JsonToModelEngine" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -456,6 +457,26 @@
 
                     $("input#iJoString").val(selection);
                     $("input#iIsRetrofitModel").val(isRetrofitModel);
+                    $("input#iTargetLang").val('<%=JsonToModelEngine.LANGUAGE_JAVA%>');
+                    $("input#iRouteName").val($("input#route").val());
+                    $("form#fJsonToModel").submit();
+
+                } else {
+                    alert("No JSON text selected!");
+                }
+            }
+
+
+            function generatePOJOJS() {
+
+                var selection = editor.getSelection();
+
+                if (selection.trim().length > 0) {
+
+
+                    $("input#iJoString").val(selection);
+                    $("input#iIsRetrofitModel").val(false);
+                    $("input#iTargetLang").val('<%=JsonToModelEngine.LANGUAGE_JAVASCRIPT%>');
                     $("input#iRouteName").val($("input#route").val());
                     $("form#fJsonToModel").submit();
 
@@ -1372,8 +1393,13 @@
                     case "aFormatResponse":
                         formatJSON();
                         break;
+
                     case "aPojo":
                         generatePOJO();
+                        break;
+
+                    case "aPojoJS":
+                        generatePOJOJS();
                         break;
 
                     case "aAPIInterfaceMethod":
@@ -1477,6 +1503,7 @@
     <form id="fJsonToModel" action="json_to_model_engine.jsp" style="display: none" target="_blank" method="POST">
         <input id="iAuthorization" name="Authorization" value="<%=project.getApiKey()%>"/>
         <input id="iJoString" name="jo_string"/>
+        <input id="iTargetLang" name="<%=JsonToModelEngine.KEY_TARGET_LANG%>"/>
         <input id="iIsRetrofitModel" name="is_retrofit_model"/>
         <input id="iRouteName" name="route_name"/>
         <input value="X" name="<%=Form.KEY_IS_SUBMITTED%>"/>

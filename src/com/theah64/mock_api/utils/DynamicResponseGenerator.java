@@ -103,7 +103,7 @@ public class DynamicResponseGenerator {
             new DynamicResponse("{randomWords (\\d+)}") {
                 @Override
                 String getValue(String count) {
-                    return CodeGen.getFirstCharUppercase(loremIpsum.getWords(Integer.parseInt(count)));
+                    return CodeGenJava.getFirstCharUppercase(loremIpsum.getWords(Integer.parseInt(count)));
                 }
             },
 

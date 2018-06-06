@@ -1,10 +1,11 @@
 <%@ page import="com.theah64.mock_api.database.Projects" %>
 <%@ page import="com.theah64.mock_api.servlets.JsonToModelEngine" %>
-<%@ page import="com.theah64.mock_api.utils.CodeGen" %>
+<%@ page import="com.theah64.mock_api.utils.CodeGenJava" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.webengine.utils.Request" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
 <%@ page import="org.json.JSONException" %>
+<%@ page import="com.theah64.mock_api.utils.CodeGenJavaScript" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -38,16 +39,20 @@
     }
 
     final String routeName = form.getString(JsonToModelEngine.KEY_ROUTE_NAME);
-    final String modelName = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response";
+    final String modelName = CodeGenJava.getFirstCharUppercase(CodeGenJava.toCamelCase(routeName)) + "Response";
     final String joString = form.getString(JsonToModelEngine.KEY_JO_STRING);
     final boolean isRetrofitModel = form.getBoolean(JsonToModelEngine.KEY_IS_RETROFIT_MODEL);
+    final String targetLang = form.getString(JsonToModelEngine.KEY_TARGET_LANG);
 
     final String apiKey = form.getString("Authorization");
 
     final String packageName = Projects.getInstance().get(Projects.COLUMN_API_KEY, apiKey, Projects.COLUMN_PACKAGE_NAME, false);
     String output = null;
     try {
-        output = CodeGen.getFinalCode(packageName, joString, modelName, isRetrofitModel);
+        output =
+                targetLang.equals(JsonToModelEngine.LANGUAGE_JAVA)
+                        ? CodeGenJava.getFinalCode(packageName, joString, modelName, isRetrofitModel)
+                        : CodeGenJavaScript.getFinalCode(joString, modelName);
     } catch (JSONException e) {
         e.printStackTrace();
         StatusResponse.redirect(response, "Error", e.getMessage());
@@ -64,6 +69,7 @@
     <link rel="stylesheet" href="//codemirror.net/addon/hint/show-hint.css">
     <script src="//codemirror.net/addon/hint/show-hint.js"></script>
     <script src="//codemirror.net/mode/clike/clike.js"></script>
+    <script src="//codemirror.net/mode/javascript/javascript.js"></script>
     <script src="//codemirror.net/addon/display/placeholder.js"></script>
     <style>
         .CodeMirror {
@@ -89,7 +95,7 @@
 
             var javaEditor = CodeMirror.fromTextArea(document.getElementById("jCode"), {
                 lineNumbers: true,
-                mode: "text/x-java",
+                mode: "<%=targetLang.equals(JsonToModelEngine.LANGUAGE_JAVA) ? "text/x-java" : "text/javascript"%>",
                 matchBrackets: true,
                 extraKeys: {
                     "F11": function (cm) {

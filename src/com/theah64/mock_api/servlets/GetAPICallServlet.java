@@ -3,7 +3,7 @@ package com.theah64.mock_api.servlets;
 import com.theah64.mock_api.database.Routes;
 import com.theah64.mock_api.models.Param;
 import com.theah64.mock_api.models.Route;
-import com.theah64.mock_api.utils.CodeGen;
+import com.theah64.mock_api.utils.CodeGenJava;
 import com.theah64.mock_api.utils.Inflector;
 import com.theah64.mock_api.utils.SlashCutter;
 import com.theah64.webengine.utils.PathInfo;
@@ -46,7 +46,7 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
 
         final String projectName = getStringParameter(KEY_PROJECT_NAME);
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
-        final String responseClass = CodeGen.getFromFirstCapCharacter(SlashCutter.cut(CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(routeName)) + "Response"));
+        final String responseClass = CodeGenJava.getFromFirstCapCharacter(SlashCutter.cut(CodeGenJava.getFirstCharUppercase(CodeGenJava.toCamelCase(routeName)) + "Response"));
 
         final Route route = Routes.getInstance().get(projectName, routeName);
         if (route != null) {
@@ -55,7 +55,7 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
             StringBuilder codeBuilder = new StringBuilder();
 
             //Basic
-            codeBuilder.append(String.format("RetrofitClient.getClient().create(APIInterface.class).%s(", SlashCutter.cut(CodeGen.toCamelCase(route.getName()))));
+            codeBuilder.append(String.format("RetrofitClient.getClient().create(APIInterface.class).%s(", SlashCutter.cut(CodeGenJava.toCamelCase(route.getName()))));
 
             if (route.isSecure()) {
                 codeBuilder.append("App.getUser().getApiKey(),");
@@ -65,7 +65,7 @@ public class GetAPICallServlet extends AdvancedBaseServlet {
             for (Param param : route.getParams()) {
                 final String paramName = param.getName();
                 codeBuilder.append("\n\t");
-                String fCharUp = CodeGen.getFirstCharUppercase(CodeGen.toCamelCase(paramName));
+                String fCharUp = CodeGenJava.getFirstCharUppercase(CodeGenJava.toCamelCase(paramName));
                 if (paramName.equals("api_key")) {
                     codeBuilder.append("App.getCompany().getApiKey(),");
                 } else if (paramName.endsWith("_id")) {

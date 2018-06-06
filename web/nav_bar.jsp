@@ -126,8 +126,16 @@
 
                     <li>
                         <a id="aPojo"
-                           href="#">POJO
+                           href="#">POJO (Java)
                             <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + M)</small>
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a id="aPojoJS"
+                           href="#">POJO (JavaScript)
+                            <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + J)</small>
                         </a>
                     </li>
 
