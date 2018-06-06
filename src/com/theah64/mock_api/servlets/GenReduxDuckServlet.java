@@ -118,9 +118,11 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
             codeBuilder.append(String.format("%s): AxiosRequestType => AxiosRequest.build(", route.getParams().isEmpty() ? "" :"\n"))
                     .append(String.format("\n\t%s,", ROUTE_NAME))
                     .append(String.format("\n\t'%s',", route.getMethod()))
-                    .append(String.format("\n\t'/%s',", route.getName()))
-                    .append(String.format("\n\t{%s\n\t}\n", requestBodyBuilder.toString()))
-            ;
+                    .append(String.format("\n\t'/%s',\n", route.getName()));
+
+            if(!requestBodyBuilder.toString().isEmpty()){
+                codeBuilder.append(String.format("\n\t{%s\n\t}\n", requestBodyBuilder.toString()));
+            }
 
 
             descriptionBuilder.append("* @return ").append(returnClassName);

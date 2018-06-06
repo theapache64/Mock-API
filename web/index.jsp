@@ -229,6 +229,17 @@
                 }
             }
 
+            //Global shortcut listener
+            function genApiInterfaceMethod() {
+                var selIndex = $("select#routes").prop('selectedIndex');
+                if (selIndex == 0) {
+                    alert("Please select a route first");
+                } else {
+                    var route = $.trim($("select#routes option:selected").text());
+                    window.open('v1/get_api_interface_method?name=' + route + "&project_name=<%=project.getName()%>");
+                }
+            }
+
             function genApiCall() {
 
                 var selIndex = $("select#routes").prop('selectedIndex');
@@ -288,6 +299,7 @@
                 }
 
 
+
                 if (event.keyCode === 112) {
                     findRoute();
                 }
@@ -298,11 +310,13 @@
                     genApiInterfaceMethod();
                 }
 
-                //F8
-                if (event.keyCode === 119) {
-
+                if (event.ctrlKey && event.keyCode === 119) {
+                    genReduxDuck();
+                }else if (event.keyCode === 119) {
                     genApiCall();
                 }
+
+
 
             });
 
@@ -563,7 +577,7 @@
 
                 console.log(event.keyCode);
 
-                //Control + Alt+  O
+                //F9
                 if (event.keyCode === 120) {
                     insertGoogleImages();
                 }
@@ -591,6 +605,11 @@
                 //Control + Alt + M
                 if (event.ctrlKey && event.altKey && event.keyCode === 77) {
                     generatePOJO();
+                }
+
+                //Control + Alt + J
+                if (event.ctrlKey && event.altKey && event.keyCode === 74) {
+                    generatePOJOJS();
                 }
 
                 if (event.ctrlKey && event.altKey && event.keyCode === 76) {
