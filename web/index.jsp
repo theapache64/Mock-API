@@ -34,9 +34,11 @@
     <%@include file="common_headers.jsp" %>
 
     <%
+
+        Preference preference = null;
         try {
 
-            final Preference preference = Preferences.getInstance().get();
+            preference = Preferences.getInstance().get();
 
             if (!preference.isOnline()) {
                 StatusResponse.redirect(response, "Maintenance Mode");
@@ -44,6 +46,10 @@
             }
         } catch (QueryBuilderException | SQLException e) {
             e.printStackTrace();
+        }
+
+        if (preference == null) {
+            throw new IllegalArgumentException("Couldn't load pref");
         }
     %>
 
@@ -486,7 +492,7 @@
 
                     $("input#iJoString").val(selection);
                     $("input#iIsRetrofitModel").val(false);
-                    $("input#iTargetLang").val(isClass ? '<%=JsonToModelEngine.LANGUAGE_TYPESCRIPT_CLASS%>' :'<%=JsonToModelEngine.LANGUAGE_TYPESCRIPT_INTERFACE%>');
+                    $("input#iTargetLang").val(isClass ? '<%=JsonToModelEngine.LANGUAGE_TYPESCRIPT_CLASS%>' : '<%=JsonToModelEngine.LANGUAGE_TYPESCRIPT_INTERFACE%>');
                     $("input#iRouteName").val($("input#route").val());
                     $("form#fJsonToModel").submit();
 
@@ -494,7 +500,7 @@
                     alert("No JSON text selected!");
                 }
             }
-            
+
 
             function insertSuccessResponse() {
                 var successResponse = '<%=project.getDefaultSuccessResponse().replaceAll("[\r\n]+", " ")%>';
@@ -511,7 +517,7 @@
 
                 var errorResponse = '<%=project.getDefaultErrorResponse().replaceAll("[\r\n]+", " ")%>';
 
-                if (errorResponse.indexOf("ERROR_MESSAGE") != -1) {
+                if (errorResponse.indexOf("ERROR_MESSAGE") !== -1) {
                     var errorMsg = prompt("Error message", "This is a sample error message");
                     editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse.replace('ERROR_MESSAGE', errorMsg)), undefined, 4));
                 } else {
@@ -1572,6 +1578,11 @@
 
     <br>
 
+    <div class="row">
+        <div class="col-md-12 content-centered" align="center">
+            <img height="120" src="<%=preference.getSurpriseImage()%>"/>
+        </div>
+    </div>
 
     <p id="pLastModified" title="" class="pull-right"></p>
 

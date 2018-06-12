@@ -17,6 +17,7 @@ public class Preferences extends BaseTable<Preference> {
     private static final String COLUMN_DEFAULT_ERROR_RESPONSE = "default_error_response";
     private static final String COLUMN_BASE_RESPONSE_STRUCTURE = "base_response_structure";
     private static final String COLUMN_IS_ONLINE = "is_online";
+    private static final String COLUMN_SURPISE_IMAGE = "surprise_image";
 
     private Preferences() {
         super("preferences");
@@ -31,8 +32,9 @@ public class Preferences extends BaseTable<Preference> {
                 rs.getString(COLUMN_DEFAULT_SUCCESS_RESPONSE),
                 rs.getString(COLUMN_DEFAULT_ERROR_RESPONSE),
                 rs.getString(COLUMN_BASE_RESPONSE_STRUCTURE),
+                rs.getString(COLUMN_SURPISE_IMAGE),
                 rs.getBoolean(COLUMN_IS_ONLINE)
-        )).select(new String[]{COLUMN_DEFAULT_SUCCESS_RESPONSE, COLUMN_DEFAULT_ERROR_RESPONSE, COLUMN_BASE_RESPONSE_STRUCTURE,COLUMN_IS_ONLINE})
+        )).select(new String[]{COLUMN_DEFAULT_SUCCESS_RESPONSE, COLUMN_SURPISE_IMAGE, COLUMN_DEFAULT_ERROR_RESPONSE, COLUMN_BASE_RESPONSE_STRUCTURE, COLUMN_IS_ONLINE})
                 .limit("1")
                 .build()
                 .get();
