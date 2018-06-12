@@ -5,7 +5,8 @@
 <%@ page import="com.theah64.webengine.utils.Request" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
 <%@ page import="org.json.JSONException" %>
-<%@ page import="com.theah64.mock_api.utils.CodeGenJavaScript" %>
+<%@ page import="com.theah64.mock_api.utils.TypescriptInterfaceGenerator" %>
+<%@ page import="com.theah64.mock_api.utils.TypescriptInterfaceClass" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -49,10 +50,8 @@
     final String packageName = Projects.getInstance().get(Projects.COLUMN_API_KEY, apiKey, Projects.COLUMN_PACKAGE_NAME, false);
     String output = null;
     try {
-        output =
-                targetLang.equals(JsonToModelEngine.LANGUAGE_JAVA)
-                        ? CodeGenJava.getFinalCode(packageName, joString, modelName, isRetrofitModel)
-                        : CodeGenJavaScript.getFinalCode(joString, modelName);
+        output = getOutput(targetLang, packageName, joString, modelName, isRetrofitModel);
+
     } catch (JSONException e) {
         e.printStackTrace();
         StatusResponse.redirect(response, "Error", e.getMessage());
@@ -114,3 +113,22 @@
 <textarea id="jCode"><%=output%></textarea>
 </body>
 </html>
+<%!
+    public static String getOutput(String targetLang, String packageName, String joString, String modelName, boolean isRetrofitModel) throws JSONException {
+
+        switch (targetLang) {
+            case JsonToModelEngine.LANGUAGE_JAVA:
+                return CodeGenJava.getFinalCode(packageName, joString, modelName, isRetrofitModel);
+
+            case JsonToModelEngine.LANGUAGE_TYPESCRIPT_INTERFACE:
+                return TypescriptInterfaceGenerator.getFinalCode(joString, modelName);
+
+            case JsonToModelEngine.LANGUAGE_TYPESCRIPT_CLASS:
+                return TypescriptInterfaceClass.getFinalCode(joString, modelName);
+
+
+            default:
+                throw new IllegalArgumentException("Undefined language " + targetLang);
+        }
+    }
+%>

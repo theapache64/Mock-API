@@ -13,10 +13,8 @@ import java.util.regex.Pattern;
 /**
  * Created by theapache64 on 22/11/17.
  */
-public class CodeGenJavaScript {
+public class TypescriptInterfaceClass {
 
-
-    private static final String SERIALIZED_NAME_IMPORT = "import com.google.gson.annotations.SerializedName;";
 
     private static void getGenClassCode(final boolean isJsonObject, final StringBuilder codeBuilder, final Object object, final String modelName) throws JSONException {
 
@@ -83,7 +81,7 @@ public class CodeGenJavaScript {
                 return o1.getVariableName().length() - o2.getVariableName().length();
             });
 
-            codeBuilder.insert(0, genClassCode(true, modelName, properties, isJsonObject));
+            codeBuilder.insert(0, genClassCode(modelName, properties, isJsonObject));
         }
 
     }
@@ -92,25 +90,23 @@ public class CodeGenJavaScript {
         final StringBuilder codeBuilder = new StringBuilder();
 
         //It's javascript
-        modelName = CodeGenJavaScript.getFromFirstCapCharacter(SlashCutter.cut(modelName));
-        CodeGenJavaScript.getGenClassCode(true, codeBuilder, new JSONObject(joString), "Data");
+        modelName = TypescriptInterfaceClass.getFromFirstCapCharacter(SlashCutter.cut(modelName));
+        TypescriptInterfaceClass.getGenClassCode(true, codeBuilder, new JSONObject(joString), "Data");
         codeBuilder.insert(0, String.format("%s\n\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/\n",
                 "// @flow",
                 "import BaseAPIResponse from './BaseAPIResponse';",
                 new Date().toString()));
 
-        codeBuilder.append(String.format("export interface %s extends BaseAPIResponse<Data> {}",modelName));
+        codeBuilder.append(String.format("export default class %s extends BaseAPIResponse<Data> {}", modelName));
 
         return codeBuilder.toString();
     }
 
-    private static String genClassCode(boolean isNestedClass, String modelName, List<Model.Property> properties, boolean isJSONObject) {
+    private static String genClassCode(String modelName, List<Model.Property> properties, boolean isJSONObject) {
 
         final StringBuilder codeBuilder = new StringBuilder();
-        if (isNestedClass) {
-            codeBuilder.append(String.format("class %s {", isJSONObject ? modelName : removePlural(modelName))).append("\n");
-        }
-
+        codeBuilder.append(String.format("class %s {", isJSONObject ? modelName : removePlural(modelName))).append("\n");
+        codeBuilder.append("\n\tconstructor(\n");
         //final StringBuilder constructorParams = new StringBuilder();
         //final StringBuilder constructorThis = new StringBuilder();
         //final StringBuilder getters = new StringBuilder();
@@ -119,14 +115,15 @@ public class CodeGenJavaScript {
 
 
             String variableCamelCase = property.getVariableName();
-            final String a = String.format("readonly %s: %s",variableCamelCase,property.getDataType());
-            codeBuilder.append(String.format("%s%s;", isNestedClass ? "\t" : "", a)).append("\n");
+            final String a = String.format("\tpublic readonly %s: %s", variableCamelCase, property.getDataType());
+            codeBuilder.append(String.format("\t%s,", a)).append("\n");
         }
 
+
+        codeBuilder.append("\t){}\n");
+
         //class end
-        if (isNestedClass) {
-            codeBuilder.append("}\n\n");
-        }
+        codeBuilder.append("}\n\n");
 
 
         return codeBuilder.toString();

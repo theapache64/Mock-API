@@ -150,15 +150,22 @@
 
             <%--JavaScript--%>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">JavaScript
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">TypeScript
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu">
 
 
                     <li>
-                        <a id="aPojoJS"
-                           href="#">POJO
+                        <a id="aTypeScriptInterface"
+                           href="#">Interface
                             <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + J)</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="aTypeScriptClass"
+                           href="#">Class
+                            <small class="text-muted menu_shortcut pull-right">(Ctrl + Alt + K)</small>
                         </a>
                     </li>
 

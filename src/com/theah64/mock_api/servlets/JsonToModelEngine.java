@@ -24,7 +24,8 @@ public class JsonToModelEngine extends AdvancedBaseServlet {
     public static final String KEY_TARGET_LANG = "target_lang";
     public static final String KEY_IS_RETROFIT_MODEL = "is_retrofit_model";
 
-    public static final String LANGUAGE_JAVASCRIPT = "javascript";
+    public static final String LANGUAGE_TYPESCRIPT_INTERFACE = "typescript_interface";
+    public static final String LANGUAGE_TYPESCRIPT_CLASS = "typescript_class";
     public static final String LANGUAGE_JAVA = "java";
 
     @Override

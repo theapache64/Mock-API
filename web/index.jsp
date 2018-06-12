@@ -299,7 +299,6 @@
                 }
 
 
-
                 if (event.keyCode === 112) {
                     findRoute();
                 }
@@ -312,10 +311,9 @@
 
                 if (event.ctrlKey && event.keyCode === 119) {
                     genReduxDuck();
-                }else if (event.keyCode === 119) {
+                } else if (event.keyCode === 119) {
                     genApiCall();
                 }
-
 
 
             });
@@ -479,7 +477,7 @@
             }
 
 
-            function generatePOJOJS() {
+            function generateTypeScript(isClass) {
 
                 var selection = editor.getSelection();
 
@@ -488,7 +486,7 @@
 
                     $("input#iJoString").val(selection);
                     $("input#iIsRetrofitModel").val(false);
-                    $("input#iTargetLang").val('<%=JsonToModelEngine.LANGUAGE_JAVASCRIPT%>');
+                    $("input#iTargetLang").val(isClass ? '<%=JsonToModelEngine.LANGUAGE_TYPESCRIPT_CLASS%>' :'<%=JsonToModelEngine.LANGUAGE_TYPESCRIPT_INTERFACE%>');
                     $("input#iRouteName").val($("input#route").val());
                     $("form#fJsonToModel").submit();
 
@@ -496,6 +494,7 @@
                     alert("No JSON text selected!");
                 }
             }
+            
 
             function insertSuccessResponse() {
                 var successResponse = '<%=project.getDefaultSuccessResponse().replaceAll("[\r\n]+", " ")%>';
@@ -609,7 +608,12 @@
 
                 //Control + Alt + J
                 if (event.ctrlKey && event.altKey && event.keyCode === 74) {
-                    generatePOJOJS();
+                    generateTypeScript(false);
+                }
+
+                //Control + Alt + K
+                if (event.ctrlKey && event.altKey && event.keyCode === 75) {
+                    generateTypeScript(true);
                 }
 
                 if (event.ctrlKey && event.altKey && event.keyCode === 76) {
@@ -1415,8 +1419,12 @@
                         generatePOJO();
                         break;
 
-                    case "aPojoJS":
-                        generatePOJOJS();
+                    case "aTypeScriptInterface":
+                        generateTypeScript(false);
+                        break;
+
+                    case "aTypeScriptClass":
+                        generateTypeScript(true);
                         break;
 
                     case "aAPIInterfaceMethod":
