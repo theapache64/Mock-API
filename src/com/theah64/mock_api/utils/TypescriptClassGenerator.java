@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by theapache64 on 22/11/17.
  */
-public class TypescriptInterfaceGenerator {
+public class TypescriptClassGenerator {
 
-
-    private static final String SERIALIZED_NAME_IMPORT = "import com.google.gson.annotations.SerializedName;";
 
     @SuppressWarnings("Duplicates")
     private static void getGenClassCode(final boolean isJsonObject, final StringBuilder codeBuilder, final Object object, final String modelName) throws JSONException {
@@ -50,7 +49,8 @@ public class TypescriptInterfaceGenerator {
                     final boolean isJsonArray = dataType.equals("JSONArray");
 
                     //Capital first letter
-                    dataType = GeneratorUtils.underScoreMagic(variableName, dataType);
+                    dataType = GeneratorUtils.underScoreMagic(variableName,dataType);
+
 
                     getGenClassCode(!isJsonArray, codeBuilder, joModel1, dataType);
 
@@ -84,13 +84,13 @@ public class TypescriptInterfaceGenerator {
 
         //It's javascript
         modelName = GeneratorUtils.getFromFirstCapCharacter(SlashCutter.cut(modelName));
-        TypescriptInterfaceGenerator.getGenClassCode(true, codeBuilder, new JSONObject(joString), "Data");
+        TypescriptClassGenerator.getGenClassCode(true, codeBuilder, new JSONObject(joString), "Data");
         codeBuilder.insert(0, String.format("%s\n\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/\n",
                 "// @flow",
                 "import BaseAPIResponse from './BaseAPIResponse';",
                 new Date().toString()));
 
-        codeBuilder.append(String.format("export default interface %s extends BaseAPIResponse<Data> {}", modelName));
+        codeBuilder.append(String.format("export default class %s extends BaseAPIResponse<Data> {}", modelName));
 
         return codeBuilder.toString();
     }
@@ -98,23 +98,26 @@ public class TypescriptInterfaceGenerator {
     private static String genClassCode(String modelName, List<Model.Property> properties, boolean isJSONObject) {
 
         final StringBuilder codeBuilder = new StringBuilder();
-        codeBuilder.append(String.format("interface %s {", isJSONObject ? modelName : GeneratorUtils.removePlural(modelName))).append("\n");
-
+        codeBuilder.append(String.format("class %s {", isJSONObject ? modelName : GeneratorUtils.removePlural(modelName))).append("\n");
+        codeBuilder.append("\n\tconstructor(\n");
         for (final Model.Property property : properties) {
 
 
             String variableCamelCase = property.getVariableName();
-            final String a = String.format("readonly %s: %s", variableCamelCase, property.getDataType());
-            codeBuilder.append(String.format("\t%s;", a)).append("\n");
+            final String a = String.format("\tpublic readonly %s: %s", variableCamelCase, property.getDataType());
+            codeBuilder.append(String.format("\t%s,", a)).append("\n");
         }
 
+
+        codeBuilder.append("\t){}\n");
+
         //class end
-        if (true) {
-            codeBuilder.append("}\n\n");
-        }
+        codeBuilder.append("}\n\n");
 
 
         return codeBuilder.toString();
     }
+
+
 
 }

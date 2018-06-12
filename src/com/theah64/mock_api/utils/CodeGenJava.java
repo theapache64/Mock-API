@@ -1,5 +1,6 @@
 package com.theah64.mock_api.utils;
 
+import com.theah64.mock_api.models.Model;
 import com.theah64.mock_api.servlets.JsonToModelEngine;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,16 +54,7 @@ public class CodeGenJava {
                     final boolean isJsonArray = dataType.equals("JSONArray");
 
                     //Capital first letter
-                    dataType = variableName.substring(0, 1).toUpperCase() + variableName.substring(1);
-
-                    if (dataType.contains("_")) {
-                        final String[] chunks = dataType.split("_");
-                        final StringBuilder sb = new StringBuilder();
-                        for (final String chunk : chunks) {
-                            sb.append(chunk.substring(0, 1).toUpperCase()).append(chunk.substring(1));
-                        }
-                        dataType = sb.toString();
-                    }
+                    dataType = GeneratorUtils.underScoreMagic(variableName, dataType);
 
 
                     getGenClassCode(!isJsonArray, true, codeBuilder, joModel1, dataType, isRetrofitModel);
@@ -81,7 +73,7 @@ public class CodeGenJava {
 
             //Sorting
             properties.sort((o1, o2) -> {
-                if (o1.variableName.equals("id")) {
+                if (o1.getVariableName().equals("id")) {
                     return -1;
                 }
 
@@ -210,38 +202,5 @@ public class CodeGenJava {
         return string.substring(pos);
     }
 
-    static class Model {
-        private final String name;
-        private final List<Property> properties;
 
-        Model(String name, List<Property> properties) {
-            this.name = name;
-            this.properties = properties;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public List<Property> getProperties() {
-            return properties;
-        }
-
-        static class Property {
-            private final String dataType, variableName;
-
-            Property(String dataType, String variableName) {
-                this.dataType = dataType;
-                this.variableName = variableName;
-            }
-
-            public String getDataType() {
-                return dataType;
-            }
-
-            public String getVariableName() {
-                return variableName;
-            }
-        }
-    }
 }

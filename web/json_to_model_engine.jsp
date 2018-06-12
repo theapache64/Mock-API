@@ -6,7 +6,7 @@
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
 <%@ page import="org.json.JSONException" %>
 <%@ page import="com.theah64.mock_api.utils.TypescriptInterfaceGenerator" %>
-<%@ page import="com.theah64.mock_api.utils.TypescriptInterfaceClass" %>
+<%@ page import="com.theah64.mock_api.utils.TypescriptClassGenerator" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
@@ -124,7 +124,7 @@
                 return TypescriptInterfaceGenerator.getFinalCode(joString, modelName);
 
             case JsonToModelEngine.LANGUAGE_TYPESCRIPT_CLASS:
-                return TypescriptInterfaceClass.getFinalCode(joString, modelName);
+                return TypescriptClassGenerator.getFinalCode(joString, modelName);
 
 
             default:
