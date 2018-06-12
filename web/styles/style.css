@@ -133,3 +133,14 @@ span.glyphicon.glyphicon-remove {
 .CodeMirror pre.CodeMirror-placeholder {
     color: #999;
 }
+
+div#surprise_image {
+    position:  fixed;
+    bottom: 0;
+    right: 0;
+    /* max-height: 200px; */
+}
+
+img {
+    /* max-height:  200px; */
+}

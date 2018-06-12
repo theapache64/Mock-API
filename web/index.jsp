@@ -1578,10 +1578,24 @@
 
     <br>
 
+    <%
+        if (preference.getSurpriseQuote() != null && !preference.getSurpriseQuote().trim().isEmpty()) {
+    %>
     <div class="row">
-        <div class="col-md-12 content-centered" align="center">
-            <img height="120" src="<%=preference.getSurpriseImage()%>"/>
+        <div class="col-md-12">
+            <blockquote>
+                <p><%=preference.getSurpriseQuote()%>
+                </p>
+                <footer>MockAPI</footer>
+            </blockquote>
         </div>
+    </div>
+    <%
+        }
+    %>
+
+    <div id="surprise_image">
+        <img src="<%=preference.getSurpriseImage()%>"/>
     </div>
 
     <p id="pLastModified" title="" class="pull-right"></p>

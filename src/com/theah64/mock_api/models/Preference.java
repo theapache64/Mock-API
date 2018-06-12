@@ -5,15 +5,21 @@ package com.theah64.mock_api.models;
  */
 public class Preference {
 
-    private final String defaultSuccessResponse, defaultErrorResponse, baseResponseStructure,surpriseImage;
+    private final String defaultSuccessResponse, defaultErrorResponse, baseResponseStructure, surpriseImage, surpriseQuote;
     private final boolean isOnline;
 
-    public Preference(String defaultSuccessResponse, String defaultErrorResponse, String baseResponseStructure, String surpriseImage, boolean isOnline) {
+    public Preference(String defaultSuccessResponse, String defaultErrorResponse, String baseResponseStructure, String surpriseImage, String surpriseQuote, boolean isOnline) {
         this.defaultSuccessResponse = defaultSuccessResponse;
         this.defaultErrorResponse = defaultErrorResponse;
         this.baseResponseStructure = baseResponseStructure;
         this.surpriseImage = surpriseImage;
+        this.surpriseQuote = surpriseQuote;
         this.isOnline = isOnline;
+    }
+
+
+    public String getSurpriseQuote() {
+        return surpriseQuote;
     }
 
     public String getSurpriseImage() {
