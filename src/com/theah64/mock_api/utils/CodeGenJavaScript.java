@@ -99,7 +99,7 @@ public class CodeGenJavaScript {
                 "import BaseAPIResponse from './BaseAPIResponse';",
                 new Date().toString()));
 
-        codeBuilder.append(String.format("export type %s = BaseAPIResponse<Data>;",modelName));
+        codeBuilder.append(String.format("export interface %s extends BaseAPIResponse<Data> {}",modelName));
 
         return codeBuilder.toString();
     }
@@ -119,7 +119,7 @@ public class CodeGenJavaScript {
 
 
             String variableCamelCase = property.getVariableName();
-            final String a = String.format("%s: %s",variableCamelCase,property.getDataType());
+            final String a = String.format("readonly %s: %s",variableCamelCase,property.getDataType());
             codeBuilder.append(String.format("%s%s;", isNestedClass ? "\t" : "", a)).append("\n");
         }
 
