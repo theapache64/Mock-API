@@ -59,6 +59,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
         super.doPost(req, resp);
     }
 
+
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
 

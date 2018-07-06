@@ -62,7 +62,7 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
 
 
             //Adding main constant
-            final String ROUTE_NAME = routeName.toUpperCase();
+            final String ROUTE_NAME = getFormattedRouteNameWithCaps(routeName);
             codeBuilder.append(String.format("\nconst %s = '%s';\n", ROUTE_NAME, ROUTE_NAME));
 
             //Reducer
@@ -70,7 +70,7 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
 
 
             //Action
-            codeBuilder.append(String.format("\nexport const %s = (", SlashCutter.cut(CodeGenJava.toCamelCase(route.getName()))));
+            codeBuilder.append(String.format("\nexport const %s = (", CodeGenJava.toCamelCase(route.getName())));
 
             //Looping through params
 
@@ -125,7 +125,7 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
             }
 
 
-            descriptionBuilder.append("* @return ").append(returnClassName);
+            descriptionBuilder.append("* @return AxiosRequestType");
 
             if (hasFileParam) {
                 final int index = codeBuilder.indexOf("@" + route.getMethod());
@@ -139,12 +139,12 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
             descriptionBuilder.append("\n*/\n");
 
             //description
-            // codeBuilder.insert(0, descriptionBuilder.toString());
+             codeBuilder.insert(codeBuilder.indexOf("export const"), descriptionBuilder.toString());
 
             //Adding flow
-            codeBuilder.insert(0, "// @flow\n\nimport ResponseManager from '../../../utils/ResponseManager';\n" +
-                    "import type {AxiosRequestType} from '../../../types/AxiosRequestType';\n" +
-                    "import AxiosRequest from '../../../types/AxiosRequestType';\n\n");
+            codeBuilder.insert(0, "import ResponseManager from '../../../utils/ResponseManager';\n" +
+                    "import {AxiosRequestType} from '../../../utils/AxiosRequestType';\n" +
+                    "import AxiosRequest from '../../../utils/AxiosRequestType';\n\n");
 
             getWriter().write(codeBuilder.toString());
 
@@ -153,6 +153,13 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
         }
 
 
+    }
+
+    private String getFormattedRouteNameWithCaps(String routeName) {
+        return routeName
+                .replaceAll("([a-zA-Z][a-z]*)([A-Z])","$1_$2")
+                .toUpperCase()
+                .replaceAll("[\\W+]","_");
     }
 
     private String getPrimitive(String dataType) {

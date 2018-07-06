@@ -171,6 +171,9 @@ public class CodeGenJava {
         }
         m.appendTail(sb);
 
+        //Camelcasing letters after special chars
+
+
         return sb.toString();
     }
 
