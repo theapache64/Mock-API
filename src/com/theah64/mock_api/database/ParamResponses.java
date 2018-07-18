@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ParamResponses extends BaseTable<ParamResponse> {
 
-    private static final ParamResponses instance = new ParamResponses();
     public static final String COLUMN_ROUTE_ID = "route_id";
+    private static final ParamResponses instance = new ParamResponses();
     private static final String COLUMN_PARAM_ID = "param_id";
     private static final String COLUMN_PARAM_VALUE = "param_value";
     private static final String COLUMN_RESPONSE_ID = "response_id";

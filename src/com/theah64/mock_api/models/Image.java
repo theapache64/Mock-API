@@ -1,12 +1,12 @@
 package com.theah64.mock_api.models;
 
 public class Image {
-    private String id;
     private final String projectId;
     private final String tinifyKeyId;
-    private String imageUrl;
     private final String thumbUrl;
     private final String filePath;
+    private String id;
+    private String imageUrl;
     private boolean isCompressed;
 
     public Image(String id, String projectId, String tinifyKeyId, String imageUrl, String thumbUrl, String filePath, boolean isCompressed) {
@@ -23,6 +23,10 @@ public class Image {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getProjectId() {
         return projectId;
     }
@@ -33,6 +37,10 @@ public class Image {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getThumbUrl() {
@@ -47,6 +55,10 @@ public class Image {
         return isCompressed;
     }
 
+    public void setCompressed(boolean isCompressed) {
+        this.isCompressed = isCompressed;
+    }
+
     @Override
     public String toString() {
         return "Image{" +
@@ -57,17 +69,5 @@ public class Image {
                 ", thumbUrl='" + thumbUrl + '\'' +
                 ", filePath='" + filePath + '\'' +
                 '}';
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public void setCompressed(boolean isCompressed) {
-        this.isCompressed = isCompressed;
     }
 }

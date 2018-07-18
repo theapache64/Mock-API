@@ -4,7 +4,7 @@ package com.theah64.mock_api.models;
  * Created by theapache64 on 11/1/18.
  */
 public class DiffView {
-    private final String title,oldDataId, newDataId, diffOutputId, newData, oldData;
+    private final String title, oldDataId, newDataId, diffOutputId, newData, oldData;
 
     public DiffView(String title, String oldDataId, String newDataId, String diffOutputId, String newData, String oldData) {
         this.title = title;

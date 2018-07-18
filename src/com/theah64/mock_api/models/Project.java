@@ -5,10 +5,10 @@ package com.theah64.mock_api.models;
  */
 public class Project {
     public static final String KEY = "project";
-    private String id;
-    private String name;
     private final String passHash;
     private final String apiKey;
+    private String id;
+    private String name;
     private String baseOgApiUrl;
     private String packageName;
     private boolean isAllSmallRoutes;
@@ -29,48 +29,60 @@ public class Project {
         this.baseResponseStructure = baseResponseStructure;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getDefaultSuccessResponse() {
+        return defaultSuccessResponse;
     }
 
     public void setDefaultSuccessResponse(String defaultSuccessResponse) {
         this.defaultSuccessResponse = defaultSuccessResponse;
     }
 
-    public void setDefaultErrorResponse(String defaultErrorResponse) {
-        this.defaultErrorResponse = defaultErrorResponse;
-    }
-
-    public void setBaseResponseStructure(String baseResponseStructure) {
-        this.baseResponseStructure = baseResponseStructure;
-    }
-
-    public String getDefaultSuccessResponse() {
-        return defaultSuccessResponse;
-    }
-
     public String getDefaultErrorResponse() {
         return defaultErrorResponse;
+    }
+
+    public void setDefaultErrorResponse(String defaultErrorResponse) {
+        this.defaultErrorResponse = defaultErrorResponse;
     }
 
     public String getBaseResponseStructure() {
         return baseResponseStructure;
     }
 
+    public void setBaseResponseStructure(String baseResponseStructure) {
+        this.baseResponseStructure = baseResponseStructure;
+    }
+
     public String getNotificationEmails() {
         return notificationEmails;
+    }
+
+    public void setNotificationEmails(String notificationEmails) {
+        this.notificationEmails = notificationEmails;
     }
 
     public boolean isAllSmallRoutes() {
         return isAllSmallRoutes;
     }
 
+    public void setAllSmallRoutes(boolean allSmallRoutes) {
+        this.isAllSmallRoutes = allSmallRoutes;
+    }
+
     public String getPackageName() {
         return packageName;
     }
 
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
     public String getBaseOgApiUrl() {
         return baseOgApiUrl;
+    }
+
+    public void setBaseOgApiUrl(String baseOgApiUrl) {
+        this.baseOgApiUrl = baseOgApiUrl;
     }
 
     public String getApiKey() {
@@ -81,31 +93,19 @@ public class Project {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPassHash() {
-        return passHash;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setBaseOgApiUrl(String baseOgApiUrl) {
-        this.baseOgApiUrl = baseOgApiUrl;
+    public String getName() {
+        return name;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setAllSmallRoutes(boolean allSmallRoutes) {
-        this.isAllSmallRoutes = allSmallRoutes;
-    }
-
-    public void setNotificationEmails(String notificationEmails) {
-        this.notificationEmails = notificationEmails;
+    public String getPassHash() {
+        return passHash;
     }
 }

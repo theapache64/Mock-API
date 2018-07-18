@@ -22,6 +22,23 @@ public class SearchImagesServlet extends AdvancedBaseServlet {
 
     private static final String KEY_KEYWORD = "keyword";
 
+    private static String getResponseFromURL(final String url) throws IOException {
+
+        final URL theURL = new URL(url);
+        final HttpURLConnection urlCon = (HttpURLConnection) theURL.openConnection();
+        final BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getResponseCode() == 200 ? urlCon.getInputStream() : urlCon.getErrorStream()));
+        final StringBuilder sb = new StringBuilder();
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+
+        br.close();
+
+        return sb.toString();
+    }
+
     @Override
     protected boolean isSecureServlet() {
         return false;
@@ -39,23 +56,5 @@ public class SearchImagesServlet extends AdvancedBaseServlet {
         final String keyword = getStringParameter(KEY_KEYWORD);
         final String url = String.format("http://theapache64.com/gpix/v1/search?keyword=%s&limit=100&Authorization=GoZNYVeK9O", URLEncoder.encode(keyword, "UTF-8"));
         getWriter().write(getResponseFromURL(url));
-    }
-
-
-    private static String getResponseFromURL(final String url) throws IOException {
-
-        final URL theURL = new URL(url);
-        final HttpURLConnection urlCon = (HttpURLConnection) theURL.openConnection();
-        final BufferedReader br = new BufferedReader(new InputStreamReader(urlCon.getResponseCode() == 200 ? urlCon.getInputStream() : urlCon.getErrorStream()));
-        final StringBuilder sb = new StringBuilder();
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-
-        br.close();
-
-        return sb.toString();
     }
 }

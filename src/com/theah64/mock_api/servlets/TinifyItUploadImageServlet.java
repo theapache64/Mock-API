@@ -46,11 +46,11 @@ public class TinifyItUploadImageServlet extends HttpServlet {
                     final String ext = fp.getFileExtensionFromContentType();
                     //if (ext.equals(FilePart.FILE_EXTENSION_JPG) || ext.equals(FilePart.FILE_EXTENSION_PNG)) {
 
-                        //Double check if it's an image
-                        BufferedImage image = ImageIO.read(filePart.getInputStream());
-                        if (image == null) {
-                            throw new Request.RequestException("Invalid image : double check");
-                        }
+                    //Double check if it's an image
+                    BufferedImage image = ImageIO.read(filePart.getInputStream());
+                    if (image == null) {
+                        throw new Request.RequestException("Invalid image : double check");
+                    }
 
                         /*
                         final int fileSizeInKb = filePart.getInputStream().available() / 1024;
@@ -59,18 +59,18 @@ public class TinifyItUploadImageServlet extends HttpServlet {
                         }
                         */
 
-                        try {
-                            final TinifyKey tinifyKey = TinifyKeys.getInstance().getLeastUsedKey();
-                            Tinify.setKey(tinifyKey.getKey());
-                            final byte[] result = Tinify.fromBuffer(IOUtils.toByteArray(filePart.getInputStream())).toBuffer();
-                            resp.setContentType(filePart.getContentType());
-                            resp.getOutputStream().write(result);
+                    try {
+                        final TinifyKey tinifyKey = TinifyKeys.getInstance().getLeastUsedKey();
+                        Tinify.setKey(tinifyKey.getKey());
+                        final byte[] result = Tinify.fromBuffer(IOUtils.toByteArray(filePart.getInputStream())).toBuffer();
+                        resp.setContentType(filePart.getContentType());
+                        resp.getOutputStream().write(result);
 
-                            TinifyKeys.getInstance().update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, String.valueOf(Tinify.compressionCount()));
-                        } catch (QueryBuilderException | SQLException e) {
-                            e.printStackTrace();
-                            throw new Request.RequestException(e.getMessage());
-                        }
+                        TinifyKeys.getInstance().update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, String.valueOf(Tinify.compressionCount()));
+                    } catch (QueryBuilderException | SQLException e) {
+                        e.printStackTrace();
+                        throw new Request.RequestException(e.getMessage());
+                    }
 
 
                     /*} else {

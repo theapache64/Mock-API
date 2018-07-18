@@ -16,21 +16,21 @@ public class Sample {
     private final String message;
 
 
-    public Sample(Data data,boolean error,String message){
+    public Sample(Data data, boolean error, String message) {
         this.data = data;
         this.error = error;
         this.message = message;
     }
 
-    public Data getData(){
+    public Data getData() {
         return data;
     }
 
-    public boolean isError(){
+    public boolean isError() {
         return error;
     }
 
-    public String getMessage(){
+    public String getMessage() {
         return message;
     }
 
@@ -64,7 +64,7 @@ public class Sample {
         private final List<CustomerGroup> customerGroups;
 
 
-        public Data(List<Price> prices,Accounts accounts,List<Customer> customers,List<Country> countries,List<SalesPerson> salesPersons,List<PaymentTerm> paymentTerms,List<CustomerType> customerTypes,List<ShippingType> shippingTypes,List<CustomerGroup> customerGroups){
+        public Data(List<Price> prices, Accounts accounts, List<Customer> customers, List<Country> countries, List<SalesPerson> salesPersons, List<PaymentTerm> paymentTerms, List<CustomerType> customerTypes, List<ShippingType> shippingTypes, List<CustomerGroup> customerGroups) {
             this.prices = prices;
             this.accounts = accounts;
             this.customers = customers;
@@ -76,39 +76,39 @@ public class Sample {
             this.customerGroups = customerGroups;
         }
 
-        public List<Price> getPrices(){
+        public List<Price> getPrices() {
             return prices;
         }
 
-        public Accounts getAccounts(){
+        public Accounts getAccounts() {
             return accounts;
         }
 
-        public List<Customer> getCustomers(){
+        public List<Customer> getCustomers() {
             return customers;
         }
 
-        public List<Country> getCountries(){
+        public List<Country> getCountries() {
             return countries;
         }
 
-        public List<SalesPerson> getSalesPersons(){
+        public List<SalesPerson> getSalesPersons() {
             return salesPersons;
         }
 
-        public List<PaymentTerm> getPaymentTerms(){
+        public List<PaymentTerm> getPaymentTerms() {
             return paymentTerms;
         }
 
-        public List<CustomerType> getCustomerTypes(){
+        public List<CustomerType> getCustomerTypes() {
             return customerTypes;
         }
 
-        public List<ShippingType> getShippingTypes(){
+        public List<ShippingType> getShippingTypes() {
             return shippingTypes;
         }
 
-        public List<CustomerGroup> getCustomerGroups(){
+        public List<CustomerGroup> getCustomerGroups() {
             return customerGroups;
         }
 
@@ -123,16 +123,16 @@ public class Sample {
         private final String name;
 
 
-        public ShippingType(String id,String name){
+        public ShippingType(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -147,16 +147,16 @@ public class Sample {
         private final String name;
 
 
-        public CustomerType(String id,String name){
+        public CustomerType(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -171,16 +171,16 @@ public class Sample {
         private final String name;
 
 
-        public Price(String id,String name){
+        public Price(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -195,16 +195,16 @@ public class Sample {
         private final String name;
 
 
-        public PaymentTerm(String id,String name){
+        public PaymentTerm(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -219,16 +219,16 @@ public class Sample {
         private final List<BdAccount> bdAccounts;
 
 
-        public Accounts(List<GlAccount> glAccounts,List<BdAccount> bdAccounts){
+        public Accounts(List<GlAccount> glAccounts, List<BdAccount> bdAccounts) {
             this.glAccounts = glAccounts;
             this.bdAccounts = bdAccounts;
         }
 
-        public List<GlAccount> getGlAccounts(){
+        public List<GlAccount> getGlAccounts() {
             return glAccounts;
         }
 
-        public List<BdAccount> getBdAccounts(){
+        public List<BdAccount> getBdAccounts() {
             return bdAccounts;
         }
 
@@ -243,16 +243,16 @@ public class Sample {
         private final String name;
 
 
-        public BdAccount(String id,String name){
+        public BdAccount(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -267,16 +267,16 @@ public class Sample {
         private final String name;
 
 
-        public GlAccount(String id,String name){
+        public GlAccount(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -294,21 +294,21 @@ public class Sample {
         private final List<State> states;
 
 
-        public Country(String id,String name,List<State> states){
+        public Country(String id, String name, List<State> states) {
             this.id = id;
             this.name = name;
             this.states = states;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
-        public List<State> getStates(){
+        public List<State> getStates() {
             return states;
         }
 
@@ -323,16 +323,16 @@ public class Sample {
         private final String name;
 
 
-        public State(String id,String name){
+        public State(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -347,16 +347,16 @@ public class Sample {
         private final String customerCode;
 
 
-        public Customer(String id,String customerCode){
+        public Customer(String id, String customerCode) {
             this.id = id;
             this.customerCode = customerCode;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getCustomerCode(){
+        public String getCustomerCode() {
             return customerCode;
         }
 
@@ -371,16 +371,16 @@ public class Sample {
         private final String name;
 
 
-        public SalesPerson(String id,String name){
+        public SalesPerson(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
@@ -395,21 +395,20 @@ public class Sample {
         private final String name;
 
 
-        public CustomerGroup(String id,String name){
+        public CustomerGroup(String id, String name) {
             this.id = id;
             this.name = name;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
     }
-
 
 
 }

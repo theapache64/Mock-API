@@ -9,9 +9,8 @@ import java.util.Locale;
  */
 public class RouteUpdate {
 
-    private final String id, key, routeId, method, params, delay, description, defaultResponse, createdAt;
-
     private static final SimpleDateFormat READABLE_DATE_FORMAT = new SimpleDateFormat("MMM d, EEE, ''yy (HH:mm:ss)", Locale.getDefault());
+    private final String id, key, routeId, method, params, delay, description, defaultResponse, createdAt;
 
     public RouteUpdate(String id, String key, String routeId, String method, String params, String delay, String description, String defaultResponse, long createdAt) {
         this.id = id;

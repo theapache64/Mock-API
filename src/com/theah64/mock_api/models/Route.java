@@ -15,18 +15,17 @@ public class Route {
     private static final String METHOD_PUT = "PUT";
     private static final String METHOD_PATCH = "PATCH";
     private static final String METHOD_DELETE = "DELETE";
-
-    private String id;
     private final String projectId;
     private final String name;
     private final String defaultResponse;
     private final String description;
     private final String externalApiUrl;
     private final String method;
-    private boolean isSecure;
     private final long delay;
     private final long updatedInMillis;
     private final List<Param> params;
+    private String id;
+    private boolean isSecure;
 
     public Route(String id, String projectId, String route, String response, String description, String externalApiUrl, String method, List<Param> params, boolean isSecure, long delay, long updatedInMillis) {
         this.id = id;
@@ -71,6 +70,10 @@ public class Route {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getProjectId() {
         return projectId;
     }
@@ -81,10 +84,6 @@ public class Route {
 
     public String getDefaultResponse() {
         return defaultResponse;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String[] filterRequiredParams() {

@@ -40,7 +40,7 @@
 </head>
 <body>
 
-<%@include file="nav_bar.jsp"%>
+<%@include file="nav_bar.jsp" %>
 
 <div class="container">
 

@@ -38,6 +38,7 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
     private static final String KEY_LAST_MODIFIED = "last_modified";
     private static final String KEY_LAST_MODIFIED_DATE = "last_modified_date";
     private static final String KEY_RESPONSES = "responses";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 
     @Override
     protected boolean isSecureServlet() {
@@ -53,7 +54,6 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws javax.servlet.ServletException, IOException {
         super.doPost(req, resp);
     }
-
 
     @Override
     protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, PathInfo.PathInfoException, QueryBuilderException {
@@ -105,10 +105,6 @@ public class FetchJSONServlet extends AdvancedBaseServlet {
 
         getWriter().write(new APIResponse("Response loaded", joJson).getResponse());
     }
-
-
-
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 
     private String getIndianDate(long updatedInMillis) {
         LocalDateTime ldt = LocalDateTime.parse(DATE_FORMAT.format(new Date(updatedInMillis)), DateTimeFormatter.ofPattern(DATE_FORMAT.toPattern()));

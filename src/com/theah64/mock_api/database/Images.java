@@ -13,13 +13,13 @@ import java.util.List;
 
 public class Images extends BaseTable<Image> {
 
-    private static final Images instance = new Images();
     public static final String COLUMN_PROJECT_ID = "project_id";
-    private static final String COLUMN_TINIFY_KEY_ID = "tinify_key_id";
     public static final String COLUMN_IMAGE_URL = "image_url";
     public static final String COLUMN_THUMB_URL = "thumb_url";
     public static final String COLUMN_FILE_PATH = "file_path";
     public static final String COLUMN_IS_COMPRESSED = "is_compressed";
+    private static final Images instance = new Images();
+    private static final String COLUMN_TINIFY_KEY_ID = "tinify_key_id";
 
     private Images() {
         super("images");

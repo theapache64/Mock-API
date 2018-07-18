@@ -115,12 +115,12 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
                 }
             }
 
-            codeBuilder.append(String.format("%s): AxiosRequestType => AxiosRequest.build(", route.getParams().isEmpty() ? "" :"\n"))
+            codeBuilder.append(String.format("%s): AxiosRequestType => AxiosRequest.build(", route.getParams().isEmpty() ? "" : "\n"))
                     .append(String.format("\n\t%s,", ROUTE_NAME))
                     .append(String.format("\n\t'%s',", route.getMethod()))
                     .append(String.format("\n\t'/%s',\n", route.getName()));
 
-            if(!requestBodyBuilder.toString().isEmpty()){
+            if (!requestBodyBuilder.toString().isEmpty()) {
                 codeBuilder.append(String.format("\n\t{%s\n\t}\n", requestBodyBuilder.toString()));
             }
 
@@ -139,7 +139,7 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
             descriptionBuilder.append("\n*/\n");
 
             //description
-             codeBuilder.insert(codeBuilder.indexOf("export const"), descriptionBuilder.toString());
+            codeBuilder.insert(codeBuilder.indexOf("export const"), descriptionBuilder.toString());
 
             //Adding flow
             codeBuilder.insert(0, "import ResponseManager from '../../../utils/ResponseManager';\n" +
@@ -157,9 +157,9 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
 
     private String getFormattedRouteNameWithCaps(String routeName) {
         return routeName
-                .replaceAll("([a-zA-Z][a-z]*)([A-Z])","$1_$2")
+                .replaceAll("([a-zA-Z][a-z]*)([A-Z])", "$1_$2")
                 .toUpperCase()
-                .replaceAll("[\\W+]","_");
+                .replaceAll("[\\W+]", "_");
     }
 
     private String getPrimitive(String dataType) {

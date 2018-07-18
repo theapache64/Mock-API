@@ -18,11 +18,6 @@ public class DynamicResponseGenerator {
 
     //First name throw back
     private static final LoremIpsum loremIpsum = LoremIpsum.getInstance();
-
-    public static LoremIpsum getLoremIpsum() {
-        return loremIpsum;
-    }
-
     public static final DynamicResponse[] randomResponses = new DynamicResponse[]{
 
             //random number
@@ -168,20 +163,8 @@ public class DynamicResponseGenerator {
 
     };
 
-
-    public abstract static class DynamicResponse {
-        private final String key;
-
-
-        DynamicResponse(String key) {
-            this.key = key;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        abstract String getValue(String param);
+    public static LoremIpsum getLoremIpsum() {
+        return loremIpsum;
     }
 
     public static String generate(String jsonResp) {
@@ -281,6 +264,21 @@ public class DynamicResponseGenerator {
 
 
         return jsonResp;
+    }
+
+    public abstract static class DynamicResponse {
+        private final String key;
+
+
+        DynamicResponse(String key) {
+            this.key = key;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        abstract String getValue(String param);
     }
 
 

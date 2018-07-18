@@ -15,10 +15,9 @@ import java.util.List;
  */
 public class RouteUpdates extends BaseTable<RouteUpdate> {
 
-    private static final RouteUpdates instance = new RouteUpdates();
-
     public static final String COLUMN_KEY = "_key";
     public static final String COLUMN_ROUTE_ID = "route_id";
+    private static final RouteUpdates instance = new RouteUpdates();
     private static final String COLUMN_METHOD = "method";
     private static final String COLUMN_PARAMS = "params";
     private static final String COLUMN_DELAY = "delay";

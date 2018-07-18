@@ -111,7 +111,6 @@ span.glyphicon.glyphicon-remove {
     margin-top: -1px;
 }
 
-
 .CodeMirror-fullscreen {
     position: fixed;
     top: 0;
@@ -135,7 +134,7 @@ span.glyphicon.glyphicon-remove {
 }
 
 div#surprise_image {
-    position:  fixed;
+    position: fixed;
     bottom: 0;
     right: 0;
     /* max-height: 200px; */

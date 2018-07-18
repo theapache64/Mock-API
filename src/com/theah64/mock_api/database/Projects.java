@@ -16,7 +16,6 @@ import java.sql.SQLException;
  */
 public class Projects extends BaseTable<Project> {
 
-    private static final Projects instance = new Projects();
     public static final String COLUMN_PASS_HASH = "pass_hash";
     public static final String COLUMN_API_KEY = "api_key";
     public static final String COLUMN_BASE_OG_API_URL = "base_og_api_url";
@@ -26,6 +25,7 @@ public class Projects extends BaseTable<Project> {
     public static final String COLUMN_DEFAULT_SUCCESS_RESPONSE = "default_success_response";
     public static final String COLUMN_DEFAULT_ERROR_RESPONSE = "default_error_response";
     public static final String COLUMN_BASE_RESPONSE_STRUCTURE = "base_response_structure";
+    private static final Projects instance = new Projects();
 
     private Projects() {
         super("projects");

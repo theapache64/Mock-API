@@ -21,74 +21,51 @@ import java.util.regex.Pattern;
 public class Inflector {
 
     protected static final Inflector INSTANCE = new Inflector();
-
-    public static final Inflector getInstance() {
-        return INSTANCE;
-    }
-
-    protected class Rule {
-
-        protected final String expression;
-        protected final Pattern expressionPattern;
-        protected final String replacement;
-
-        protected Rule(String expression,
-                       String replacement) {
-            this.expression = expression;
-            this.replacement = replacement != null ? replacement : "";
-            this.expressionPattern = Pattern.compile(this.expression, Pattern.CASE_INSENSITIVE);
-        }
-
-        /**
-         * Apply the rule against the input string, returning the modified string or null if the rule didn't apply (and no
-         * modifications were made)
-         *
-         * @param input the input string
-         * @return the modified string if this rule applied, or null if the input was not modified by this rule
-         */
-        protected String apply(String input) {
-            Matcher matcher = this.expressionPattern.matcher(input);
-            if (!matcher.find()) return null;
-            return matcher.replaceAll(this.replacement);
-        }
-
-        @Override
-        public int hashCode() {
-            return expression.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj != null && obj.getClass() == this.getClass()) {
-                final Rule that = (Rule) obj;
-                if (this.expression.equalsIgnoreCase(that.expression)) return true;
-            }
-            return false;
-        }
-
-        @Override
-        public String toString() {
-            return expression + ", " + replacement;
-        }
-    }
-
-    private LinkedList<Rule> plurals = new LinkedList<Rule>();
-    private LinkedList<Rule> singulars = new LinkedList<Rule>();
     /**
      * The lowercase words that are to be excluded and not processed. This map can be modified by the users via
      * {@link #getUncountables()}.
      */
     private final Set<String> uncountables = new HashSet<String>();
-
+    private LinkedList<Rule> plurals = new LinkedList<Rule>();
+    private LinkedList<Rule> singulars = new LinkedList<Rule>();
     public Inflector() {
         initialize();
     }
-
     protected Inflector(Inflector original) {
         this.plurals.addAll(original.plurals);
         this.singulars.addAll(original.singulars);
         this.uncountables.addAll(original.uncountables);
+    }
+
+    public static final Inflector getInstance() {
+        return INSTANCE;
+    }
+
+    /**
+     * Utility method to replace all occurrences given by the specific backreference with its uppercased form, and remove all
+     * other backreferences.
+     * <p>
+     * The Java {@link Pattern regular expression processing} does not use the preprocessing directives <code>\l</code>,
+     * <code>&#92;u</code>, <code>\L</code>, and <code>\U</code>. If so, such directives could be used in the replacement string
+     * to uppercase or lowercase the backreferences. For example, <code>\L1</code> would lowercase the first backreference, and
+     * <code>&#92;u3</code> would uppercase the 3rd backreference.
+     *
+     * @param input
+     * @param regex
+     * @param groupNumberToUppercase
+     * @return the input string with the appropriate characters converted to upper-case
+     */
+    protected static String replaceAllWithUppercase(String input,
+                                                    String regex,
+                                                    int groupNumberToUppercase) {
+        Pattern underscoreAndDotPattern = Pattern.compile(regex);
+        Matcher matcher = underscoreAndDotPattern.matcher(input);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, matcher.group(groupNumberToUppercase).toUpperCase());
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     @Override
@@ -452,33 +429,6 @@ public class Inflector {
     }
 
     /**
-     * Utility method to replace all occurrences given by the specific backreference with its uppercased form, and remove all
-     * other backreferences.
-     * <p>
-     * The Java {@link Pattern regular expression processing} does not use the preprocessing directives <code>\l</code>,
-     * <code>&#92;u</code>, <code>\L</code>, and <code>\U</code>. If so, such directives could be used in the replacement string
-     * to uppercase or lowercase the backreferences. For example, <code>\L1</code> would lowercase the first backreference, and
-     * <code>&#92;u3</code> would uppercase the 3rd backreference.
-     *
-     * @param input
-     * @param regex
-     * @param groupNumberToUppercase
-     * @return the input string with the appropriate characters converted to upper-case
-     */
-    protected static String replaceAllWithUppercase(String input,
-                                                    String regex,
-                                                    int groupNumberToUppercase) {
-        Pattern underscoreAndDotPattern = Pattern.compile(regex);
-        Matcher matcher = underscoreAndDotPattern.matcher(input);
-        StringBuffer sb = new StringBuffer();
-        while (matcher.find()) {
-            matcher.appendReplacement(sb, matcher.group(groupNumberToUppercase).toUpperCase());
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
-    }
-
-    /**
      * Completely remove all rules within this inflector.
      */
     public void clear() {
@@ -551,6 +501,53 @@ public class Inflector {
         inflect.addIrregular("stadium", "stadiums");
 
         inflect.addUncountable("equipment", "information", "rice", "money", "species", "series", "fish", "sheep");
+    }
+
+    protected class Rule {
+
+        protected final String expression;
+        protected final Pattern expressionPattern;
+        protected final String replacement;
+
+        protected Rule(String expression,
+                       String replacement) {
+            this.expression = expression;
+            this.replacement = replacement != null ? replacement : "";
+            this.expressionPattern = Pattern.compile(this.expression, Pattern.CASE_INSENSITIVE);
+        }
+
+        /**
+         * Apply the rule against the input string, returning the modified string or null if the rule didn't apply (and no
+         * modifications were made)
+         *
+         * @param input the input string
+         * @return the modified string if this rule applied, or null if the input was not modified by this rule
+         */
+        protected String apply(String input) {
+            Matcher matcher = this.expressionPattern.matcher(input);
+            if (!matcher.find()) return null;
+            return matcher.replaceAll(this.replacement);
+        }
+
+        @Override
+        public int hashCode() {
+            return expression.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj != null && obj.getClass() == this.getClass()) {
+                final Rule that = (Rule) obj;
+                if (this.expression.equalsIgnoreCase(that.expression)) return true;
+            }
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            return expression + ", " + replacement;
+        }
     }
 
 }

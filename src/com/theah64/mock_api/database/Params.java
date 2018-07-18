@@ -16,12 +16,12 @@ import java.util.List;
  */
 public class Params extends BaseTable<Param> {
 
-    private static final Params instance = new Params();
     public static final String COLUMN_ROUTE_ID = "route_id";
     public static final String COLUMN_IS_REQUIRED = "is_required";
     public static final String COLUMN_DEFAULT_VALUE = "default_value";
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_DATA_TYPE = "data_type";
+    private static final Params instance = new Params();
 
     private Params() {
         super("params");
@@ -163,11 +163,6 @@ public class Params extends BaseTable<Param> {
                 }
             }
         }
-
-
-
-
-
 
 
         java.sql.Connection con = Connection.getConnection();

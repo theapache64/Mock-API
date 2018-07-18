@@ -6,7 +6,6 @@ import com.theah64.webengine.database.querybuilders.AddQueryBuilder;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.database.querybuilders.SelectQueryBuilder;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,9 +14,9 @@ import java.util.List;
  */
 public class Responses extends com.theah64.webengine.database.BaseTable<Response> {
 
-    private static final Responses instance = new Responses();
     public static final String COLUMN_RESPONSE = "response";
     public static final String COLUMN_ROUTE_ID = "route_id";
+    private static final Responses instance = new Responses();
 
     public Responses() {
         super("responses");

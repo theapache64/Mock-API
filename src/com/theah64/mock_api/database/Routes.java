@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class Routes extends BaseTable<Route> {
 
-    private static final Routes instance = new Routes();
     public static final String COLUMN_DEFAULT_RESPONSE = "default_response";
     public static final String COLUMN_PROJECT_ID = "project_id";
     public static final String COLUMN_DESCRIPTION = "description";
@@ -27,6 +26,7 @@ public class Routes extends BaseTable<Route> {
     public static final String COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis";
     public static final String KEY_PARAMS = "params";
     public static final String COLUMN_METHOD = "method";
+    private static final Routes instance = new Routes();
 
     private Routes() {
         super("routes");

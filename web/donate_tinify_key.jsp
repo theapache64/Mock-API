@@ -112,7 +112,7 @@
                 <tr>
                     <td><%=tinifyKey.getEmail()%>
                     </td>
-                    <td><%=tinifyKey.getKey().replaceAll("[A-Z]","*")%>
+                    <td><%=tinifyKey.getKey().replaceAll("[A-Z]", "*")%>
                     </td>
                     <td><%=tinifyKey.getUsage()%>/500</td>
                 </tr>

@@ -6,16 +6,15 @@ import com.theah64.webengine.database.querybuilders.AddQueryBuilder;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.database.querybuilders.SelectQueryBuilder;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 public class TinifyKeys extends BaseTable<TinifyKey> {
 
-    private static final TinifyKeys instance = new TinifyKeys();
     public static final String COLUMN_KEY = "_key";
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_USAGE = "_usage";
+    private static final TinifyKeys instance = new TinifyKeys();
 
     private TinifyKeys() {
         super("tinify_keys");

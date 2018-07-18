@@ -17,7 +17,7 @@ public class Product {
     private final String quantityTitle;
     private final List<SimilarProduct> similarProducts;
 
-    public Product(String title,String brand,String thumbUrl,String imageUrl,List<Quantity> quantities,String description,String categoryName,String quantityTitle,List<SimilarProduct> similarProducts){
+    public Product(String title, String brand, String thumbUrl, String imageUrl, List<Quantity> quantities, String description, String categoryName, String quantityTitle, List<SimilarProduct> similarProducts) {
         this.title = title;
         this.brand = brand;
         this.thumbUrl = thumbUrl;
@@ -29,39 +29,39 @@ public class Product {
         this.similarProducts = similarProducts;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
-    public String getBrand(){
+    public String getBrand() {
         return brand;
     }
 
-    public String getThumbUrl(){
+    public String getThumbUrl() {
         return thumbUrl;
     }
 
-    public String getImageUrl(){
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public List<Quantity> getQuantities(){
+    public List<Quantity> getQuantities() {
         return quantities;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
-    public String getCategoryName(){
+    public String getCategoryName() {
         return categoryName;
     }
 
-    public String getQuantityTitle(){
+    public String getQuantityTitle() {
         return quantityTitle;
     }
 
-    public List<SimilarProduct> getSimilarProducts(){
+    public List<SimilarProduct> getSimilarProducts() {
         return similarProducts;
     }
 
@@ -78,7 +78,7 @@ public class Product {
         private final String favoritesCount;
         private final String purchasedCount;
 
-        public Quantity(String id,String povId,String quantity,String cartCount,String realPrice,String anonaPrice,String availability,String rewardsNeeded,String favoritesCount,String purchasedCount){
+        public Quantity(String id, String povId, String quantity, String cartCount, String realPrice, String anonaPrice, String availability, String rewardsNeeded, String favoritesCount, String purchasedCount) {
             this.id = id;
             this.povId = povId;
             this.quantity = quantity;
@@ -91,43 +91,43 @@ public class Product {
             this.purchasedCount = purchasedCount;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getPovId(){
+        public String getPovId() {
             return povId;
         }
 
-        public String getQuantity(){
+        public String getQuantity() {
             return quantity;
         }
 
-        public String getCartCount(){
+        public String getCartCount() {
             return cartCount;
         }
 
-        public String getRealPrice(){
+        public String getRealPrice() {
             return realPrice;
         }
 
-        public String getAnonaPrice(){
+        public String getAnonaPrice() {
             return anonaPrice;
         }
 
-        public String getAvailability(){
+        public String getAvailability() {
             return availability;
         }
 
-        public String getRewardsNeeded(){
+        public String getRewardsNeeded() {
             return rewardsNeeded;
         }
 
-        public String getFavoritesCount(){
+        public String getFavoritesCount() {
             return favoritesCount;
         }
 
-        public String getPurchasedCount(){
+        public String getPurchasedCount() {
             return purchasedCount;
         }
 
@@ -139,26 +139,25 @@ public class Product {
         private final String title;
         private final String thumbUrl;
 
-        public SimilarProduct(String id,String title,String thumbUrl){
+        public SimilarProduct(String id, String title, String thumbUrl) {
             this.id = id;
             this.title = title;
             this.thumbUrl = thumbUrl;
         }
 
-        public String getId(){
+        public String getId() {
             return id;
         }
 
-        public String getTitle(){
+        public String getTitle() {
             return title;
         }
 
-        public String getThumbUrl(){
+        public String getThumbUrl() {
             return thumbUrl;
         }
 
     }
-
 
 
 }

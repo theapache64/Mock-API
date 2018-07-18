@@ -1,7 +1,6 @@
 package com.theah64.mock_api.utils;
 
 import com.theah64.mock_api.models.Model;
-import com.theah64.mock_api.servlets.JsonToModelEngine;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +19,7 @@ public class CodeGenJava {
 
 
     private static final String SERIALIZED_NAME_IMPORT = "import com.google.gson.annotations.SerializedName;";
-
+    private static final Pattern p = Pattern.compile("_(.)");
     private static boolean hasList = false;
 
     private static boolean getGenClassCode(final boolean isJsonObject, final boolean isNestedClass, final StringBuilder codeBuilder, final Object object, final String modelName, final boolean isRetrofitModel) throws JSONException {
@@ -163,8 +162,6 @@ public class CodeGenJava {
     public static String getFirstCharSmallcase(String input) {
         return input.substring(0, 1).toLowerCase() + input.substring(1);
     }
-
-    private static final Pattern p = Pattern.compile("_(.)");
 
     public static String toCamelCase(String string) {
         string = string.toLowerCase();

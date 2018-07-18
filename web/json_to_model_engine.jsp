@@ -1,12 +1,12 @@
 <%@ page import="com.theah64.mock_api.database.Projects" %>
 <%@ page import="com.theah64.mock_api.servlets.JsonToModelEngine" %>
 <%@ page import="com.theah64.mock_api.utils.CodeGenJava" %>
+<%@ page import="com.theah64.mock_api.utils.TypescriptClassGenerator" %>
+<%@ page import="com.theah64.mock_api.utils.TypescriptInterfaceGenerator" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.webengine.utils.Request" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
 <%@ page import="org.json.JSONException" %>
-<%@ page import="com.theah64.mock_api.utils.TypescriptInterfaceGenerator" %>
-<%@ page import="com.theah64.mock_api.utils.TypescriptClassGenerator" %>
 <%--
   Created by IntelliJ IDEA.
   User: theapache64
