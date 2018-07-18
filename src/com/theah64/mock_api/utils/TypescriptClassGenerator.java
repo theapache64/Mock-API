@@ -128,10 +128,12 @@ public class TypescriptClassGenerator {
             final String expose = String.format("  @Expose({ name: '%s' })\n", property.getVariableName());
 
             String variableCamelCase = property.getVariableName();
-
             if (variableCamelCase.contains("_")) {
                 variableCamelCase = CodeGenJava.toCamelCase(variableCamelCase);
+            } else {
+                variableCamelCase = CodeGenJava.getFirstCharSmallcase(variableCamelCase);
             }
+
 
             final String a = String.format("readonly %s: %s", variableCamelCase, property.getDataType());
             codeBuilder

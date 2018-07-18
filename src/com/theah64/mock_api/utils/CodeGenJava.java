@@ -160,6 +160,10 @@ public class CodeGenJava {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
+    public static String getFirstCharSmallcase(String input) {
+        return input.substring(0, 1).toLowerCase() + input.substring(1);
+    }
+
     private static final Pattern p = Pattern.compile("_(.)");
 
     public static String toCamelCase(String string) {
@@ -176,6 +180,7 @@ public class CodeGenJava {
 
         return sb.toString();
     }
+
 
     private static String getDataType(final JSONObject joModel, String variableName) throws JSONException {
 
