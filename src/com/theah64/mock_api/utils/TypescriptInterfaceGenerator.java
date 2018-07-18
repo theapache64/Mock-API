@@ -85,8 +85,7 @@ public class TypescriptInterfaceGenerator {
         //It's javascript
         modelName = GeneratorUtils.getFromFirstCapCharacter(SlashCutter.cut(modelName));
         TypescriptInterfaceGenerator.getGenClassCode(true, codeBuilder, new JSONObject(joString), "Data");
-        codeBuilder.insert(0, String.format("%s\n\n%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/\n",
-                "// @flow",
+        codeBuilder.insert(0, String.format("%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/\n",
                 "import BaseAPIResponse from './BaseAPIResponse';",
                 new Date().toString()));
 
