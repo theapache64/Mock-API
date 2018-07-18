@@ -9,17 +9,6 @@ A web based tool to save and retrieve JSONs intelligently
 
 ### TODOs
 
-**Response Geneator** 
-- Remove @flow from TypeScript response
-- Remove default export
-- Change indent to 2
-- Add `// tslint:disable:variable-name` to top of the reponse file
-- Change `Array<T>` to `T[]`
-- Remove `import BaseAPIResponse from './BaseAPIResponse';`
-- Remove trailing comma
-- Add new line at the end
-
-
 - Add feature 'Download all class as zip' => Control + Alt + M
 - Add JSON error on validation -> control + alt + l
 - Clear button shouldn't reload page
