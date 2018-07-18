@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="com.tinify:tinify:1.5.1" type="repository">
+  <library name="com.tinify:tinify:1.5.11" type="repository">
     <properties maven-id="com.tinify:tinify:1.5.1" />
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/tinify/tinify/1.5.1/tinify-1.5.1.jar!/" />
