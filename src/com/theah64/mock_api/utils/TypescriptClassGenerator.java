@@ -49,7 +49,7 @@ public class TypescriptClassGenerator {
                     final boolean isJsonArray = dataType.equals("JSONArray");
 
                     //Capital first letter
-                    dataType = GeneratorUtils.underScoreMagic(variableName,dataType);
+                    dataType = GeneratorUtils.underScoreMagic(variableName, dataType);
 
 
                     getGenClassCode(!isJsonArray, codeBuilder, joModel1, dataType);
@@ -57,7 +57,7 @@ public class TypescriptClassGenerator {
                     if (joModel1.getClass().getSimpleName().equals("JSONObject") && !isJsonArray) {
                         dataType = ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? dataType : joModel1.getClass().getSimpleName());
                     } else {
-                        dataType = "Array&#60;" + ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? GeneratorUtils.removePlural(dataType) : joModel1.getClass().getSimpleName()) + "&#62;";
+                        dataType = ((joModel1 instanceof JSONArray || joModel1 instanceof JSONObject) ? GeneratorUtils.removePlural(dataType) : joModel1.getClass().getSimpleName()) + "[]";
                     }
                 }
 
@@ -85,30 +85,61 @@ public class TypescriptClassGenerator {
         //It's javascript
         modelName = GeneratorUtils.getFromFirstCapCharacter(SlashCutter.cut(modelName));
         TypescriptClassGenerator.getGenClassCode(true, codeBuilder, new JSONObject(joString), "Data");
+        String importStatement = "import { Type, Expose } from 'class-transformer';\nimport { BaseAPIResponse } from './BaseAPIResponse';";
         codeBuilder.insert(0, String.format("%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/\n",
-                "import BaseAPIResponse from './BaseAPIResponse';",
+                importStatement,
                 new Date().toString()));
 
-        codeBuilder.append(String.format("export default class %s extends BaseAPIResponse<Data> {}", modelName));
+        final String responseClassContent =
+                "\n  @Type(() => Data)\n" +
+                        "  data: Data;\n";
+
+        codeBuilder.append(String.format("export class %s extends BaseAPIResponse {%s}\n", modelName, responseClassContent));
 
         return codeBuilder.toString();
+    }
+
+    private static boolean isPrimitive(final String dataType) {
+        switch (dataType) {
+            case "string":
+            case "number":
+                return true;
+        }
+
+        return false;
     }
 
     private static String genClassCode(String modelName, List<Model.Property> properties, boolean isJSONObject) {
 
         final StringBuilder codeBuilder = new StringBuilder();
-        codeBuilder.append(String.format("class %s {", isJSONObject ? modelName : GeneratorUtils.removePlural(modelName))).append("\n");
-        codeBuilder.append("\n\tconstructor(\n");
+        codeBuilder.append(String.format("class %s {\n", isJSONObject ? modelName : GeneratorUtils.removePlural(modelName))).append("\n");
+
         for (final Model.Property property : properties) {
 
+            String type = "";
+            if (!isPrimitive(property.getDataType())) {
+                String dType = property.getDataType();
+                if (dType.endsWith("[]")) {
+                    dType = dType.substring(0, dType.lastIndexOf("[]"));
+                }
+                type = String.format("  @Type(() => %s)\n", dType);
+            }
+
+            final String expose = String.format("  @Expose({ name: '%s' })\n", property.getVariableName());
 
             String variableCamelCase = property.getVariableName();
-            final String a = String.format("\tpublic readonly %s: %s", variableCamelCase, property.getDataType());
-            codeBuilder.append(String.format("\t%s,", a)).append("\n");
+
+            if (variableCamelCase.contains("_")) {
+                variableCamelCase = CodeGenJava.toCamelCase(variableCamelCase);
+            }
+
+            final String a = String.format("readonly %s: %s", variableCamelCase, property.getDataType());
+            codeBuilder
+                    .append(type)
+                    .append(expose)
+                    .append(String.format("  %s;\n", a)).append("\n");
         }
 
-
-        codeBuilder.append("\t){}\n");
 
         //class end
         codeBuilder.append("}\n\n");
@@ -116,7 +147,6 @@ public class TypescriptClassGenerator {
 
         return codeBuilder.toString();
     }
-
 
 
 }
