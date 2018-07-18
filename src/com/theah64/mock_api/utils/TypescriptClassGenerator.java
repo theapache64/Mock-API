@@ -130,7 +130,7 @@ public class TypescriptClassGenerator {
             if (variableCamelCase.contains("_")) {
                 variableCamelCase = CodeGenJava.toCamelCase(variableCamelCase);
             } else {
-                variableCamelCase = CodeGenJava.getFirstCharSmallcase(variableCamelCase);
+                variableCamelCase = !isFirstTwoUpperCase(variableCamelCase) ? CodeGenJava.getFirstCharSmallcase(variableCamelCase) : variableCamelCase;
             }
 
 
@@ -147,6 +147,13 @@ public class TypescriptClassGenerator {
 
 
         return codeBuilder.toString();
+    }
+
+    private static boolean isFirstTwoUpperCase(String s) {
+        if (s != null && s.length() >= 2) {
+            return Character.isUpperCase(s.codePointAt(0)) && Character.isUpperCase(s.codePointAt(1));
+        }
+        return false;
     }
 
 
