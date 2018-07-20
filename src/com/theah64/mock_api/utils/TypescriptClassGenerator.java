@@ -84,7 +84,7 @@ public class TypescriptClassGenerator {
         //It's javascript
         modelName = GeneratorUtils.getFromFirstCapCharacter(SlashCutter.cut(modelName));
         TypescriptClassGenerator.getGenClassCode(true, codeBuilder, new JSONObject(joString), "Data");
-        String importStatement = "import { Type, Expose } from 'class-transformer';\nimport { BaseAPIResponse } from './BaseAPIResponse';";
+        String importStatement = "import { Type, Expose } from 'class-transformer';";
         codeBuilder.insert(0, String.format("%s\n\n/**\n* Generated using MockAPI (https://github.com/theapache64/Mock-API) : %s\n*/\n",
                 importStatement,
                 new Date().toString()));
@@ -126,12 +126,7 @@ public class TypescriptClassGenerator {
 
             final String expose = String.format("  @Expose({ name: '%s' })\n", property.getVariableName());
 
-            String variableCamelCase = property.getVariableName();
-            if (variableCamelCase.contains("_")) {
-                variableCamelCase = CodeGenJava.toCamelCase(variableCamelCase);
-            } else {
-                variableCamelCase = !isFirstTwoUpperCase(variableCamelCase) ? CodeGenJava.getFirstCharSmallcase(variableCamelCase) : variableCamelCase;
-            }
+            String variableCamelCase = getProperVariableName(property.getVariableName());
 
 
             final String a = String.format("readonly %s: %s", variableCamelCase, property.getDataType());
@@ -147,6 +142,44 @@ public class TypescriptClassGenerator {
 
 
         return codeBuilder.toString();
+    }
+
+    private static String getProperVariableName(String variableCamelCase) {
+
+        //Checking if full upperCase
+
+        boolean hasNoLowerCase = variableCamelCase.matches("^[^a-z]+$");
+        if (hasNoLowerCase) {
+            variableCamelCase = variableCamelCase.toLowerCase();
+        }
+
+        boolean isStarWithUpperCase = isFirstTwoUpperCase(variableCamelCase);
+        if (isStarWithUpperCase) {
+            variableCamelCase = smallUpToSecondUpperCase(variableCamelCase);
+        }
+
+        if (variableCamelCase.contains("_")) {
+            variableCamelCase = CodeGenJava.toCamelCase(variableCamelCase);
+        } else {
+            variableCamelCase = isFirstTwoUpperCase(variableCamelCase)
+                    ? variableCamelCase
+                    : CodeGenJava.getFirstCharSmallcase(variableCamelCase);
+        }
+        return variableCamelCase;
+    }
+
+    private static String smallUpToSecondUpperCase(String variableCamelCase) {
+        int lastUpPost = 0;
+        for (int i = 0; i < variableCamelCase.length(); i++) {
+            boolean isUpCase = Character.isUpperCase(variableCamelCase.codePointAt((i)));
+            if (isUpCase) {
+                lastUpPost = i;
+            }
+        }
+
+        final String firstPart = variableCamelCase.substring(0, lastUpPost).toLowerCase();
+        final String secondPart = variableCamelCase.substring(lastUpPost, variableCamelCase.length() );
+        return firstPart + secondPart;
     }
 
     private static boolean isFirstTwoUpperCase(String s) {
