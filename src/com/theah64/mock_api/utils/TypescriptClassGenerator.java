@@ -91,7 +91,7 @@ public class TypescriptClassGenerator {
 
         final String responseClassContent =
                 "\n  @Type(() => Data)\n" +
-                        "  data: Data;\n";
+                        "  readonly data: Data;\n";
 
         codeBuilder.append(String.format("export class %s extends BaseAPIResponse {%s}\n", modelName, responseClassContent));
 
@@ -111,7 +111,7 @@ public class TypescriptClassGenerator {
     private static String genClassCode(String modelName, List<Model.Property> properties, boolean isJSONObject) {
 
         final StringBuilder codeBuilder = new StringBuilder();
-        codeBuilder.append(String.format("class %s {\n", isJSONObject ? modelName : GeneratorUtils.removePlural(modelName))).append("\n");
+        codeBuilder.append(String.format("export class %s {\n", isJSONObject ? modelName : GeneratorUtils.removePlural(modelName))).append("\n");
 
         for (final Model.Property property : properties) {
 

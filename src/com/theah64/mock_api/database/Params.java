@@ -95,7 +95,7 @@ public class Params extends BaseTable<Param> {
 
         java.sql.Connection con = Connection.getConnection();
         final List<Param> params = new ArrayList<>();
-        final String query = String.format("SELECT id, name ,route_id, is_required, data_type, default_value, description FROM params WHERE %s = ?", whereColumn);
+        final String query = String.format("SELECT id, name ,route_id, is_required, data_type, default_value, description FROM params WHERE %s = ? ORDER BY is_required DESC", whereColumn);
         try {
             final PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, whereColumnValue);

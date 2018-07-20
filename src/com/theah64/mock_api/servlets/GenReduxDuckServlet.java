@@ -69,6 +69,20 @@ public class GenReduxDuckServlet extends AdvancedBaseServlet {
             codeBuilder.append(String.format("\nexport default (state : Object, action : Object) => ResponseManager.manage(%s, state, action);\n\n", ROUTE_NAME));
 
 
+            // Params
+            codeBuilder.append("export class Params {\n  constructor(\n");
+
+            for (final Param param : route.getParams()) {
+                codeBuilder.append("    public readonly ").append(param.getName())
+                        .append(String.format("%s: ", param.isRequired() ? "" : "?")).append(getPrimitive(param.getDataType()))
+                        .append(",\n");
+            }
+
+            codeBuilder.append("  ) { }\n}");
+
+
+            codeBuilder.append("\n\n\n");
+
             //Action
             codeBuilder.append(String.format("\nexport const %s = (", CodeGenJava.toCamelCase(route.getName())));
 
