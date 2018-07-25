@@ -144,7 +144,7 @@ public class TypescriptClassGenerator {
         return codeBuilder.toString();
     }
 
-    private static String getProperVariableName(String variableCamelCase) {
+    public static String getProperVariableName(String variableCamelCase) {
 
         //Checking if full upperCase
 
