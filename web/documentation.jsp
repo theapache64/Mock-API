@@ -41,6 +41,16 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
+            $("div.routeContent").slideUp();
+            $("h3.h3RouteName").on('click', function () {
+                $(this).parent().find('div.routeContent').slideToggle();
+            });
+
+            $('div#toggleRouteContentVisibility').click(function () {
+                $("div.routeContent").slideDown();
+                $("div#toggleRouteContentVisibility").hide();
+            });
+
             var successEditor = CodeMirror.fromTextArea(document.getElementById("tDefaultSuccessResponse"), {
                 lineNumbers: true,
                 viewportMargin: Infinity,
@@ -131,6 +141,16 @@
             color: #999;
         }
 
+        @media print {
+            .no-print, .no-print * {
+                display: none !important;
+            }
+
+            .routeContent {
+                display: block !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -177,159 +197,172 @@
         </div>
     </div>
 
+    <div id="toggleRouteContentVisibility" style="cursor:pointer;margin-top:10px;align-items: center"
+         class="pull-right no-print">
+        <button class="btn btn-primary">
+            <span class="glyphicon glyphicon-eye-open"></span> Expand All Routes
+        </button>
+    </div>
+
     <%
         int i = 0;
         for (final Route route : routeList) {
             i++;
     %>
 
-    <h3>
-        <small><%=i%>
-            .
-        </small>
-        /<%=route.getName()%>
-        <span class="label label-sm <%=route.getBootstrapLabelForMethod()%>"><%=route.getMethod()%></span>
-    </h3>
+    <div>
+        <h3 style="cursor: pointer;" class="h3RouteName">
+            <small><%=i%>
+                .
+            </small>
+            /<%=route.getName()%>
+            <span class="label label-sm <%=route.getBootstrapLabelForMethod()%>"><%=route.getMethod()%></span>
+        </h3>
 
-    <br>
+        <br>
 
-    <%--End point--%>
-    <div class="row">
-        <div class="col-md-9">
-            <table class="table table-bordered ">
-                <thead>
-                <tr>
-                    <th>End Point</th>
-                    <th>Type</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <a href="<%=route.getExternalApiUrl()%>"><%=route.getExternalApiUrl()%>
-                        </a></td>
-                    <td>Actual URL</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+        <div class="routeContent">
+            <%--End point--%>
+            <div class="row">
+                <div class="col-md-9">
+                    <table class="table table-bordered ">
+                        <thead>
+                        <tr>
+                            <th>End Point</th>
+                            <th>Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <a href="<%=route.getExternalApiUrl()%>"><%=route.getExternalApiUrl()%>
+                                </a></td>
+                            <td>Actual URL</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
-    <br>
-    <%
-        if (route.getDescription() != null && !route.getDescription().trim().isEmpty()) {
-    %>
-    <h4><b>Description</b></h4>
-    <p><%=route.getDescription()%>
-    </p>
-    <br>
-    <%
-        }
-    %>
+            <br>
+            <%
+                if (route.getDescription() != null && !route.getDescription().trim().isEmpty()) {
+            %>
+            <h4><b>Description</b></h4>
+            <p><%=route.getDescription()%>
+            </p>
+            <br>
+            <%
+                }
+            %>
 
-    <%
-        if (!route.getParams().isEmpty()) {
+            <%
+                if (!route.getParams().isEmpty()) {
 
-    %>
-    <%--Parameters--%>
-    <div class="row">
-        <div class="col-md-10">
-            <table class="table table-bordered ">
-                <thead>
-                <tr>
-                    <th>Parameter</th>
-                    <th>Required</th>
-                    <th>Type</th>
-                    <th>Default value</th>
-                    <th>Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <%
-                    for (final Param param : route.getParams()) {
+            %>
+            <%--Parameters--%>
+            <div class="row">
+                <div class="col-md-10">
+                    <table class="table table-bordered ">
+                        <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Required</th>
+                            <th>Type</th>
+                            <th>Default value</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <%
+                            for (final Param param : route.getParams()) {
 
-                %>
-                <tr>
-                    <td><code><%=param.getName()%>
-                    </code></td>
-                    <td><span
-                            class="label pull-right label-<%=param.isRequired()?"success" : "warning"%>"><%=param.isRequired()%></span>
-                    </td>
-                    <td><%=param.getDataType()%>
-                    </td>
-                    <td><%=param.getDefaultValue()%>
-                    </td>
-                    <td><%=param.getDescription()%>
-                    </td>
-                </tr>
-                <%
+                        %>
+                        <tr>
+                            <td><code><%=param.getName()%>
+                            </code></td>
+                            <td><span
+                                    class="label pull-right label-<%=param.isRequired()?"success" : "warning"%>"><%=param.isRequired()%></span>
+                            </td>
+                            <td><%=param.getDataType()%>
+                            </td>
+                            <td><%=param.getDefaultValue()%>
+                            </td>
+                            <td><%=param.getDescription()%>
+                            </td>
+                        </tr>
+                        <%
 
-                    }
-                %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <%
+                            }
+                        %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <%
 
-        }
-    %>
-
-
-    <h4><b>Sample Response</b></h4>
-
-    <%--Sample output--%>
+                }
+            %>
 
 
-    <div class="row">
-        <div class="col-md-10">
+            <div class="no-print">
+                <h4><b>Sample Response</b></h4>
+
+                <%--Sample output--%>
+
+
+                <div class="row">
+                    <div class="col-md-10">
             <textarea class="default_response" name="response"
                       placeholder="Response" title="JSON"><%=route.getDefaultResponse()%></textarea>
-        </div>
-    </div>
+                    </div>
+                </div>
 
-    <br>
-    <br>
+                <br>
+            </div>
+            <br>
 
-    <%--Examples--%>
-    <h4><b>Test URLs</b></h4>
-    <div class="row">
-        <div class="col-md-10">
-            <table class="table table-bordered ">
-                <thead>
-                <tr>
-                    <th>URL</th>
-                    <th>Type</th>
-                </tr>
-                </thead>
-                <tbody>
-
-
-                <tr>
-                    <td>
-                        <a target="_blank" href="<%=route.getExternalApiUrl()%>"><%=route.getExternalApiUrl()%>
-                        </a></td>
-                    <td>Actual URL</td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <a target="_blank"
-                           href="<%=route.getExternalApiUrl()+"?"+route.getDummyRequiredParams()%>"><%=route.getExternalApiUrl()%>
-                        </a></td>
-                    <td>Actual URL (with required params.)</td>
-                </tr>
+            <%--Examples--%>
+            <h4><b>Test URLs</b></h4>
+            <div class="row">
+                <div class="col-md-10">
+                    <table class="table table-bordered ">
+                        <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
 
-                <tr>
-                    <td>
-                        <a target="_blank"
-                           href="<%=WebEngineConfig.getBaseURL()+"/get_json/"+project.getName()+"/"+route.getName()+"?"+route.getDummyRequiredParams()%>">
-                            <%=WebEngineConfig.getBaseURL() + "/get_json/" + project.getName() + "/" + route.getName()%>
-                        </a></td>
-                    <td>Mock URL (with required params.)</td>
-                </tr>
-                </tbody>
-            </table>
+                        <tr>
+                            <td>
+                                <a target="_blank" href="<%=route.getExternalApiUrl()%>"><%=route.getExternalApiUrl()%>
+                                </a></td>
+                            <td>Actual URL</td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <a target="_blank"
+                                   href="<%=route.getExternalApiUrl()+"?"+route.getDummyRequiredParams()%>"><%=route.getExternalApiUrl()%>
+                                </a></td>
+                            <td>Actual URL (with required params.)</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <a target="_blank"
+                                   href="<%=WebEngineConfig.getBaseURL()+"/get_json/"+project.getName()+"/"+route.getName()+"?"+route.getDummyRequiredParams()%>">
+                                    <%=WebEngineConfig.getBaseURL() + "/get_json/" + project.getName() + "/" + route.getName()%>
+                                </a></td>
+                            <td>Mock URL (with required params.)</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 

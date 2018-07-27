@@ -131,7 +131,7 @@
 
 
                     <div class="col-md-4">
-                        <input value="SUBMIT" name="<%=Form.KEY_IS_SUBMITTED%>" type="submit"
+                        <input value="CREATE/OPEN" name="<%=Form.KEY_IS_SUBMITTED%>" type="submit"
                                class="btn btn-primary pull-right"/>
                     </div>
 
