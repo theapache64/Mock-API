@@ -1,5 +1,6 @@
 package com.theah64.mock_api.database;
 
+import com.sun.istack.internal.Nullable;
 import com.theah64.mock_api.models.RouteUpdate;
 import com.theah64.webengine.database.BaseTable;
 import com.theah64.webengine.database.querybuilders.AddQueryBuilder;
@@ -101,6 +102,26 @@ public class RouteUpdates extends BaseTable<RouteUpdate> {
     }
 
     public RouteUpdate getSecondLast(String limitUpdateId, String column, String value) throws QueryBuilderException, SQLException {
+        return getWithLimit("1,1", limitUpdateId, column, value);
+    }
+
+    public RouteUpdate getLast(String column, String value) throws QueryBuilderException, SQLException {
+        return getWithLimit("1", null, column, value);
+    }
+
+    private RouteUpdate getWithLimit(String limit, @Nullable String limitUpdateId, String column, String value) throws QueryBuilderException, SQLException {
+
+        String[] whereKeys, whereValues;
+
+        if (limitUpdateId != null) {
+            whereKeys = new String[]{column, "id<"};
+            whereValues = new String[]{value, limitUpdateId};
+        } else {
+            whereKeys = new String[]{column};
+            whereValues = new String[]{value};
+        }
+
+
         return new SelectQueryBuilder.Builder<RouteUpdate>(getTableName(), new SelectQueryBuilder.Callback<RouteUpdate>() {
             @Override
             public RouteUpdate getNode(ResultSet rs) throws SQLException {
@@ -116,9 +137,9 @@ public class RouteUpdates extends BaseTable<RouteUpdate> {
                         rs.getLong(COLUMN_CREATED_AT));
             }
         }).select(new String[]{COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)})
-                .where(new String[]{column, "id<"}, new String[]{value, limitUpdateId})
+                .where(whereKeys, whereValues)
                 .orderBy("id DESC")
-                .limit("1,1")
+                .limit(limit)
                 .build()
                 .get();
     }

@@ -4,11 +4,9 @@ import com.theah64.mock_api.database.Projects;
 import com.theah64.mock_api.database.Responses;
 import com.theah64.mock_api.database.RouteUpdates;
 import com.theah64.mock_api.database.Routes;
-import com.theah64.mock_api.models.Param;
-import com.theah64.mock_api.models.Project;
-import com.theah64.mock_api.models.Route;
-import com.theah64.mock_api.models.RouteUpdate;
+import com.theah64.mock_api.models.*;
 import com.theah64.mock_api.utils.APIResponse;
+import com.theah64.mock_api.utils.DiffUtils;
 import com.theah64.mock_api.utils.MailHelper;
 import com.theah64.webengine.database.querybuilders.QueryBuilderException;
 import com.theah64.webengine.exceptions.MailException;
@@ -40,6 +38,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     public static final String KEY_PARAMS = "params[]";
     private static final String KEY_RESPONSE = "response";
     private static final String KEY_RESPONSE_ID = "response_id";
+    private static final String KEY_NOTIFY_OTHERS = "notify_others";
     private static final String MAIL_CONTENT = "<html style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <head style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <link href=\"https://fonts.googleapis.com/css?family=Roboto:400,500,700\" rel=\"stylesheet\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <style style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > * { margin: 0 auto; padding: 0; } p, a { font-family: 'Roboto', sans-serif; } body { background: #171717; } div#body { text-align: center; color: white; padding: 50px; height: 158px; } a { text-decoration: none; } a#link { background: #6ac045; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; color: white !important; padding: 8px 34px; font-weight: 800; } div#header { background-color: #1d1d1d; width: 100%; height: 80px; border-bottom: 1px solid #2f2f2f; } div#footer { background-color: #1d1d1d; width: 100%; text-align: center; border-top: 1px solid #2f2f2f; position: absolute; bottom: 0px; } p#credits { padding: 10px; color: #565656; } p#credits a { color: #565656; } p.title { color: #ffffff; font-size: 26px; padding: 26px; } p.title2 { color: #ffffff; font-size: 26px; padding: 26px; font-weight: 600; } span.sub_title { font-size: 15px; } </style> </head> <body style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;background-color:#171717;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;\" > <div id=\"header\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;background-color:#1d1d1d;width:100%;height:80px;border-bottom-width:1px;border-bottom-style:solid;border-bottom-color:#2f2f2f;\" > <p class=\"title\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;font-family:'Roboto', sans-serif;color:#ffffff;font-size:26px;padding-top:26px;padding-bottom:26px;padding-right:26px;padding-left:26px;\" >MockAPI <span id=\"sub_title\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" >- PROJECT_NAME</span></p></div> <div id=\"body\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:50px;padding-bottom:50px;padding-right:50px;padding-left:50px;text-align:center;color:white;height:158px;\" > <p class=\"title2\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;font-family:'Roboto', sans-serif;color:#ffffff;font-size:26px;padding-top:26px;padding-bottom:26px;padding-right:26px;padding-left:26px;font-weight:600;\" >MESSAGE_HEADING</p> <br style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <p id=\"verify_instruction\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;font-size:18px;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:'Roboto', sans-serif;\" > /ROUTE_NAME </p><br style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" ><br style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;\" > <a id=\"link\" href=\"EXTERNAL_LINK\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:8px;padding-bottom:8px;padding-right:34px;padding-left:34px;font-family:'Roboto', sans-serif;text-decoration:none;background-color:#6ac045;background-image:none;background-repeat:repeat;background-position:top left;background-attachment:scroll;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;font-weight:800;color:white !important;\" >Watch!</a> </div> <div id=\"footer\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;background-color:#1d1d1d;width:100%;text-align:center;border-top-width:1px;border-top-style:solid;border-top-color:#2f2f2f;position:absolute;bottom:0px;\" > <p id=\"credits\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:10px;padding-bottom:10px;padding-right:10px;padding-left:10px;font-family:'Roboto', sans-serif;color:#565656;\" ><a target=\"_blank\" href=\"https://github.com/theapache64/Mock-API\" style=\"margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:'Roboto', sans-serif;text-decoration:none;color:#565656;\" > A Github Project</a></p></div> </body> </html>";
 
     private static String getMailContent(String messageHeading, String projectName, String routeName, String externalLink) {
@@ -59,11 +58,12 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
     protected String[] getRequiredParameters() {
         return new String[]{
                 KEY_RESPONSE_ID,
+                KEY_NOTIFY_OTHERS,
                 KEY_RESPONSE};
     }
 
     @Override
-    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException {
+    protected void doAdvancedPost() throws Request.RequestException, IOException, JSONException, SQLException, QueryBuilderException {
 
         final String routeName = getStringParameter(Routes.COLUMN_NAME);
         final String projectId = getHeaderSecurity().getProjectId();
@@ -91,6 +91,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             final String paramDefaultValues[] = getStringParameterArray(KEY_DEFAULT_VALUES);
             final String paramDescriptions[] = getStringParameterArray(KEY_DESCRIPTIONS);
             final String paramIsRequired[] = getStringParameterArray(KEY_IS_REQUIRED);
+            final boolean notifyOthers = getBooleanParameter(KEY_NOTIFY_OTHERS);
 
 
             if (paramNames != null) {
@@ -159,7 +160,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
 
                     if (!isHistoryExists) {
 
-                        //Add history
+                        //Add first history for further comparisons
                         final Route hRoute = Routes.getInstance().get(project.getName(), routeName);
                         RouteUpdates.getInstance().add(new RouteUpdate(
                                 null,
@@ -167,7 +168,7 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
                                 hRoute.getId(),
                                 hRoute.getMethod(),
                                 toReadableString(hRoute),
-                                hRoute.getDelay() > 0 ? String.valueOf(hRoute.getDelay()) : null,
+                                hRoute.getDelay() > 0 ? String.valueOf(hRoute.getDelay()) : "-1",
                                 hRoute.getDescription(),
                                 hRoute.getDefaultResponse(),
                                 -1
@@ -192,36 +193,49 @@ public class SaveJSONServlet extends AdvancedBaseServlet {
             }
 
 
-            try {
-                RouteUpdates.getInstance().add(new RouteUpdate(null, updateKey, route.getId(), route.getMethod(), toReadableString(route),
-                        route.getDelay() > 0 ? String.valueOf(route.getDelay()) : null,
-                        route.getDescription(), route.getDefaultResponse(),
-                        -1));
-            } catch (QueryBuilderException e) {
-                e.printStackTrace();
-                throw new Request.RequestException(e.getMessage());
-            }
+            final RouteUpdate lastRouteUpdate = RouteUpdates.getInstance().getLast(RouteUpdates.COLUMN_ROUTE_ID, route.getId());
+
+            final RouteUpdate newRouteUpdate = new RouteUpdate(null, updateKey, route.getId(), route.getMethod(), toReadableString(route),
+                    String.valueOf(route.getDelay()),
+                    route.getDescription(), route.getDefaultResponse(),
+                    -1);
+
+            final List<DiffView> diffViews = DiffUtils.getDiffViews(lastRouteUpdate, newRouteUpdate);
+
+            if (!diffViews.isEmpty()) {
+
+                System.out.println("has difference");
+
+                try {
+                    RouteUpdates.getInstance().add(newRouteUpdate);
+                } catch (QueryBuilderException e) {
+                    e.printStackTrace();
+                    throw new Request.RequestException(e.getMessage());
+                }
 
 
-            //About update
-            if (project.getNotificationEmails() != null && !project.getNotificationEmails().trim().isEmpty()) {
+                //About update
+                if (notifyOthers && project.getNotificationEmails() != null && !project.getNotificationEmails().trim().isEmpty()) {
 
-                new Thread(() -> {
+                    new Thread(() -> {
 
 
-                    try {
-                        MailHelper.sendMail(
-                                project.getNotificationEmails(),
-                                subject,
-                                getMailContent(message, project.getName(), route.getName(), externalLink),
-                                "MockAPI"
-                        );
-                    } catch (MailException e) {
-                        e.printStackTrace();
-                    }
+                        try {
+                            MailHelper.sendMail(
+                                    project.getNotificationEmails(),
+                                    subject,
+                                    getMailContent(message, project.getName(), route.getName(), externalLink),
+                                    "MockAPI"
+                            );
+                        } catch (MailException e) {
+                            e.printStackTrace();
+                        }
 
-                }).start();
+                    }).start();
 
+                }
+            } else {
+                System.out.println("No difference found");
             }
         }
 

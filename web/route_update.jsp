@@ -1,10 +1,10 @@
 <%@ page import="com.theah64.mock_api.database.RouteUpdates" %>
 <%@ page import="com.theah64.mock_api.models.DiffView" %>
 <%@ page import="com.theah64.mock_api.models.RouteUpdate" %>
+<%@ page import="com.theah64.mock_api.utils.DiffUtils" %>
 <%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="com.theah64.webengine.utils.StatusResponse" %>
 <%@ page import="java.sql.SQLException" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
 <%--
@@ -82,74 +82,7 @@
         $(document).ready(function () {
 
             <%
-                final List<DiffView> diffViews= new  ArrayList<>();
-
-                //Method
-                if(!oldRouteUpdate.getMethod().equals(newRouteUpdate.getMethod())){
-                    //Change in method
-                           diffViews.add(new DiffView(
-                            "Method","oldMethod",
-                            "newMethod",
-                            "methodDiffOuput",
-                            newRouteUpdate.getMethod(),
-                            oldRouteUpdate.getMethod()
-                            ));
-                }
-
-
-                //Params
-                if(!oldRouteUpdate.getParams().equals(newRouteUpdate.getParams())){
-
-                    diffViews.add(new DiffView(
-                            "Parameters","oldParams",
-                            "newParams",
-                            "paramsDiffOuput",
-                            newRouteUpdate.getParams(),
-                            oldRouteUpdate.getParams()
-                            ));
-
-                }
-
-
-                //Delay
-                if(!oldRouteUpdate.getDelay().equals(newRouteUpdate.getDelay())){
-
-                    diffViews.add(new DiffView(
-                            "Delay","oldDelay",
-                            "newDelay",
-                            "delayDiffOutput",
-                            newRouteUpdate.getDelay(),
-                            oldRouteUpdate.getDelay()
-                            ));
-
-                }
-
-                //Descriptions
-                 if(!oldRouteUpdate.getDescription().equals(newRouteUpdate.getDescription())){
-
-                    diffViews.add(new DiffView(
-                            "Description","oldDescription",
-                            "newDescription",
-                            "descriptionDiffOutput",
-                            newRouteUpdate.getDescription(),
-                            oldRouteUpdate.getDescription()
-                            ));
-
-                }
-
-
-                //Default response
-                if(!oldRouteUpdate.getDefaultResponse().equals(newRouteUpdate.getDefaultResponse())){
-                    //Change in default response
-                    diffViews.add(new DiffView(
-                            "Default response","oldDefaultResponse",
-                            "newDefaultResponse",
-                            "defaultResponseDiffOutput",
-                            newRouteUpdate.getDefaultResponse(),
-                            oldRouteUpdate.getDefaultResponse()
-                            ));
-                }
-
+                final List<DiffView> diffViews= DiffUtils.getDiffViews(oldRouteUpdate, newRouteUpdate);
 
                 for(final DiffView diffView : diffViews){
 

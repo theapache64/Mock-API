@@ -911,6 +911,8 @@
 
             $("button#bSubmit").on('click', function () {
 
+                var hasNotificationEmails = <%=project.getNotificationEmails()!=null%>;
+                var notifyOthers = hasNotificationEmails ? confirm('Do you want to notify others about the change ?') : false;
 
                 resultDiv.hide();
                 var route = $("input#route").val();
@@ -941,6 +943,7 @@
                     "&external_api_url=" + encodeURIComponent(external_api_url) +
                     "&is_secure=" + encodeURIComponent(isSecure) +
                     "&delay=" + encodeURIComponent(delay) +
+                    "&notify_others=" + notifyOthers +
                     "&method=" + encodeURIComponent($("select#<%=Routes.COLUMN_METHOD%>").val()) +
                     "&description=" + encodeURIComponent(description),
                     success: function (data) {
