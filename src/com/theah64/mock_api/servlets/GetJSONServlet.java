@@ -97,7 +97,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
                         if (
                                 (op.equals(ParamResponse.EQUALS) && pVal.equals(paramResponse.getParamValue())) ||
                                         (op.equals(ParamResponse.NOT_EQUALS) && !pVal.equals(paramResponse.getParamValue()))
-                                ) {
+                        ) {
                             jsonResp = resp;
                         } else {
                             try {
@@ -111,7 +111,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
                                                 (op.equals(ParamResponse.LESS_THAN) && inputNum < pNum) ||
                                                 (op.equals(ParamResponse.LESS_THAN_OR_EQUALS) && inputNum <= pNum)
 
-                                        ) {
+                                ) {
                                     jsonResp = resp;
                                 }
                             } catch (NumberFormatException e) {
@@ -148,6 +148,7 @@ public class GetJSONServlet extends AdvancedBaseServlet {
 
             //Validation
             if (CommonUtils.isJSONValid(jsonResp)) {
+                getHttpServletResponse().addHeader("Content-Length", String.valueOf(jsonResp.length()));
                 getWriter().write(jsonResp);
             }
 

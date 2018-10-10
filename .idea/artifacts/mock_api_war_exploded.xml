@@ -8,14 +8,10 @@
           <element id="module-output" name="webengine" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="commons-io-2.6" />
           <element id="library" level="project" name="com.thedeanda:lorem:2.11" />
           <element id="library" level="project" name="com.tinify:tinify:1.5.11" />
-          <element id="library" level="application" name="mail" />
-          <element id="library" level="application" name="json" />
-          <element id="file-copy" path="$PROJECT_DIR$/libs/jackson-core-2.2.3.jar" />
-          <element id="library" level="project" name="commons-io-2.61" />
           <element id="library" level="project" name="com.fasterxml.jackson.core:jackson-databind:2.8.4" />
+          <element id="file-copy" path="$PROJECT_DIR$/lib/commons-io-2.6.jar" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="mock_api/web/Web" />
