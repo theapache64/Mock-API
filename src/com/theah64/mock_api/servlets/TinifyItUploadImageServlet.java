@@ -32,7 +32,7 @@ public class TinifyItUploadImageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            //Yes,it's a valid data type
+            //Yes, It's a valid data type
             final Part dataFilePart = req.getPart(KEY_IMAGE);
 
             if (dataFilePart != null) {
