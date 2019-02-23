@@ -251,11 +251,20 @@
                         <input id="iProjectName" class="form-control" value="<%=project.getName()%>"
                                name="<%=Projects.COLUMN_NAME%>" placeholder="Project name" required/>
                     </div>
+                </div>
 
+                <%--Request Body Type--%>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="iRequestBodyType">Request Body Type</label>
+                        <input id="iRequestBodyType" class="form-control" value="<%=project.getName()%>"
+                               name="<%=Projects.COLUMN_NAME%>" placeholder="Project name" required/>
+                    </div>
                 </div>
             </div>
 
             <div class="row">
+
                 <div class="col-md-4">
                     <%--package name--%>
                     <div class="form-group">

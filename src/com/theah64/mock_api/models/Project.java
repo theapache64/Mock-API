@@ -9,17 +9,19 @@ public class Project {
     private final String apiKey;
     private String id;
     private String name;
+    private String requestBodyType;
     private String baseOgApiUrl;
     private String packageName;
     private boolean isAllSmallRoutes;
     private String notificationEmails;
     private String defaultSuccessResponse, defaultErrorResponse, baseResponseStructure;
 
-    public Project(String id, String name, String passHash, String apiKey, String baseOgApiUrl, String packageName, boolean isAllSmallRoutes, String notificationEmails, String defaultSuccessResponse, String defaultErrorResponse, String baseResponseStructure) {
+    public Project(String id, String name, String passHash, String apiKey, String requestBodyType, String baseOgApiUrl, String packageName, boolean isAllSmallRoutes, String notificationEmails, String defaultSuccessResponse, String defaultErrorResponse, String baseResponseStructure) {
         this.id = id;
         this.name = name;
         this.passHash = passHash;
         this.apiKey = apiKey;
+        this.requestBodyType = requestBodyType;
         this.baseOgApiUrl = baseOgApiUrl;
         this.packageName = packageName;
         this.isAllSmallRoutes = isAllSmallRoutes;
