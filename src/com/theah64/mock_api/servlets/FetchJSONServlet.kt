@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse
 class FetchJSONServlet : AdvancedBaseServlet() {
 
     override val isSecureServlet: Boolean
-        get() = true
+        get() = false
 
     override val requiredParameters: Array<String>?
         get() = null

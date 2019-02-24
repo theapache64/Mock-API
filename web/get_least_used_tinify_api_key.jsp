@@ -1,2 +1,2 @@
 <%@ page import="com.theah64.mock_api.database.TinifyKeys" %>
-<%=TinifyKeys.getInstance().getLeastUsedKey().getKey()%>
+<%=TinifyKeys.Companion.getINSTANCE().getLeastUsedKey().getKey()%>

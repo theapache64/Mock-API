@@ -41,8 +41,8 @@ import java.sql.SQLException
 */
 object ActivityCodeGen {
 
-    val KEY_ROUTE_NAME = "route_name"
     val KEY_PROJECT_NAME = "project_name"
+    val KEY_ROUTE_NAME = "route_name"
 
     @Throws(SQLException::class, Request.RequestException::class)
     fun generate(projectName: String, routeName: String): ActivityCode {

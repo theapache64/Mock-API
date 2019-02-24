@@ -27,7 +27,7 @@ object TinifyUtils {
         Tinify.setKey(tinifyKey!!.key)
 
         //Adding to db
-        val image1 = Image(null, projectId, tinifyKey.id, imageUrl, thumbUrl, filePath, false)
+        val image1 = Image(null, projectId, tinifyKey.id!!, imageUrl, thumbUrl, filePath, false)
         val imagesTable = Images.INSTANCE
         val id = imagesTable.addv3(image1)
         image1.id = id
@@ -88,7 +88,7 @@ object TinifyUtils {
 
                         if (e is AccountException) {
                             //Disabling key
-                            tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey!!.id, TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE)
+                            tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey.id, TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE)
                         }
 
 
@@ -96,7 +96,7 @@ object TinifyUtils {
                     } catch (e: QueryBuilderException) {
                         e.printStackTrace()
                         if (e is AccountException) {
-                            tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey!!.id, TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE)
+                            tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey.id, TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE)
                         }
                         throw Request.RequestException("Compression failed, Please try again: " + e.message)
                     }

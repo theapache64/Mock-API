@@ -35,36 +35,36 @@
                 <div class="form-group">
                     <label for="iKey">API Key</label>
                     <input id="iKey" class="form-control" placeholder="Tinify API key" type="text"
-                           name="<%=TinifyKeys.COLUMN_KEY%>" required/>
+                           name="<%=TinifyKeys.Companion.getCOLUMN_KEY()%>" required/>
                 </div>
 
                 <%--Email--%>
                 <div class="form-group">
                     <label for="iEmail">Email</label>
                     <input id="iEmail" class="form-control" placeholder="Email address" type="email"
-                           name="<%=TinifyKeys.COLUMN_EMAIL%>" required/>
+                           name="<%=TinifyKeys.Companion.getCOLUMN_EMAIL()%>" required/>
                 </div>
 
                 <%
                     final Form form = new Form(request, new String[]{
-                            TinifyKeys.COLUMN_KEY,
-                            TinifyKeys.COLUMN_EMAIL
+                            TinifyKeys.Companion.getCOLUMN_KEY(),
+                            TinifyKeys.Companion.getCOLUMN_EMAIL()
                     });
 
                     try {
                         if (form.isSubmitted() && form.isAllRequiredParamsAvailable()) {
 
-                            final String key = form.getString(TinifyKeys.COLUMN_KEY);
+                            final String key = form.getString(TinifyKeys.Companion.getCOLUMN_KEY());
 
 
                             Tinify.setKey(key);
 
                             if (Tinify.validate()) {
 
-                                TinifyKeys.getInstance().add(new TinifyKey(
+                                TinifyKeys.Companion.getINSTANCE().add(new TinifyKey(
                                         null,
-                                        form.getString(TinifyKeys.COLUMN_KEY),
-                                        form.getString(TinifyKeys.COLUMN_EMAIL),
+                                        form.getString(TinifyKeys.Companion.getCOLUMN_KEY()),
+                                        form.getString(TinifyKeys.Companion.getCOLUMN_EMAIL()),
                                         String.valueOf(Tinify.compressionCount())
                                 ));
 
@@ -105,7 +105,7 @@
                 <tbody>
                 <%
                     try {
-                        final List<TinifyKey> tinifyKeys = TinifyKeys.getInstance().getAll();
+                        final List<TinifyKey> tinifyKeys = TinifyKeys.Companion.getINSTANCE().getAll();
                         for (final TinifyKey tinifyKey : tinifyKeys) {
                 %>
 

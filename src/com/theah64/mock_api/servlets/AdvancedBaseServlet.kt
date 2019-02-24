@@ -43,9 +43,6 @@ abstract class AdvancedBaseServlet : HttpServlet() {
             return hs
         }
 
-    fun setRequest(request: Request) {
-        this.request = request
-    }
 
     @Throws(IOException::class)
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
@@ -91,7 +88,7 @@ abstract class AdvancedBaseServlet : HttpServlet() {
     protected abstract fun doAdvancedPost()
 
     internal fun getStringParameter(key: String): String? {
-        return request!!.getStringParameter(key)
+        return request?.getStringParameter(key)
     }
 
     fun getIntParameter(key: String, defValue: Int): Int {
@@ -111,19 +108,19 @@ abstract class AdvancedBaseServlet : HttpServlet() {
     }
 
     internal fun getBooleanParameter(key: String): Boolean {
-        return request!!.getBooleanParameter(key)
+        return request?.getBooleanParameter(key) ?: false
     }
 
     fun has(key: String): Boolean {
-        return request!!.has(key)
+        return request?.has(key) ?: false
     }
 
     internal fun getLongParameter(key: String): Long {
-        return request!!.getLongParameter(key)
+        return request?.getLongParameter(key) ?: -1
     }
 
     fun getStringParameterArray(key: String): Array<String> {
-        return request!!.getStringParameters(key)
+        return request?.getStringParameters(key) ?: arrayOf()
     }
 
 

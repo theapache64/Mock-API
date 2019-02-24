@@ -14,8 +14,8 @@
 
 <%
     Form form = new Form(request, new String[]{
-            ActivityCodeGen.KEY_PROJECT_NAME,
-            ActivityCodeGen.KEY_ROUTE_NAME
+            ActivityCodeGen.INSTANCE.getKEY_PROJECT_NAME(),
+            ActivityCodeGen.INSTANCE.getKEY_ROUTE_NAME()
     });
 
 
@@ -27,12 +27,12 @@
         return;
     }
 
-    final String projectName = form.getString(ActivityCodeGen.KEY_PROJECT_NAME);
-    final String routeName = form.getString(ActivityCodeGen.KEY_ROUTE_NAME);
+    final String projectName = form.getString(ActivityCodeGen.INSTANCE.getKEY_PROJECT_NAME());
+    final String routeName = form.getString(ActivityCodeGen.INSTANCE.getKEY_ROUTE_NAME());
 
     final ActivityCodeGen.ActivityCode activityCode;
     try {
-        activityCode = ActivityCodeGen.generate(projectName, routeName);
+        activityCode = ActivityCodeGen.INSTANCE.generate(projectName, routeName);
     } catch (SQLException | Request.RequestException e) {
         e.printStackTrace();
         StatusResponse.redirect(response, "Error", e.getMessage());

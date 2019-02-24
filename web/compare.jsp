@@ -62,7 +62,7 @@
                 <%
                     final List<Route> routes;
                     try {
-                        routes = Routes.getInstance().getAll(project.getId());
+                        routes = Routes.Companion.getINSTANCE().getAll(project.getId());
                         for (final Route route : routes) {
                 %>
                 <tr>
