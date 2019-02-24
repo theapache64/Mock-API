@@ -41,7 +41,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
             ps0.close()
 
             route.id = id
-            Params.INSTANCE.addParamsFromRoute(route)
+            Params.instance.addParamsFromRoute(route)
 
         } catch (e: SQLException) {
             e.printStackTrace()
@@ -131,7 +131,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                     val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
                     val method = rs.getString(COLUMN_METHOD)
 
-                    val allParams = Params.INSTANCE.getAll(Params.COLUMN_ROUTE_ID, id)
+                    val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
                     routeList.add(Route(id, projectId, routeName, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis))
 
@@ -180,7 +180,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                 val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
                 val method = rs.getString(COLUMN_METHOD)
 
-                val allParams = Params.INSTANCE.getAll(Params.COLUMN_ROUTE_ID, id)
+                val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
                 route = Route(id, null, routeName, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
             }
@@ -231,7 +231,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                 val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
                 val method = rs.getString(COLUMN_METHOD)
 
-                val allParams = Params.INSTANCE.getAll(Params.COLUMN_ROUTE_ID, id)
+                val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
                 route = Route(id, null, routeName, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
             }
@@ -278,7 +278,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
             ps.setString(8, route.name)
             ps.setString(9, route.projectId)
 
-            Params.INSTANCE.updateParamFromRoute(route)
+            Params.instance.updateParamFromRoute(route)
 
             isUpdated = ps.executeUpdate() == 1
             ps.close()
@@ -333,18 +333,17 @@ class Routes private constructor() : BaseTable<Route>("routes") {
     }
 
     companion object {
-
-        val COLUMN_ID = "id"
-        val COLUMN_NAME = "name"
-        val COLUMN_DEFAULT_RESPONSE = "default_response"
-        val COLUMN_PROJECT_ID = "project_id"
-        val COLUMN_DESCRIPTION = "description"
-        val COLUMN_IS_SECURE = "is_secure"
-        val COLUMN_DELAY = "delay"
-        val COLUMN_EXTERNAL_API_URL = "external_api_url"
-        val COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis"
-        val KEY_PARAMS = "params"
-        val COLUMN_METHOD = "method"
-        val INSTANCE = Routes()
+        const val COLUMN_ID = "id"
+        const val COLUMN_NAME = "name"
+        const val COLUMN_DEFAULT_RESPONSE = "default_response"
+        const val COLUMN_PROJECT_ID = "project_id"
+        const val COLUMN_DESCRIPTION = "description"
+        const val COLUMN_IS_SECURE = "is_secure"
+        const val COLUMN_DELAY = "delay"
+        const val COLUMN_EXTERNAL_API_URL = "external_api_url"
+        const val COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis"
+        const val KEY_PARAMS = "params"
+        const val COLUMN_METHOD = "method"
+        val instance = Routes()
     }
 }

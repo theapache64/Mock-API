@@ -22,13 +22,13 @@ object TinifyUtils {
     @Throws(QueryBuilderException::class, SQLException::class)
     fun manage(projectId: String, imageUrl: String, thumbUrl: String, filePath: String, isCompress: Boolean): String {
 
-        val tinifyTable = TinifyKeys.INSTANCE
+        val tinifyTable = TinifyKeys.instance
         val tinifyKey = tinifyTable.leastUsedKey
         Tinify.setKey(tinifyKey!!.key)
 
         //Adding to db
         val image1 = Image(null, projectId, tinifyKey.id!!, imageUrl, thumbUrl, filePath, false)
-        val imagesTable = Images.INSTANCE
+        val imagesTable = Images.instance
         val id = imagesTable.addv3(image1)
         image1.id = id
 

@@ -29,7 +29,7 @@ constructor(private val authorization: String?) {
             throw AuthorizationException("Unauthorized access")
         }
 
-        Projects.INSTANCE.get(Projects.COLUMN_API_KEY, this.authorization, Projects.COLUMN_ID, true).let { projectId ->
+        Projects.instance.get(Projects.COLUMN_API_KEY, this.authorization, Projects.COLUMN_ID, true).let { projectId ->
 
             if (projectId == null) {
                 throw AuthorizationException("Invalid API KEY: " + this.authorization)

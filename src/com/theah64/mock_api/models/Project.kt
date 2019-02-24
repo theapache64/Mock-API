@@ -17,7 +17,7 @@ class Project(
         var defaultErrorResponse: String,
         var baseResponseStructure: String) {
     companion object {
-        val KEY = "project"
-        val REQUEST_BODY_TYPE_FORM = "JSON"
+        const val KEY = "project"
+        const val REQUEST_BODY_TYPE_FORM = "JSON"
     }
 }

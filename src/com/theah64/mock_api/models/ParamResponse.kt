@@ -1,7 +1,7 @@
 package com.theah64.mock_api.models
 
 class ParamResponse(
-        val id: String,
+        val id: String?,
         val routeId: String,
         val paramId: String,
         val paramValue: String,

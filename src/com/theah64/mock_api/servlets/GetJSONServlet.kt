@@ -39,7 +39,7 @@ class GetJSONServlet : AdvancedBaseServlet() {
             val pathInfo = PathInfo(httpServletRequest!!.pathInfo, 2, PathInfo.UNLIMITED)
             val projectName = pathInfo.getPart(1)
             val routeName = pathInfo.getPartFrom(2)
-            route = Routes.INSTANCE.get(projectName, routeName)
+            route = Routes.instance.get(projectName, routeName)
             route!!.filterRequiredParams()
         } catch (e: PathInfo.PathInfoException) {
             e.printStackTrace()
@@ -81,12 +81,12 @@ class GetJSONServlet : AdvancedBaseServlet() {
                 //Has custom resp
                 for (paramResponse in paramResponses) {
 
-                    val pVal = getStringParameter(Params.INSTANCE.get(Params.COLUMN_ID, paramResponse.paramId, Params.COLUMN_NAME, false)!!)
+                    val pVal = getStringParameter(Params.instance.get(Params.COLUMN_ID, paramResponse.paramId, Params.COLUMN_NAME, false)!!)
 
                     if (pVal != null) {
 
                         val op = paramResponse.relOpt
-                        val resp = Responses.INSTANCE.get(Responses.COLUMN_ID, paramResponse.responseId, Responses.COLUMN_RESPONSE, false)
+                        val resp = Responses.instance.get(Responses.COLUMN_ID, paramResponse.responseId, Responses.COLUMN_RESPONSE, false)
 
                         if (op == ParamResponse.EQUALS && pVal == paramResponse.paramValue || op == ParamResponse.NOT_EQUALS && pVal != paramResponse.paramValue) {
                             jsonResp = resp

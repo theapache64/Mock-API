@@ -38,7 +38,7 @@
         Preference preference = null;
         try {
 
-            preference = Preferences.Companion.getINSTANCE().get();
+            preference = Preferences.Companion.getInstance().get();
 
             if (!preference.isOnline()) {
                 StatusResponse.redirect(response, "Maintenance Mode");
@@ -343,7 +343,7 @@
                     beforeSend: function () {
                         startLoading(true);
                     },
-                    url: "v1/search?column=<%=Routes.Companion.getCOLUMN_DEFAULT_RESPONSE()%>&value=" + sValue,
+                    url: "v1/search?column=<%=Routes.COLUMN_DEFAULT_RESPONSE%>&value=" + sValue,
                     headers: {"Authorization": "<%=project.getApiKey()%>"},
                     success: function (data) {
 
@@ -473,7 +473,7 @@
 
                     $("input#iJoString").val(selection);
                     $("input#iIsRetrofitModel").val(isRetrofitModel);
-                    $("input#iTargetLang").val('<%=JsonToModelEngine.Companion.getLANGUAGE_JAVA()%>');
+                    $("input#iTargetLang").val('<%=JsonToModelEngine.LANGUAGE_JAVA%>');
                     $("input#iRouteName").val($("input#route").val());
                     $("form#fJsonToModel").submit();
 
@@ -493,8 +493,8 @@
                     $("input#iJoString").val(selection);
                     $("input#iIsRetrofitModel").val(false);
                     $("input#iTargetLang").val(isClass
-                        ? '<%=JsonToModelEngine.Companion.getLANGUAGE_TYPESCRIPT_CLASS()%>'
-                        : '<%=JsonToModelEngine.Companion.getLANGUAGE_TYPESCRIPT_INTERFACE()%>');
+                        ? '<%=JsonToModelEngine.LANGUAGE_TYPESCRIPT_CLASS%>'
+                        : '<%=JsonToModelEngine.LANGUAGE_TYPESCRIPT_INTERFACE%>');
                     $("input#iRouteName").val($("input#route").val());
                     $("form#fJsonToModel").submit();
 
@@ -784,7 +784,7 @@
                                     $("select#responses").append('<option value="' + item.id + '">' + item.name + '</option>');
                                 });
 
-                                var respoId = '<%=request.getParameter("response_id")==null ? Routes.Companion.getCOLUMN_DEFAULT_RESPONSE() : request.getParameter("response_id")%>';
+                                var respoId = '<%=request.getParameter("response_id")==null ? Routes.COLUMN_DEFAULT_RESPONSE : request.getParameter("response_id")%>';
 
                                 var isExist = $("select#responses option[value='" + respoId + "']").length > 0;
                                 if (isExist) {
@@ -805,7 +805,7 @@
                                 //Reseting req para
                                 $("form#fParam").html("");
 
-                                $("select#<%=Routes.Companion.getCOLUMN_METHOD()%>").val(data.data.method);
+                                $("select#<%=Routes.COLUMN_METHOD%>").val(data.data.method);
 
                                 //Looping through required params
                                 var isParamsAdded = false;
@@ -946,7 +946,7 @@
                         "&is_secure=" + encodeURIComponent(isSecure) +
                         "&delay=" + encodeURIComponent(delay) +
                         "&notify_others=" + notifyOthers +
-                        "&method=" + encodeURIComponent($("select#<%=Routes.Companion.getCOLUMN_METHOD()%>").val()) +
+                        "&method=" + encodeURIComponent($("select#<%=Routes.COLUMN_METHOD%>").val()) +
                         "&description=" + encodeURIComponent(description),
                     success: function (data) {
                         stopLoading(true);
@@ -1511,7 +1511,7 @@
 <%
     List<Route> routes = null;
     try {
-        routes = Routes.Companion.getINSTANCE().getAll(project.getId());
+        routes = Routes.Companion.getInstance().getAll(project.getId());
     } catch (SQLException e) {
         e.printStackTrace();
     }
@@ -1543,7 +1543,7 @@
     <form id="fJsonToModel" action="json_to_model_engine.jsp" style="display: none" target="_blank" method="POST">
         <input id="iAuthorization" name="Authorization" value="<%=project.getApiKey()%>"/>
         <input id="iJoString" name="jo_string"/>
-        <input id="iTargetLang" name="<%=JsonToModelEngine.Companion.getKEY_TARGET_LANG()%>"/>
+        <input id="iTargetLang" name="<%=JsonToModelEngine.KEY_TARGET_LANG%>"/>
         <input id="iIsRetrofitModel" name="is_retrofit_model"/>
         <input id="iRouteName" name="route_name"/>
         <input value="X" name="<%=Form.KEY_IS_SUBMITTED%>"/>
@@ -1660,9 +1660,9 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label for="<%=Routes.Companion.getCOLUMN_METHOD()%>">Method</label>
+                    <label for="<%=Routes.COLUMN_METHOD%>">Method</label>
                     <%--<input class="form-control" type="text" maxlength="50" id="route" placeholder="Route">--%>
-                    <select id="<%=Routes.Companion.getCOLUMN_METHOD()%>" class="form-control">
+                    <select id="<%=Routes.COLUMN_METHOD%>" class="form-control">
                         <option value="GET">GET</option>
                         <option value="POST">POST</option>
                         <option value="PUT">PUT</option>
@@ -1730,7 +1730,7 @@
                         <form class="form-inline">
                             <div class="form-group">
                                 <select id="responses" class="form-control">
-                                    <option value="<%=Routes.Companion.getCOLUMN_DEFAULT_RESPONSE()%>">Default
+                                    <option value="<%=Routes.COLUMN_DEFAULT_RESPONSE%>">Default
                                         response
                                     </option>
                                 </select>
@@ -1842,13 +1842,13 @@
 
 
             <div class="col-md-2">
-                <input class="iNames form-control" type="text" name="<%=SaveJSONServlet.Companion.getKEY_PARAMS()%>"
+                <input class="iNames form-control" type="text" name="<%=SaveJSONServlet.KEY_PARAMS%>"
                        placeholder="Name"><br>
             </div>
 
 
             <div class="col-md-2">
-                <select name="<%=SaveJSONServlet.Companion.getKEY_DATA_TYPES()%>" class="sDataTypes form-control">
+                <select name="<%=SaveJSONServlet.KEY_DATA_TYPES%>" class="sDataTypes form-control">
                     <option value="String">String</option>
                     <option value="Integer">Integer</option>
                     <option value="Boolean">Boolean</option>
@@ -1860,19 +1860,19 @@
             </div>
 
             <div class="col-md-2">
-                <input class="iDefaultValues form-control" name="<%=SaveJSONServlet.Companion.getKEY_DEFAULT_VALUES()%>"
+                <input class="iDefaultValues form-control" name="<%=SaveJSONServlet.KEY_DEFAULT_VALUES%>"
                        type="text" placeholder="Default value"><br>
             </div>
 
             <div class="col-md-3">
                     <textarea class="taDescriptions form-control"
-                              name="<%=SaveJSONServlet.Companion.getKEY_DESCRIPTIONS()%>"
+                              name="<%=SaveJSONServlet.KEY_DESCRIPTIONS%>"
                               placeholder="Description"></textarea>
             </div>
 
             <div class="col-md-1 checkbox">
                 <input class="iIsRequiredHidden" type="hidden"
-                       name="<%=SaveJSONServlet.Companion.getKEY_IS_REQUIRED()%>" value="true">
+                       name="<%=SaveJSONServlet.KEY_IS_REQUIRED%>" value="true">
                 <label><input class="iIsRequired" type="checkbox" checked>Required</label>
             </div>
 
@@ -2007,7 +2007,7 @@
 
                     <form id="fInsertImage" style="width: 0px;height: 0px;overflow: hidden">
                         <input id="iFile" type="file" accept="image/*"
-                               name="<%=UploadImageServlet.Companion.getKEY_IMAGE()%>"
+                               name="<%=UploadImageServlet.KEY_IMAGE%>"
                                required/>
                         <input type="submit" value="Upload"/>
                     </form>
@@ -2019,7 +2019,7 @@
                         <%
 
                             try {
-                                List<Image> images = Images.Companion.getINSTANCE().getAll(Images.Companion.getCOLUMN_PROJECT_ID(), project.getId());
+                                List<Image> images = Images.Companion.getInstance().getAll(Images.COLUMN_PROJECT_ID, project.getId());
 
                                 for (final Image image : images) {
                         %>

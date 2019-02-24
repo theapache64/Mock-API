@@ -38,7 +38,7 @@ class SearchServlet : AdvancedBaseServlet() {
         val projectId = headerSecurity!!.projectId
         val column = getStringParameter(KEY_COLUMN)!!
         val value = getStringParameter(KEY_VALUE)!!
-        val routes = Routes.INSTANCE.getLike(Routes.COLUMN_PROJECT_ID, projectId, column, value, Routes.COLUMN_NAME)
+        val routes = Routes.instance.getLike(Routes.COLUMN_PROJECT_ID, projectId, column, value, Routes.COLUMN_NAME)
         if (routes != null) {
             val jaRoutes = JSONArray()
             for (route in routes) {

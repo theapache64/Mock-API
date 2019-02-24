@@ -27,9 +27,9 @@ class DeleteRouteServlet : AdvancedBaseServlet() {
     @Throws(IOException::class, JSONException::class, SQLException::class, Request.RequestException::class)
     override fun doAdvancedPost() {
         val routeId = getStringParameter(Routes.COLUMN_ID)!!
-        val route = Routes.INSTANCE.getRouteBy(Routes.COLUMN_ID, routeId)
-        val project = Projects.INSTANCE[Projects.COLUMN_ID, headerSecurity!!.projectId]!!
-        Routes.INSTANCE.delete(Routes.COLUMN_ID, routeId, Routes.COLUMN_PROJECT_ID, headerSecurity!!.projectId)
+        val route = Routes.instance.getRouteBy(Routes.COLUMN_ID, routeId)
+        val project = Projects.instance[Projects.COLUMN_ID, headerSecurity!!.projectId]!!
+        Routes.instance.delete(Routes.COLUMN_ID, routeId, Routes.COLUMN_PROJECT_ID, headerSecurity!!.projectId)
         Thread {
             if (project.notificationEmails != null) {
                 try {

@@ -59,6 +59,6 @@ class TinifyKeys private constructor() : BaseTable<TinifyKey>("tinify_keys") {
 
         val FALSE = "0"
         val TRUE = "1"
-        val INSTANCE = TinifyKeys()
+        val instance = TinifyKeys()
     }
 }

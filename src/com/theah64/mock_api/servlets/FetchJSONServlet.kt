@@ -47,13 +47,13 @@ class FetchJSONServlet : AdvancedBaseServlet() {
         val pathInfo = PathInfo(httpServletRequest!!.pathInfo, 2, PathInfo.UNLIMITED)
         val projectName = pathInfo.getPart(1)
         val routeName = pathInfo.getPartFrom(2)
-        val route = Routes.INSTANCE.get(projectName, routeName)!!
+        val route = Routes.instance.get(projectName, routeName)!!
 
 
         val joJson = JSONObject()
 
         val jaResponses = JSONArray()
-        val responses = Responses.INSTANCE.getAll(Responses.COLUMN_ROUTE_ID, route.id!!)
+        val responses = Responses.instance.getAll(Responses.COLUMN_ROUTE_ID, route.id!!)
         for (response in responses) {
             val joResponse = JSONObject()
             joResponse.put(Responses.COLUMN_ID, response.id)

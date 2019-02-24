@@ -39,14 +39,14 @@ class AddResponseServlet : AdvancedBaseServlet() {
         val name = getStringParameter(Responses.COLUMN_NAME)!!
         val routeName = getStringParameter(KEY_ROUTE)!!
         val projectId = getStringParameter(Routes.COLUMN_PROJECT_ID)!!
-        val routeId = Routes.INSTANCE.get(Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_NAME, routeName, Routes.COLUMN_ID)!!
+        val routeId = Routes.instance.get(Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_NAME, routeName, Routes.COLUMN_ID)!!
 
         //Checking duplicate responseName
-        val isExist = Responses.INSTANCE.isExist(Responses.COLUMN_NAME, name, Responses.COLUMN_ROUTE_ID, routeId)
+        val isExist = Responses.instance.isExist(Responses.COLUMN_NAME, name, Responses.COLUMN_ROUTE_ID, routeId)
 
         if (!isExist) {
             val response = getStringParameter(Responses.COLUMN_RESPONSE)!!
-            val respId = Responses.INSTANCE.addv3(Response(null, name, routeId, response))
+            val respId = Responses.instance.addv3(Response(null, name, routeId, response))
             writer!!.write(APIResponse("Response added", "id", respId).response)
         } else {
             writer!!.write(APIResponse("ERROR: Duplicate response -$name").response)

@@ -75,13 +75,13 @@ class Images private constructor() : BaseTable<Image>("images") {
 
     companion object {
 
-        val COLUMN_ID = "id"
-        val COLUMN_PROJECT_ID = "project_id"
-        val COLUMN_IMAGE_URL = "image_url"
-        val COLUMN_THUMB_URL = "thumb_url"
-        val COLUMN_FILE_PATH = "file_path"
-        val COLUMN_IS_COMPRESSED = "is_compressed"
-        val INSTANCE = Images()
-        private val COLUMN_TINIFY_KEY_ID = "tinify_key_id"
+        const val COLUMN_ID = "id"
+        const val COLUMN_PROJECT_ID = "project_id"
+        const val COLUMN_IMAGE_URL = "image_url"
+        const val COLUMN_THUMB_URL = "thumb_url"
+        const val COLUMN_FILE_PATH = "file_path"
+        const val COLUMN_IS_COMPRESSED = "is_compressed"
+        val instance = Images()
+        const val COLUMN_TINIFY_KEY_ID = "tinify_key_id"
     }
 }

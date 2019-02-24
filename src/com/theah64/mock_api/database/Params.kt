@@ -199,7 +199,7 @@ class Params private constructor() : BaseTable<Param>("params") {
         val COLUMN_DEFAULT_VALUE = "default_value"
         val COLUMN_DESCRIPTION = "description"
         val COLUMN_DATA_TYPE = "data_type"
-        val INSTANCE = Params()
+        val instance = Params()
     }
 
 

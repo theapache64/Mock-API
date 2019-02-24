@@ -46,6 +46,6 @@ class Responses : com.theah64.webengine.database.BaseTable<Response>("responses"
         val COLUMN_NAME = "name"
         val COLUMN_RESPONSE = "response"
         val COLUMN_ROUTE_ID = "route_id"
-        val INSTANCE = Responses()
+        val instance = Responses()
     }
 }

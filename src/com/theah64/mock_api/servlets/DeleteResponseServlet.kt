@@ -26,7 +26,7 @@ class DeleteResponseServlet : AdvancedBaseServlet() {
     @Throws(IOException::class, JSONException::class, SQLException::class, Request.RequestException::class, PathInfo.PathInfoException::class, QueryBuilderException::class)
     override fun doAdvancedPost() {
         val respId = getStringParameter(Responses.COLUMN_ID)!!
-        Responses.INSTANCE.delete(Responses.COLUMN_ID, respId)
+        Responses.instance.delete(Responses.COLUMN_ID, respId)
         writer!!.write(APIResponse("Response deleted", null).response)
     }
 }

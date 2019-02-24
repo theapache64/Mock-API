@@ -143,23 +143,20 @@ class Projects private constructor() : BaseTable<Project>("projects") {
 
     companion object {
 
-        @JvmStatic
-        var COLUMN_API_KEY = "api_key"
+        const val COLUMN_API_KEY = "api_key"
+        const val COLUMN_ID = "id"
+        const val COLUMN_NAME = "name"
+        const val COLUMN_PASS_HASH = "pass_hash"
+        const val COLUMN_BASE_OG_API_URL = "base_og_api_url"
+        const val COLUMN_REQUEST_BODY_TYPE = "request_body_type"
+        const val COLUMN_PACKAGE_NAME = "package_name"
+        const val COLUMN_IS_ALL_SMALL_ROUTES = "is_all_small_routes"
+        const val COLUMN_NOTIFICATION_EMAILS = "notification_emails"
+        const val COLUMN_DEFAULT_SUCCESS_RESPONSE = "default_success_response"
+        const val COLUMN_DEFAULT_ERROR_RESPONSE = "default_error_response"
+        const val COLUMN_BASE_RESPONSE_STRUCTURE = "base_response_structure"
 
-        val COLUMN_ID = "id"
-        val COLUMN_NAME = "name"
-        val COLUMN_PASS_HASH = "pass_hash"
-        val COLUMN_BASE_OG_API_URL = "base_og_api_url"
-        val COLUMN_REQUEST_BODY_TYPE = "request_body_type"
-        val COLUMN_PACKAGE_NAME = "package_name"
-        val COLUMN_IS_ALL_SMALL_ROUTES = "is_all_small_routes"
-        val COLUMN_NOTIFICATION_EMAILS = "notification_emails"
-        val COLUMN_DEFAULT_SUCCESS_RESPONSE = "default_success_response"
-        val COLUMN_DEFAULT_ERROR_RESPONSE = "default_error_response"
-        val COLUMN_BASE_RESPONSE_STRUCTURE = "base_response_structure"
-
-        @JvmStatic
-        var INSTANCE = Projects()
+        var instance = Projects()
     }
 
 

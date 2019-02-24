@@ -1,8 +1,6 @@
 package com.theah64.mock_api.utils
 
 import com.theah64.mock_api.database.Routes
-import com.theah64.mock_api.models.Param
-import com.theah64.mock_api.models.Route
 
 import com.theah64.webengine.utils.Request
 
@@ -46,7 +44,7 @@ object ActivityCodeGen {
 
     @Throws(SQLException::class, Request.RequestException::class)
     fun generate(projectName: String, routeName: String): ActivityCode {
-        val route = Routes.INSTANCE.get(projectName, routeName)
+        val route = Routes.instance.get(projectName, routeName)
                 ?: throw Request.RequestException("No route found : $projectName:$routeName")
 
         // First build constants needed

@@ -32,9 +32,9 @@ class GetResponseServlet : AdvancedBaseServlet() {
         if (responseId == Routes.COLUMN_DEFAULT_RESPONSE) {
             val routeName = getStringParameter(KEY_ROUTE_NAME)!!
             val projectName = getStringParameter(KEY_PROJECT_NAME)!!
-            resp = Routes.INSTANCE.get(projectName, routeName)!!.defaultResponse
+            resp = Routes.instance.get(projectName, routeName)!!.defaultResponse
         } else {
-            resp = Responses.INSTANCE.get(
+            resp = Responses.instance.get(
                     Responses.COLUMN_ID,
                     responseId,
                     Responses.COLUMN_RESPONSE,

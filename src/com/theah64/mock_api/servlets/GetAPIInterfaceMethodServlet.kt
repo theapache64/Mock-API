@@ -39,7 +39,7 @@ class GetAPIInterfaceMethodServlet : AdvancedBaseServlet() {
         val routeName = getStringParameter(Routes.COLUMN_NAME)!!
         val responseClass = CodeGenJava.getFirstCharUppercase(CodeGenJava.toCamelCase(routeName)) + "Response"
 
-        val route = Routes.INSTANCE.get(projectName, routeName)
+        val route = Routes.instance.get(projectName, routeName)
 
         if (route != null) {
 

@@ -21,7 +21,7 @@
     Project project = null;
 
     if (apiKey != null) {
-        project = Projects.getInstance().get(Projects.COLUMN_API_KEY, apiKey);
+        project = Projects.Instance().get(Projects.COLUMN_API_KEY, apiKey);
     }
 
     if (project == null) {
@@ -29,7 +29,7 @@
         return;
     }
 
-    final List<Route> routeList = Routes.getInstance().getAllDetailed(project.getId());
+    final List<Route> routeList = Routes.Instance().getAllDetailed(project.getId());
 %>
 <html>
 <head>

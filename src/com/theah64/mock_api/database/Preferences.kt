@@ -30,7 +30,7 @@ class Preferences private constructor() : BaseTable<Preference>("preferences") {
     }
 
     companion object {
-        val INSTANCE = Preferences()
+        val instance = Preferences()
         private val COLUMN_DEFAULT_SUCCESS_RESPONSE = "default_success_response"
         private val COLUMN_DEFAULT_ERROR_RESPONSE = "default_error_response"
         private val COLUMN_BASE_RESPONSE_STRUCTURE = "base_response_structure"

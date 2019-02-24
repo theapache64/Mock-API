@@ -1,8 +1,6 @@
 package com.theah64.mock_api.servlets
 
 import com.theah64.mock_api.database.Routes
-import com.theah64.mock_api.models.Param
-import com.theah64.mock_api.models.Route
 import com.theah64.mock_api.utils.CodeGenJava
 import com.theah64.mock_api.utils.Inflector
 import com.theah64.mock_api.utils.SlashCutter
@@ -42,7 +40,7 @@ class GetAPICallServlet : AdvancedBaseServlet() {
         val routeName = getStringParameter(Routes.COLUMN_NAME)!!
         val responseClass = CodeGenJava.getFromFirstCapCharacter(SlashCutter.cut(CodeGenJava.getFirstCharUppercase(CodeGenJava.toCamelCase(routeName)) + "Response"))
 
-        val route = Routes.INSTANCE.get(projectName, routeName)
+        val route = Routes.instance.get(projectName, routeName)
         if (route != null) {
             httpServletResponse!!.contentType = "text/plain"
 

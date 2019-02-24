@@ -5,7 +5,7 @@ package com.theah64.mock_api.models
  */
 class Param(val id: String?,
             val name: String,
-            val routeId: String,
+            val routeId: String?,
             val dataType: String,
             val defaultValue: String,
             val description: String,

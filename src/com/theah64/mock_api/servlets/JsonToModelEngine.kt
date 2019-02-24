@@ -33,7 +33,7 @@ class JsonToModelEngine : AdvancedBaseServlet() {
         val joString = getStringParameter(KEY_JO_STRING)
         val isRetrofitModel = getBooleanParameter(KEY_IS_RETROFIT_MODEL)
 
-        val packageName = Projects.INSTANCE.get(Projects.COLUMN_ID, headerSecurity!!.projectId, Projects.COLUMN_PACKAGE_NAME, false)
+        val packageName = Projects.instance.get(Projects.COLUMN_ID, headerSecurity!!.projectId, Projects.COLUMN_PACKAGE_NAME, false)
         writer!!.write(APIResponse("Done", "data", CodeGenJava.getFinalCode(packageName, joString, modelName, isRetrofitModel)).response)
     }
 
@@ -44,16 +44,14 @@ class JsonToModelEngine : AdvancedBaseServlet() {
     }
 
     companion object {
+        const val KEY_ROUTE_NAME = "route_name"
+        const val KEY_JO_STRING = "jo_string"
+        const val KEY_TARGET_LANG = "target_lang"
+        const val KEY_IS_RETROFIT_MODEL = "is_retrofit_model"
 
-        val KEY_ROUTE_NAME = "route_name"
-        val KEY_JO_STRING = "jo_string"
-        val KEY_TARGET_LANG = "target_lang"
-        val KEY_IS_RETROFIT_MODEL = "is_retrofit_model"
-
-        val LANGUAGE_TYPESCRIPT_INTERFACE = "typescript_interface"
-        val LANGUAGE_TYPESCRIPT_CLASS = "typescript_class"
-        val LANGUAGE_JAVA = "java"
+        const val LANGUAGE_TYPESCRIPT_INTERFACE = "typescript_interface"
+        const val LANGUAGE_TYPESCRIPT_CLASS = "typescript_class"
+        const val LANGUAGE_JAVA = "java"
     }
-
 
 }

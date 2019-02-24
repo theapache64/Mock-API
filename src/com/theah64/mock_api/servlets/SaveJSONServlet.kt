@@ -43,7 +43,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
         val routeName = getStringParameter(Routes.COLUMN_NAME)!!
         val projectId = headerSecurity!!.projectId
 
-        var routeId = Routes.INSTANCE.get(Routes.COLUMN_NAME, routeName, Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_ID)!!
+        var routeId = Routes.instance.get(Routes.COLUMN_NAME, routeName, Routes.COLUMN_PROJECT_ID, projectId, Routes.COLUMN_ID)
 
         val responseId = getStringParameter(KEY_RESPONSE_ID)!!
         val response = getStringParameter(KEY_RESPONSE)!!
@@ -56,7 +56,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
             if (responseId == Routes.COLUMN_DEFAULT_RESPONSE) {
                 defaultResponse = response
             } else {
-                Responses.INSTANCE.update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response)
+                Responses.instance.update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response)
             }
 
             val params = ArrayList<Param>()
@@ -100,7 +100,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
             val joResp = JSONObject()
             joResp.put(KEY_DUMMY_PARAMS, route.dummyRequiredParams)
 
-            val project = Projects.INSTANCE.get(Projects.COLUMN_ID, projectId)!!
+            val project = Projects.instance.get(Projects.COLUMN_ID, projectId)!!
 
             val subject: String
             val message: String
@@ -112,7 +112,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
             if (routeId == null) {
 
                 //Route doesn't exist
-                routeId = Routes.INSTANCE.addv3(route)
+                routeId = Routes.instance.addv3(route)
                 route.id = routeId
 
                 joResp.put(Routes.COLUMN_ID, routeId)
@@ -134,7 +134,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
                     if (!isHistoryExists) {
 
                         //Add first history for further comparisons
-                        val hRoute = Routes.INSTANCE.get(project.name, routeName)!!
+                        val hRoute = Routes.instance.get(project.name, routeName)!!
                         RouteUpdates.instance.add(RouteUpdate(null,
                                 RandomString.get(50),
                                 hRoute.id!!,
@@ -151,7 +151,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
                     e.printStackTrace()
                 }
 
-                Routes.INSTANCE.update(route)
+                Routes.instance.update(route)
 
                 subject = "Route updated - " + project.name + " / " + route.name
                 message = "Route Updated"
@@ -232,11 +232,11 @@ class SaveJSONServlet : AdvancedBaseServlet() {
 
     companion object {
 
-        val KEY_DATA_TYPES = "data_types[]"
-        val KEY_DEFAULT_VALUES = "default_values[]"
-        val KEY_DESCRIPTIONS = "descriptions[]"
-        val KEY_IS_REQUIRED = "is_required[]"
-        val KEY_PARAMS = "params[]"
+        const val KEY_DATA_TYPES = "data_types[]"
+        const val KEY_DEFAULT_VALUES = "default_values[]"
+        const val KEY_DESCRIPTIONS = "descriptions[]"
+        const val KEY_IS_REQUIRED = "is_required[]"
+        const val KEY_PARAMS = "params[]"
         private val KEY_RESPONSE = "response"
         private val KEY_RESPONSE_ID = "response_id"
         private val KEY_NOTIFY_OTHERS = "notify_others"

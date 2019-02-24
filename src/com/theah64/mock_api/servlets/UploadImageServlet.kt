@@ -131,7 +131,7 @@ class UploadImageServlet : AdvancedBaseServlet() {
     companion object {
 
 
-        val KEY_IMAGE = "image"
+       const  val KEY_IMAGE = "image"
         private val MAX_FILE_SIZE_IN_KB = 2000
     }
 

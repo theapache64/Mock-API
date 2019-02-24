@@ -128,7 +128,7 @@ abstract class AdvancedBaseServlet : HttpServlet() {
 
     companion object {
 
-        val URL_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
+        const val URL_REGEX = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"
 
         private val CONTENT_TYPE_JSON = "application/json"
         private val ERROR_GET_NOT_SUPPORTED = "GET method not supported"

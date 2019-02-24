@@ -2,7 +2,6 @@ package com.theah64.mock_api.servlets
 
 
 import com.theah64.mock_api.database.TinifyKeys
-import com.theah64.mock_api.models.TinifyKey
 import com.theah64.webengine.database.querybuilders.QueryBuilderException
 import com.theah64.webengine.utils.FilePart
 import com.theah64.webengine.utils.Request
@@ -16,8 +15,6 @@ import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.Part
-import java.awt.image.BufferedImage
 import java.io.IOException
 import java.sql.SQLException
 
@@ -55,13 +52,13 @@ class TinifyItUploadImageServlet : HttpServlet() {
                         */
 
                     try {
-                        val tinifyKey = TinifyKeys.INSTANCE.leastUsedKey!!
+                        val tinifyKey = TinifyKeys.instance.leastUsedKey!!
                         Tinify.setKey(tinifyKey.key)
                         val result = Tinify.fromBuffer(IOUtils.toByteArray(filePart.inputStream)).toBuffer()
                         resp.contentType = filePart.contentType
                         resp.outputStream.write(result)
 
-                        TinifyKeys.INSTANCE.update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, Tinify.compressionCount().toString())
+                        TinifyKeys.instance.update(TinifyKeys.COLUMN_KEY, Tinify.key(), TinifyKeys.COLUMN_USAGE, Tinify.compressionCount().toString())
                     } catch (e: QueryBuilderException) {
                         e.printStackTrace()
                         throw Request.RequestException(e.message)

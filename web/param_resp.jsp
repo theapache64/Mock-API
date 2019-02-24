@@ -34,7 +34,7 @@
         try {
             if (form.isAllRequiredParamsAvailable()) {
                 final String routeName = form.getString(KEY_ROUTE_NAME);
-                route = Routes.getInstance().get(project.getName(), routeName);
+                route = Routes.Instance().get(project.getName(), routeName);
             }
         } catch (Request.RequestException | SQLException e) {
             e.printStackTrace();
@@ -48,11 +48,12 @@
         }
 
 
+        ParamResponses paramResponsesDb = ParamResponses.Instance();
         final Form saveParamRespForm = new Form(request);
         if (saveParamRespForm.isSubmitted()) {
 
             //First delete all current responses
-            ParamResponses.getInstance().delete(ParamResponses.COLUMN_ROUTE_ID, route.getId());
+            paramResponsesDb.delete(ParamResponses.COLUMN_ROUTE_ID, route.getId());
 
             final String[] fParams = request.getParameterValues("params[]");
             final String[] fOps = request.getParameterValues("ops[]");
@@ -70,7 +71,7 @@
                     final String fResponse = fResponses[i];
 
                     try {
-                        ParamResponses.getInstance().add(new ParamResponse(
+                        paramResponsesDb.add(new ParamResponse(
                                 null, route.getId(),
                                 fParam, fIValue, fResponse, fOp
                         ));
@@ -89,16 +90,17 @@
 
         // Data needed
 
+
         List
                 <Param>
-                params = Params.getInstance().getAll(Params.COLUMN_ROUTE_ID, route.getId());
+                params = Params.instance.getAll(Params.COLUMN_ROUTE_ID, route.getId());
         List
                 <Response> responses = null;
         List
                 <ParamResponse> paramResponses = null;
         try {
-            responses = Responses.getInstance().getAll(Responses.COLUMN_ROUTE_ID, route.getId());
-            paramResponses = ParamResponses.getInstance().getAll(ParamResponses.COLUMN_ROUTE_ID, route.getId());
+            responses = Responses.instance.getAll(Responses.COLUMN_ROUTE_ID, route.getId());
+            paramResponses = ParamResponses.Instance().getAll(ParamResponses.COLUMN_ROUTE_ID, route.getId());
         } catch (QueryBuilderException | SQLException e) {
             e.printStackTrace();
             StatusResponse.redirect(response, "Error", e.getMessage());

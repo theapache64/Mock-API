@@ -27,14 +27,14 @@ class DeleteProjectImageServlet : AdvancedBaseServlet() {
         val imageId = getStringParameter(Images.COLUMN_ID)!!
         val projectId = headerSecurity!!.projectId
 
-        val filePath = Images.INSTANCE.get(Images.COLUMN_ID, imageId, Images.COLUMN_PROJECT_ID, projectId, Images.COLUMN_FILE_PATH)
+        val filePath = Images.instance.get(Images.COLUMN_ID, imageId, Images.COLUMN_PROJECT_ID, projectId, Images.COLUMN_FILE_PATH)
         if (filePath != null) {
             val file = File(filePath)
 
             file.delete()
 
             //Delete from db also
-            Images.INSTANCE.delete(Images.COLUMN_ID, imageId, Images.COLUMN_PROJECT_ID, projectId)
+            Images.instance.delete(Images.COLUMN_ID, imageId, Images.COLUMN_PROJECT_ID, projectId)
             writer!!.write(APIResponse("Image deleted", null).response)
 
         } else {

@@ -83,8 +83,8 @@
                                 final String name = request.getParameter("name");
                                 final String password = request.getParameter("password");
                                 final String passHash = DarKnight.getEncrypted(password);
-                                final Projects projectsTable = Projects.Companion.getINSTANCE();
-                                Project project = projectsTable.get(Projects.Companion.getCOLUMN_NAME(), name, Projects.Companion.getCOLUMN_PASS_HASH(), passHash);
+                                final Projects projectsTable = Projects.Companion.getInstance();
+                                Project project = projectsTable.get(Projects.COLUMN_NAME, name, Projects.COLUMN_PASS_HASH, passHash);
 
                                 if (project != null) {
 
@@ -98,13 +98,13 @@
 
                                         //Project doesn't exist
                                         final String apiKey = RandomString.get(10);
-                                        final Preference preference = Preferences.Companion.getINSTANCE().get();
+                                        final Preference preference = Preferences.Companion.getInstance().get();
                                         project = new Project(
                                                 null,
                                                 name,
                                                 passHash,
                                                 apiKey,
-                                                Project.Companion.getREQUEST_BODY_TYPE_FORM(),
+                                                Project.REQUEST_BODY_TYPE_FORM,
                                                 "http://baseapiurlgoeshere.com",
                                                 "com.your.packagename",
                                                 true,

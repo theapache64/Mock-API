@@ -47,7 +47,7 @@
 
     final String apiKey = form.getString("Authorization");
 
-    final String packageName = Projects.getInstance().get(Projects.COLUMN_API_KEY, apiKey, Projects.COLUMN_PACKAGE_NAME, false);
+    final String packageName = Projects.Companion.getInstance().get(Projects.COLUMN_API_KEY, apiKey, Projects.COLUMN_PACKAGE_NAME, false);
     String output = null;
     try {
         output = getOutput(targetLang, packageName, joString, modelName, isRetrofitModel);

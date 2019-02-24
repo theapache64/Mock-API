@@ -195,7 +195,7 @@
                         }
 
 
-                        final Projects projectsTable = Projects.getInstance();
+                        final Projects projectsTable = Projects.Instance();
                         final String oldBaseUrl = project.getBaseOgApiUrl();
 
                         String dsr = form.getString(Projects.COLUMN_DEFAULT_SUCCESS_RESPONSE);
@@ -220,7 +220,7 @@
 
 
                             projectsTable.update(project);
-                            Routes.getInstance().updateBaseOGAPIURL(project.getId(), oldBaseUrl, baseOgAPIUrl);
+                            Routes.Instance().updateBaseOGAPIURL(project.getId(), oldBaseUrl, baseOgAPIUrl);
 
 
             %>
