@@ -61,7 +61,7 @@
 
                             if (Tinify.validate()) {
 
-                                TinifyKeys.instance.add(new TinifyKey(
+                                TinifyKeys.Companion.getInstance().add(new TinifyKey(
                                         null,
                                         form.getString(TinifyKeys.COLUMN_KEY),
                                         form.getString(TinifyKeys.COLUMN_EMAIL),
@@ -105,7 +105,7 @@
                 <tbody>
                 <%
                     try {
-                        final List<TinifyKey> tinifyKeys = TinifyKeys.instance.getAll();
+                        final List<TinifyKey> tinifyKeys = TinifyKeys.Companion.getInstance().getAll();
                         for (final TinifyKey tinifyKey : tinifyKeys) {
                 %>
 

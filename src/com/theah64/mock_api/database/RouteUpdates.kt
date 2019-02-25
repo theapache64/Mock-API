@@ -37,7 +37,7 @@ class RouteUpdates private constructor() : BaseTable<RouteUpdate>("route_updates
     override fun get(column: String, value: String): RouteUpdate? {
         return SelectQueryBuilder.Builder(tableName, SelectQueryBuilder.Callback { rs ->
             RouteUpdate(
-                    rs.getString(BaseTable.Companion.COLUMN_ID),
+                    rs.getString(BaseTable.COLUMN_ID),
                     rs.getString(COLUMN_KEY),
                     rs.getString(COLUMN_ROUTE_ID),
                     rs.getString(COLUMN_METHOD),
@@ -46,7 +46,7 @@ class RouteUpdates private constructor() : BaseTable<RouteUpdate>("route_updates
                     rs.getString(COLUMN_DESCRIPTION),
                     rs.getString(COLUMN_DEFAULT_RESPONSE),
                     rs.getLong(COLUMN_CREATED_AT))
-        }).select(arrayOf(BaseTable.Companion.COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)))
+        }).select(arrayOf(BaseTable.COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)))
                 .where(column, value)
                 .limit(1)
                 .build()
@@ -58,7 +58,7 @@ class RouteUpdates private constructor() : BaseTable<RouteUpdate>("route_updates
     override fun getAll(whereColumn: String, whereColumnValue: String): List<RouteUpdate> {
         return SelectQueryBuilder.Builder(tableName, SelectQueryBuilder.Callback { rs ->
             RouteUpdate(
-                    rs.getString(BaseTable.Companion.COLUMN_ID),
+                    rs.getString(BaseTable.COLUMN_ID),
                     rs.getString(COLUMN_KEY),
                     rs.getString(COLUMN_ROUTE_ID),
                     rs.getString(COLUMN_METHOD),
@@ -67,7 +67,7 @@ class RouteUpdates private constructor() : BaseTable<RouteUpdate>("route_updates
                     rs.getString(COLUMN_DESCRIPTION),
                     rs.getString(COLUMN_DEFAULT_RESPONSE),
                     rs.getLong(COLUMN_CREATED_AT))
-        }).select(arrayOf(BaseTable.Companion.COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)))
+        }).select(arrayOf(BaseTable.COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)))
                 .where(whereColumn, whereColumnValue)
                 .build()
                 .all
@@ -101,7 +101,7 @@ class RouteUpdates private constructor() : BaseTable<RouteUpdate>("route_updates
 
         return SelectQueryBuilder.Builder(tableName, SelectQueryBuilder.Callback { rs ->
             RouteUpdate(
-                    rs.getString(BaseTable.Companion.COLUMN_ID),
+                    rs.getString(BaseTable.COLUMN_ID),
                     rs.getString(COLUMN_KEY),
                     rs.getString(COLUMN_ROUTE_ID),
                     rs.getString(COLUMN_METHOD),
@@ -110,7 +110,7 @@ class RouteUpdates private constructor() : BaseTable<RouteUpdate>("route_updates
                     rs.getString(COLUMN_DESCRIPTION),
                     rs.getString(COLUMN_DEFAULT_RESPONSE),
                     rs.getLong(COLUMN_CREATED_AT))
-        }).select(arrayOf(BaseTable.Companion.COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)))
+        }).select(arrayOf(BaseTable.COLUMN_ID, COLUMN_KEY, COLUMN_ROUTE_ID, COLUMN_METHOD, COLUMN_PARAMS, COLUMN_DELAY, COLUMN_DESCRIPTION, COLUMN_DEFAULT_RESPONSE, String.format("UNIX_TIMESTAMP(%s) AS %s", COLUMN_CREATED_AT, COLUMN_CREATED_AT)))
                 .where(whereKeys, whereValues)
                 .orderBy("id DESC")
                 .limit(limit)

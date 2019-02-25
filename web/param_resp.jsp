@@ -34,7 +34,7 @@
         try {
             if (form.isAllRequiredParamsAvailable()) {
                 final String routeName = form.getString(KEY_ROUTE_NAME);
-                route = Routes.Instance().get(project.getName(), routeName);
+                route = Routes.Companion.getInstance().get(project.getName(), routeName);
             }
         } catch (Request.RequestException | SQLException e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@
         }
 
 
-        ParamResponses paramResponsesDb = ParamResponses.Instance();
+        ParamResponses paramResponsesDb = ParamResponses.Companion.getInstance();
         final Form saveParamRespForm = new Form(request);
         if (saveParamRespForm.isSubmitted()) {
 
@@ -93,7 +93,7 @@
 
         List
                 <Param>
-                params = Params.instance.getAll(Params.COLUMN_ROUTE_ID, route.getId());
+                params = Params.Companion.getInstance().getAll(Params.COLUMN_ROUTE_ID, route.getId());
         List
                 <Response> responses = null;
         List

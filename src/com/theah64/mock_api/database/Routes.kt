@@ -121,8 +121,8 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
                 do {
 
-                    val id = rs.getString(BaseTable.Companion.COLUMN_ID)
-                    val routeName = rs.getString(BaseTable.Companion.COLUMN_NAME)
+                    val id = rs.getString(BaseTable.COLUMN_ID)
+                    val routeName = rs.getString(BaseTable.COLUMN_NAME)
                     val response = rs.getString(COLUMN_DEFAULT_RESPONSE)
                     val description = rs.getString(COLUMN_DESCRIPTION)
                     val isSecure = rs.getBoolean(COLUMN_IS_SECURE)
@@ -151,7 +151,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         }
 
-        BaseTable.Companion.manageError(error)
+        BaseTable.manageError(error)
 
         return routeList
 
@@ -171,7 +171,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
             val rs = ps.executeQuery()
             if (rs.first()) {
 
-                val id = rs.getString(BaseTable.Companion.COLUMN_ID)
+                val id = rs.getString(BaseTable.COLUMN_ID)
                 val response = rs.getString(COLUMN_DEFAULT_RESPONSE)
                 val description = rs.getString(COLUMN_DESCRIPTION)
                 val isSecure = rs.getBoolean(COLUMN_IS_SECURE)
@@ -200,7 +200,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         }
 
-        BaseTable.Companion.manageError(error)
+        BaseTable.manageError(error)
 
         if (route == null) {
             throw SQLException("No response found for $projectName:$routeName")
@@ -221,8 +221,8 @@ class Routes private constructor() : BaseTable<Route>("routes") {
             val rs = ps.executeQuery()
             if (rs.first()) {
 
-                val id = rs.getString(BaseTable.Companion.COLUMN_ID)
-                val routeName = rs.getString(BaseTable.Companion.COLUMN_NAME)
+                val id = rs.getString(BaseTable.COLUMN_ID)
+                val routeName = rs.getString(BaseTable.COLUMN_NAME)
                 val response = rs.getString(COLUMN_DEFAULT_RESPONSE)
                 val description = rs.getString(COLUMN_DESCRIPTION)
                 val isSecure = rs.getBoolean(COLUMN_IS_SECURE)
@@ -250,7 +250,8 @@ class Routes private constructor() : BaseTable<Route>("routes") {
             }
 
         }
-        BaseTable.Companion.manageError(error)
+
+        BaseTable.manageError(error)
 
         if (route == null) {
             throw SQLException("No response found for " + route!!)
@@ -266,7 +267,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
         try {
             val ps = con.prepareStatement(query)
 
-            val r = if (route.defaultResponse == null) get(BaseTable.Companion.COLUMN_ID, route.id!!, COLUMN_DEFAULT_RESPONSE, true) else route.defaultResponse
+            val r = if (route.defaultResponse == null) get(BaseTable.COLUMN_ID, route.id!!, COLUMN_DEFAULT_RESPONSE, true) else route.defaultResponse
 
             ps.setString(1, r)
             ps.setString(2, route.description)
@@ -324,7 +325,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         }
 
-        BaseTable.Companion.manageError(error)
+        BaseTable.manageError(error)
     }
 
     @Throws(QueryBuilderException::class, SQLException::class)
