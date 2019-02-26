@@ -328,11 +328,6 @@ class Routes private constructor() : BaseTable<Route>("routes") {
         BaseTable.manageError(error)
     }
 
-    @Throws(QueryBuilderException::class, SQLException::class)
-    override fun get(column1: String, value1: String, column2: String, value2: String): Route {
-        return super.get(column1, value1, column2, value2)
-    }
-
     companion object {
         const val COLUMN_ID = "id"
         const val COLUMN_NAME = "name"

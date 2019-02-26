@@ -40,8 +40,7 @@ class Images private constructor() : BaseTable<Image>("images") {
         ).all
     }
 
-    @Throws(QueryBuilderException::class, SQLException::class)
-    override fun get(column1: String, value1: String, column2: String, value2: String): Image {
+    override fun get(column1: String, value1: String, column2: String?, value2: String?): Image? {
         return SelectQueryBuilder<Image>(
                 tableName,
                 SelectQueryBuilder.Callback<Image> { this.getImageFromResultSet(it) },

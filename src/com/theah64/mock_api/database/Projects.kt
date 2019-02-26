@@ -20,9 +20,7 @@ class Projects private constructor() : BaseTable<Project>("projects") {
         return get(column, value, null, null)
     }
 
-    @Throws(SQLException::class, QueryBuilderException::class)
     override fun update(project: Project): Boolean {
-
         return UpdateQueryBuilder.Builder(tableName)
                 .set(BaseTable.COLUMN_NAME, project.name)
                 .set(COLUMN_PACKAGE_NAME, project.packageName)
@@ -35,10 +33,9 @@ class Projects private constructor() : BaseTable<Project>("projects") {
                 .where(BaseTable.COLUMN_ID, project.id)
                 .build()
                 .done()
-
     }
 
-    override fun get(column1: String, value1: String, @Nullable column2: String?, @Nullable value2: String?): Project? {
+    override fun get(column1: String, value1: String, column2: String?, value2: String?): Project? {
         var project: Project? = null
         val query: String
 
