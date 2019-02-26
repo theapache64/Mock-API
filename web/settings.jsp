@@ -232,7 +232,7 @@
                     }
 
                 }
-            } catch (Request.RequestException | SQLException | QueryBuilderException e) {
+            } catch (Request.RequestException | SQLException e) {
                 e.printStackTrace();
             %>
             <div class="alert alert-danger">
