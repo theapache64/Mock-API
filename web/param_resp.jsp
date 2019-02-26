@@ -48,7 +48,7 @@
         }
 
 
-        ParamResponses paramResponsesDb = ParamResponses.Instance();
+        ParamResponses paramResponsesDb = ParamResponses.Companion.getInstance();
         final Form saveParamRespForm = new Form(request);
         if (saveParamRespForm.isSubmitted()) {
 
@@ -90,10 +90,10 @@
 
         // Data needed
 
-
         List<Param> params = Params.Companion.getInstance().getAll(Params.COLUMN_ROUTE_ID, route.getId());
         List<Response> responses = null;
         List<ParamResponse> paramResponses = null;
+
 
         try {
             responses = Responses.Companion.getInstance().getAll(Responses.COLUMN_ROUTE_ID, route.getId());

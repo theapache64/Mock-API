@@ -38,7 +38,7 @@ class Projects private constructor() : BaseTable<Project>("projects") {
 
     }
 
-    fun get(column1: String, value1: String, @Nullable column2: String?, @Nullable value2: String?): Project? {
+    override fun get(column1: String, value1: String, @Nullable column2: String?, @Nullable value2: String?): Project? {
         var project: Project? = null
         val query: String
 
