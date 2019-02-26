@@ -104,9 +104,8 @@
 
                 <tbody>
                 <%
-                    try {
-                        final List<TinifyKey> tinifyKeys = TinifyKeys.Companion.getInstance().getAll();
-                        for (final TinifyKey tinifyKey : tinifyKeys) {
+                    final List<TinifyKey> tinifyKeys = TinifyKeys.Companion.getInstance().getAll();
+                    for (final TinifyKey tinifyKey : tinifyKeys) {
                 %>
 
                 <tr>
@@ -118,10 +117,6 @@
                 </tr>
 
                 <%
-                        }
-
-                    } catch (QueryBuilderException | SQLException e) {
-                        e.printStackTrace();
                     }
                 %>
                 </tbody>

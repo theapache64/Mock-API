@@ -26,7 +26,7 @@ class TinifyKeys private constructor() : BaseTable<TinifyKey>("tinify_keys") {
                 COLUMN_USAGE
         ).get()
 
-    override fun getAll(whereColumn: String, whereColumnValue: String): List<TinifyKey> {
+    override fun getAll(): MutableList<TinifyKey> {
         return SelectQueryBuilder.Builder(tableName) { rs ->
             TinifyKey(
                     rs.getString(BaseTable.COLUMN_ID),
