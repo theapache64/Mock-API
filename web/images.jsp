@@ -260,7 +260,7 @@
                 <%
 
                     try {
-                        List<Image> images = Images.instance.getAll(Images.COLUMN_PROJECT_ID, project.getId());
+                        List<Image> images = Images.Companion.getInstance().getAll(Images.COLUMN_PROJECT_ID, project.getId());
 
 
                         for (final Image image : images) {

@@ -120,14 +120,14 @@ class RouteUpdates private constructor() : BaseTable<RouteUpdate>("route_updates
 
     companion object {
 
-        val COLUMN_KEY = "_key"
-        val COLUMN_ROUTE_ID = "route_id"
         val instance = RouteUpdates()
-        private val COLUMN_METHOD = "method"
-        private val COLUMN_PARAMS = "params"
-        private val COLUMN_DELAY = "delay"
-        private val COLUMN_DESCRIPTION = "description"
-        private val COLUMN_DEFAULT_RESPONSE = "default_response"
-        private val COLUMN_CREATED_AT = "created_at"
+        const val COLUMN_KEY = "_key"
+        const val COLUMN_ROUTE_ID = "route_id"
+        const val COLUMN_METHOD = "method"
+        const val COLUMN_PARAMS = "params"
+        const val COLUMN_DELAY = "delay"
+        const val COLUMN_DESCRIPTION = "description"
+        const val COLUMN_DEFAULT_RESPONSE = "default_response"
+        const val COLUMN_CREATED_AT = "created_at"
     }
 }

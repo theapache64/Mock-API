@@ -23,7 +23,7 @@
     RouteUpdate newRouteUpdate = null;
     RouteUpdate oldRouteUpdate = null;
     try {
-        newRouteUpdate = RouteUpdates.Instance().get(RouteUpdates.COLUMN_KEY, key);
+        newRouteUpdate = RouteUpdates.Companion.getInstance().get(RouteUpdates.COLUMN_KEY, key);
     } catch (QueryBuilderException | SQLException e) {
         e.printStackTrace();
         StatusResponse.redirect(response, "Error", e.getMessage());
@@ -34,9 +34,7 @@
     }
 
     try {
-        oldRouteUpdate = RouteUpdates.Instance().getSecondLast(newRouteUpdate.getId(), RouteUpdates.COLUMN_ROUTE_ID, newRouteUpdate.getRouteId());
-
-
+        oldRouteUpdate = RouteUpdates.Companion.getInstance().getSecondLast(newRouteUpdate.getId(), RouteUpdates.COLUMN_ROUTE_ID, newRouteUpdate.getRouteId());
     } catch (QueryBuilderException | SQLException e) {
         e.printStackTrace();
     }
@@ -141,7 +139,10 @@
                     <%
                         try {
 
-                            final List<RouteUpdate> routeUpdates = RouteUpdates.Instance().getAll(RouteUpdates.COLUMN_ROUTE_ID, newRouteUpdate.getRouteId());
+                            final List<RouteUpdate> routeUpdates = RouteUpdates.Companion.getInstance().getAll(
+                                    RouteUpdates.COLUMN_ROUTE_ID,
+                                    newRouteUpdate.getRouteId()
+                            );
                             routeUpdates.remove(0);
                             Collections.reverse(routeUpdates);
                             for (final RouteUpdate routeUpdate : routeUpdates) {

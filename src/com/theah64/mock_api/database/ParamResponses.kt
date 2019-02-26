@@ -44,11 +44,11 @@ class ParamResponses private constructor() : BaseTable<ParamResponse>("param_res
 
     companion object {
 
-        val COLUMN_ROUTE_ID = "route_id"
+        const val COLUMN_ROUTE_ID = "route_id"
         val instance = ParamResponses()
-        private val COLUMN_PARAM_ID = "param_id"
-        private val COLUMN_PARAM_VALUE = "param_value"
-        private val COLUMN_RESPONSE_ID = "response_id"
-        private val COLUMN_REL_OPT = "rel_opt"
+        const val COLUMN_PARAM_ID = "param_id"
+        const val COLUMN_PARAM_VALUE = "param_value"
+        const val COLUMN_RESPONSE_ID = "response_id"
+        const val COLUMN_REL_OPT = "rel_opt"
     }
 }

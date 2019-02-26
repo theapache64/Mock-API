@@ -192,13 +192,13 @@ class Params private constructor() : BaseTable<Param>("params") {
     }
 
     companion object {
-        val COLUMN_ID = "id"
-        val COLUMN_NAME = "name"
-        val COLUMN_ROUTE_ID = "route_id"
-        val COLUMN_IS_REQUIRED = "is_required"
-        val COLUMN_DEFAULT_VALUE = "default_value"
-        val COLUMN_DESCRIPTION = "description"
-        val COLUMN_DATA_TYPE = "data_type"
+        const val COLUMN_ID = "id"
+        const val COLUMN_NAME = "name"
+        const val COLUMN_ROUTE_ID = "route_id"
+        const val COLUMN_IS_REQUIRED = "is_required"
+        const val COLUMN_DEFAULT_VALUE = "default_value"
+        const val COLUMN_DESCRIPTION = "description"
+        const val COLUMN_DATA_TYPE = "data_type"
         val instance = Params()
     }
 

@@ -51,14 +51,14 @@ class TinifyKeys private constructor() : BaseTable<TinifyKey>("tinify_keys") {
 
     companion object {
 
-        val COLUMN_KEY = "_key"
-        val COLUMN_ID = "id"
-        val COLUMN_IS_ACTIVE = "is_active"
-        val COLUMN_EMAIL = "email"
-        val COLUMN_USAGE = "_usage"
-
-        val FALSE = "0"
-        val TRUE = "1"
         val instance = TinifyKeys()
+        const val COLUMN_KEY = "_key"
+        const val COLUMN_ID = "id"
+        const val COLUMN_IS_ACTIVE = "is_active"
+        const val COLUMN_EMAIL = "email"
+        const val COLUMN_USAGE = "_usage"
+
+        const val FALSE = "0"
+        const val TRUE = "1"
     }
 }

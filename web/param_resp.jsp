@@ -34,7 +34,7 @@
         try {
             if (form.isAllRequiredParamsAvailable()) {
                 final String routeName = form.getString(KEY_ROUTE_NAME);
-                route = Routes.Instance().get(project.getName(), routeName);
+                route = Routes.Companion.getInstance().get(project.getName(), routeName);
             }
         } catch (Request.RequestException | SQLException e) {
             e.printStackTrace();
@@ -91,16 +91,13 @@
         // Data needed
 
 
-        List
-                <Param>
-                params = Params.instance.getAll(Params.COLUMN_ROUTE_ID, route.getId());
-        List
-                <Response> responses = null;
-        List
-                <ParamResponse> paramResponses = null;
+        List<Param> params = Params.Companion.getInstance().getAll(Params.COLUMN_ROUTE_ID, route.getId());
+        List<Response> responses = null;
+        List<ParamResponse> paramResponses = null;
+
         try {
-            responses = Responses.instance.getAll(Responses.COLUMN_ROUTE_ID, route.getId());
-            paramResponses = ParamResponses.Instance().getAll(ParamResponses.COLUMN_ROUTE_ID, route.getId());
+            responses = Responses.Companion.getInstance().getAll(Responses.COLUMN_ROUTE_ID, route.getId());
+            paramResponses = ParamResponses.Companion.getInstance().getAll(ParamResponses.COLUMN_ROUTE_ID, route.getId());
         } catch (QueryBuilderException | SQLException e) {
             e.printStackTrace();
             StatusResponse.redirect(response, "Error", e.getMessage());

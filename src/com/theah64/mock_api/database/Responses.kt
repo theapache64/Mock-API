@@ -42,10 +42,10 @@ class Responses : com.theah64.webengine.database.BaseTable<Response>("responses"
     }
 
     companion object {
-        val COLUMN_ID = "id"
-        val COLUMN_NAME = "name"
-        val COLUMN_RESPONSE = "response"
-        val COLUMN_ROUTE_ID = "route_id"
+        const val COLUMN_ID = "id"
+        const val COLUMN_NAME = "name"
+        const val COLUMN_RESPONSE = "response"
+        const val COLUMN_ROUTE_ID = "route_id"
         val instance = Responses()
     }
 }
