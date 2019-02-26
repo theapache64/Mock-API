@@ -18,6 +18,7 @@ class Project(
         var baseResponseStructure: String) {
     companion object {
         const val KEY = "project"
-        const val REQUEST_BODY_TYPE_FORM = "JSON"
+        const val REQUEST_BODY_TYPE_FORM = "FORM"
+        const val REQUEST_BODY_TYPE_JSON = "JSON"
     }
 }

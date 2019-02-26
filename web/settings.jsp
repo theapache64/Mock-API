@@ -218,7 +218,6 @@
                             project.setAllSmallRoutes(isAllSmallRoutes);
                             project.setNotificationEmails(emailBuilder != null ? emailBuilder.substring(0, emailBuilder.length() - 1) : null);
 
-
                             projectsTable.update(project);
                             Routes.Companion.getInstance().updateBaseOGAPIURL(project.getId(), oldBaseUrl, baseOgAPIUrl);
 
@@ -256,9 +255,14 @@
                 <%--Request Body Type--%>
                 <div class="col-md-4">
                     <div class="form-group">
+
                         <label for="iRequestBodyType">Request Body Type</label>
-                        <input id="iRequestBodyType" class="form-control" value="<%=project.getName()%>"
-                               name="<%=Projects.COLUMN_NAME%>" placeholder="Project name" required/>
+
+                        <select id="iRequestBodyType" class="form-control">
+                            <option value="<%=Project.REQUEST_BODY_TYPE_FORM%>" <%=%>>FORM</option>
+                            <option value="<%=Project.REQUEST_BODY_TYPE_JSON%>" selected>JSON</option>
+                        </select>
+
                     </div>
                 </div>
             </div>
