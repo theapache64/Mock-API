@@ -80,6 +80,8 @@ class FetchJSONServlet : AdvancedBaseServlet() {
         joJson.put(Routes.KEY_PARAMS, jaParams)
         joJson.put(Routes.COLUMN_EXTERNAL_API_URL, route.externalApiUrl)
         joJson.put(Routes.COLUMN_IS_SECURE, route.isSecure)
+        joJson.put(Routes.COLUMN_REQUEST_BODY_TYPE, route.requestBodyType)
+        joJson.put(Routes.COLUMN_JSON_REQ_BODY, route.jsonReqBody)
         joJson.put(Routes.COLUMN_DELAY, route.delay)
         joJson.put(Routes.COLUMN_DESCRIPTION, route.description)
         joJson.put(Routes.COLUMN_METHOD, route.method)

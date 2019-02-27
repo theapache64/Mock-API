@@ -11,6 +11,8 @@ class Route(
         var id: String?,
         val projectId: String?,
         val name: String,
+        val requestBodyType: String,
+        val jsonReqBody: String?,
         val defaultResponse: String?,
         val description: String?,
         val externalApiUrl: String,

@@ -616,10 +616,8 @@
 
             }
 
-            console.log(editors)
-
             editors.forEach(function (editor) {
-                console.log(editor)
+
                 editor.on('keyup', function () {
 
                     console.log(event.keyCode);
@@ -727,7 +725,7 @@
                             history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + $('input#route').val() + "&response_id=" + data.data.id);
 
                             //Deleted response from db
-                            activeEditor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
+                            jsonRespBody.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
                             $(resultDiv).html("<strong>Error! </strong> " + data.message);
@@ -785,6 +783,21 @@
 
             });
 
+            $("select#sRequestBodyType").on('change', function () {
+
+                console.log("Val changed")
+
+                var curType = $(this).val()
+                if (curType === "<%=Project.REQUEST_BODY_TYPE_JSON%>") {
+                    // it's json
+                    $("form#fParam").hide()
+                    $(jsonReqBody.getWrapperElement()).show()
+                } else {
+                    // it's form
+                    $("form#fParam").show()
+                    $(jsonReqBody.getWrapperElement()).hide()
+                }
+            });
 
             $("select#routes").on('change', function () {
 
@@ -805,12 +818,21 @@
 
                             console.log(data);
 
+
                             //Changing browser url without reloading the page
 
                             stopLoading(true);
                             var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "?" + data.data.dummy_params + "'>/" + route + "</a>";
 
                             if (!data.error) {
+
+                                // Setting request body type
+                                var requestBodyType = data.data.request_body_type;
+                                console.log("Val changing...")
+                                $("select#sRequestBodyType").val(requestBodyType).change();
+
+
+                                jsonReqBody.getDoc().setValue(data.data.json_req_body)
 
                                 $("input#route").val(route);
 
@@ -959,9 +981,9 @@
 
                 resultDiv.hide();
                 var route = $("input#route").val();
-                var response = activeEditor.getDoc().getValue();
+                var reqBody = jsonReqBody.getDoc().getValue()
+                var response = jsonRespBody.getDoc().getValue();
                 var params = $("form#fParam").serialize();
-                console.log("Params:" + params);
                 var opParams = $("input#optional_params").val();
                 var isSecure = $("input#is_secure").is(":checked") ? true : false;
                 var delay = $("input#delay").val();
@@ -980,8 +1002,10 @@
                     url: "v1/save_json",
                     data: params +
                         "&name=" + encodeURIComponent(route) +
+                        "&request_body_type=" + encodeURIComponent($("select#sRequestBodyType").val()) +
                         "&response_id=" + encodeURIComponent($('select#responses :selected').val()) +
                         "&response=" + encodeURIComponent(response) +
+                        "&json_req_body=" + encodeURIComponent(reqBody) +
                         "&optional_params=" + encodeURIComponent(opParams) +
                         "&external_api_url=" + encodeURIComponent(external_api_url) +
                         "&is_secure=" + encodeURIComponent(isSecure) +
@@ -1047,7 +1071,11 @@
                 $("input#route").prop('disabled', true);
                 $("input#delay").prop('disabled', true);
                 $("textarea#description").prop('disabled', true);
-                activeEditor.setOption('readOnly', 'nocursor');
+
+                editors.forEach(function (editor) {
+                    editor.setOption('readOnly', 'nocursor');
+                })
+
                 $("div#resultDiv").hide();
 
                 if (isSubmit) {
@@ -1070,7 +1098,9 @@
                 $("input#external_api_url").prop('disabled', false);
                 $("input#delay").prop('disabled', false);
                 $("textarea#description").prop('disabled', false);
-                activeEditor.setOption('readOnly', false);
+                editors.forEach(function (editor) {
+                    editor.setOption('readOnly', false);
+                });
 
                 if (isSubmit) {
                     $("button#bSubmit").html('<span class="glyphicon glyphicon-save"></span> SAVE');
@@ -1083,10 +1113,19 @@
             <%
                 if(project.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_FORM)){
                     %>
+            // FORM
+            $("form#fParam").show()
             $("form#fParam").append(paramRow);
+            $(jsonReqBody.getWrapperElement()).hide()
             <%
-                }
-            %>
+                }else{
+                    %>
+            // JSON
+            $(jsonReqBody.getWrapperElement()).show()
+            $("form#fParam").hide()
+            <%
+        }
+    %>
 
             $("button#bDelete").on('click', function () {
 
@@ -1721,9 +1760,9 @@
                 <div class="col-md-2">
                     <div class="form-group">
 
-                        <label for="iRequestBodyType">Request Body</label>
+                        <label for="sRequestBodyType">Request Body</label>
 
-                        <select name="<%=Projects.COLUMN_REQUEST_BODY_TYPE%>" id="iRequestBodyType"
+                        <select name="<%=Projects.COLUMN_REQUEST_BODY_TYPE%>" id="sRequestBodyType"
                                 class="form-control">
                             <option value="<%=Project.REQUEST_BODY_TYPE_FORM%>"
                                     <%=project.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_FORM) ? "selected" : ""%>
@@ -1751,11 +1790,17 @@
             <br>
             <label for="fParam">Request Body</label>
 
+            <%--JSON--%>
             <textarea id="json_req_body" class="form-control"></textarea>
 
+
+            <%--FORM--%>
             <form id="fParam" class="fParam">
 
             </form>
+
+            <br>
+
 
             <div class="row">
                 <div class="col-md-8">
