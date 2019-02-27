@@ -259,7 +259,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
 
-                        <label for="iRequestBodyType">Request Body Type</label>
+                        <label for="iRequestBodyType">Default Request Body Type</label>
 
                         <select name="<%=Projects.COLUMN_REQUEST_BODY_TYPE%>" id="iRequestBodyType"
                                 class="form-control">

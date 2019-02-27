@@ -341,7 +341,7 @@ public class Inflector {
      * <p>
      * <pre>
      *   inflector.titleCase(&quot;man from the boondocks&quot;)       #=&gt; &quot;Man From The Boondocks&quot;
-     *   inflector.titleCase(&quot;x-men: the last stand&quot;)        #=&gt; &quot;X Men: The Last Stand&quot;
+     *   inflector.titleCase(&quot;editor-men: the last stand&quot;)        #=&gt; &quot;X Men: The Last Stand&quot;
      * </pre>
      *
      * @param words           the input to be turned into title case
@@ -453,7 +453,7 @@ public class Inflector {
         inflect.addPluralize("(?:([^f])fe|([lr])f)$", "$1$2ves");
         inflect.addPluralize("(hive)$", "$1s");
         inflect.addPluralize("([^aeiouy]|qu)y$", "$1ies");
-        inflect.addPluralize("(x|ch|ss|sh)$", "$1es");
+        inflect.addPluralize("(editor|ch|ss|sh)$", "$1es");
         inflect.addPluralize("(matr|vert|ind)ix|ex$", "$1ices");
         inflect.addPluralize("([m|l])ouse$", "$1ice");
         inflect.addPluralize("([m|l])ice$", "$1ice");
@@ -477,7 +477,7 @@ public class Inflector {
         inflect.addSingularize("([^aeiouy]|qu)ies$", "$1y");
         inflect.addSingularize("(s)eries$", "$1eries");
         inflect.addSingularize("(m)ovies$", "$1ovie");
-        inflect.addSingularize("(x|ch|ss|sh)es$", "$1");
+        inflect.addSingularize("(editor|ch|ss|sh)es$", "$1");
         inflect.addSingularize("([m|l])ice$", "$1ouse");
         inflect.addSingularize("(bus)es$", "$1");
         inflect.addSingularize("(o)es$", "$1");

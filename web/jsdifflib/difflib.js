@@ -238,12 +238,12 @@ difflib = {
                 blo = qi[2];
                 bhi = qi[3];
                 x = this.find_longest_match(alo, ahi, blo, bhi);
-                i = x[0];
-                j = x[1];
-                k = x[2];
+                i = editor[0];
+                j = editor[1];
+                k = editor[2];
 
                 if (k) {
-                    matching_blocks.push(x);
+                    matching_blocks.push(editor);
                     if (alo < i && blo < j)
                         queue.push([alo, i, blo, j]);
                     if (i + k < ahi && j + k < bhi)
