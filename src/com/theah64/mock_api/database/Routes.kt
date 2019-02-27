@@ -18,7 +18,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
     override fun addv3(route: Route): String {
         var error: String? = null
         var id: String? = null
-        val query = "INSERT INTO routes (project_id, name, default_response, description, is_secure, delay,external_api_url,updated_at_in_millis,method,json_req_body) VALUES (?,?,?,?,?,?,?,?,?,?);"
+        val query = "INSERT INTO routes (project_id, name, default_response, description, is_secure, delay,external_api_url,updated_at_in_millis,method,request_body_type,json_req_body) VALUES (?,?,?,?,?,?,?,?,?,?,?);"
         val con = Connection.getConnection()
         try {
             val ps0 = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)
@@ -31,7 +31,8 @@ class Routes private constructor() : BaseTable<Route>("routes") {
             ps0.setString(7, route.externalApiUrl)
             ps0.setLong(8, System.currentTimeMillis())
             ps0.setString(9, route.method)
-            ps0.setString(10, route.jsonReqBody)
+            ps0.setString(10, route.requestBodyType)
+            ps0.setString(11, route.jsonReqBody)
 
             ps0.executeUpdate()
             val rs = ps0.generatedKeys
