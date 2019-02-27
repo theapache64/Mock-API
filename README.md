@@ -43,8 +43,8 @@ and more ...
 ### TODO
 - [x] Request Body  
 - [ ] JSON Request Body 
-    - [ ] Documentation Support
-    - [ ] Request validation + Validation Power
+    - [x] Documentation Support
+    - [ ] Request Validation 
     
    
 ### Future Enhancements

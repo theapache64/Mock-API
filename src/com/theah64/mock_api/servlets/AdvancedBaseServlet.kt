@@ -43,6 +43,9 @@ abstract class AdvancedBaseServlet : HttpServlet() {
             return hs
         }
 
+    open fun isJsonBody(): Boolean {
+        return false
+    }
 
     @Throws(IOException::class)
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
@@ -57,7 +60,8 @@ abstract class AdvancedBaseServlet : HttpServlet() {
         try {
 
             if (requiredParameters != null) {
-                request = Request(req, requiredParameters)
+                val isJsonBody = isJsonBody()
+                request = Request(req, requiredParameters, isJsonBody)
             }
 
 

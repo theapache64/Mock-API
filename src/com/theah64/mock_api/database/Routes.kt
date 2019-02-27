@@ -219,7 +219,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         var error: String? = null
         var route: Route? = null
-        val query = String.format("SELECT r.id,r.name, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE r.%s = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;", column)
+        val query = String.format("SELECT r.id,r.name,r.request_body_type, r.json_req_body, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE r.%s = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;", column)
         val con = Connection.getConnection()
         try {
             val ps = con.prepareStatement(query)

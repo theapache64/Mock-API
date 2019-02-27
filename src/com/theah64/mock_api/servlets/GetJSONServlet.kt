@@ -1,16 +1,15 @@
 package com.theah64.mock_api.servlets
 
-import com.theah64.mock_api.database.ParamResponses
-import com.theah64.mock_api.database.Params
-import com.theah64.mock_api.database.Responses
-import com.theah64.mock_api.database.Routes
+import com.theah64.mock_api.database.*
 import com.theah64.mock_api.lab.Main
 import com.theah64.mock_api.models.ParamResponse
+import com.theah64.mock_api.models.Project
 import com.theah64.mock_api.models.Route
 import com.theah64.mock_api.utils.DynamicResponseGenerator
 import com.theah64.mock_api.utils.HeaderSecurity
 import com.theah64.webengine.database.querybuilders.QueryBuilderException
 import com.theah64.webengine.utils.CommonUtils
+import com.theah64.webengine.utils.ParamFilter
 import com.theah64.webengine.utils.PathInfo
 import com.theah64.webengine.utils.Request
 import org.json.JSONException
@@ -34,13 +33,39 @@ class GetJSONServlet : AdvancedBaseServlet() {
     override val isSecureServlet: Boolean
         get() = false
 
+    override fun isJsonBody(): Boolean {
+        initRoute()
+
+        val isJsonBody = route!!.requestBodyType == Project.REQUEST_BODY_TYPE_JSON
+        return isJsonBody
+    }
+
+    private fun initRoute() {
+        val pathInfo = PathInfo(httpServletRequest!!.pathInfo, 2, PathInfo.UNLIMITED)
+        val projectName = pathInfo.getPart(1)
+        val routeName = pathInfo.getPartFrom(2)
+        route = Routes.instance.get(projectName, routeName)
+    }
+
     override val requiredParameters: Array<String>?
         get() = try {
-            val pathInfo = PathInfo(httpServletRequest!!.pathInfo, 2, PathInfo.UNLIMITED)
-            val projectName = pathInfo.getPart(1)
-            val routeName = pathInfo.getPartFrom(2)
-            route = Routes.instance.get(projectName, routeName)
-            route!!.filterRequiredParams()
+
+            initRoute()
+
+            // required params only if the request body is FORM
+            if (route!!.requestBodyType == Project.REQUEST_BODY_TYPE_FORM) {
+                // form
+                route!!.filterRequiredParams()
+            } else {
+                // json
+                val jsonBody = route!!.jsonReqBody
+                if (jsonBody != null) {
+                    ParamFilter.filterRequiredParams(jsonBody).toTypedArray()
+                } else {
+                    // no req params
+                    arrayOf()
+                }
+            }
         } catch (e: PathInfo.PathInfoException) {
             e.printStackTrace()
             throw Request.RequestException(e.message)

@@ -255,8 +255,12 @@
                 }
             %>
 
+
             <%
-                if (!route.getParams().isEmpty()) {
+                if (route.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_FORM) &&
+                        route.getParams() != null &&
+                        !route.getParams().isEmpty()
+                ) {
 
             %>
             <%--Parameters--%>
@@ -300,6 +304,29 @@
             </div>
             <%
 
+                }
+            %>
+
+            <%
+                if (route.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_JSON) && route.getJsonReqBody() != null) {
+            %>
+            <div class="no-print">
+                <h4><b>Request Body</b></h4>
+
+                <%--Sample output--%>
+
+
+                <div class="row">
+                    <div class="col-md-10">
+            <textarea class="default_response" name="response"
+                      placeholder="Response" title="JSON"><%=route.getJsonReqBody()%></textarea>
+                    </div>
+                </div>
+
+                <br>
+            </div>
+            <br>
+            <%
                 }
             %>
 
