@@ -44,8 +44,9 @@ and more ...
 - [x] Request Body  
 - [ ] JSON Request Body 
     - [x] Documentation Support
-    - [ ] Request Validation 
-    
+    - [x] Request Validation 
+    - [ ] Route Update
+    - [ ] Stable Release
    
 ### Future Enhancements
 

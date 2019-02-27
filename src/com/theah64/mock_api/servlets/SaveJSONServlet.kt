@@ -5,6 +5,7 @@ import com.theah64.mock_api.database.Responses
 import com.theah64.mock_api.database.RouteUpdates
 import com.theah64.mock_api.database.Routes
 import com.theah64.mock_api.models.Param
+import com.theah64.mock_api.models.Project
 import com.theah64.mock_api.models.Route
 import com.theah64.mock_api.models.RouteUpdate
 import com.theah64.mock_api.servlets.FetchJSONServlet.Companion.KEY_DUMMY_PARAMS
@@ -49,8 +50,19 @@ class SaveJSONServlet : AdvancedBaseServlet() {
         val response = getStringParameter(KEY_RESPONSE)!!
         val method = getStringParameter(Routes.COLUMN_METHOD)!!
 
+
+        val requestBodyType = getStringParameter(Routes.COLUMN_REQUEST_BODY_TYPE)!!
+        val jsonReqBody = getStringParameter(Routes.COLUMN_JSON_REQ_BODY)
+
         //Validation
-        if (CommonUtils.isJSONValid(response)) {
+        if (
+                CommonUtils.isJSONValid(response, "Invalid response JSON : ")
+
+        ) {
+
+            if (requestBodyType == Project.REQUEST_BODY_TYPE_JSON && jsonReqBody!!.isNotEmpty() && CommonUtils.isJSONValid(jsonReqBody!!, "Invalid request JSON : ")) {
+                println("Valid json request")
+            }
 
             var defaultResponse: String? = null
             if (responseId == Routes.COLUMN_DEFAULT_RESPONSE) {
@@ -89,8 +101,6 @@ class SaveJSONServlet : AdvancedBaseServlet() {
             val isSecure = getBooleanParameter(Routes.COLUMN_IS_SECURE)
             val delay = getLongParameter(Routes.COLUMN_DELAY)
             val externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL)!!
-            val requestBodyType = getStringParameter(Routes.COLUMN_REQUEST_BODY_TYPE)!!
-            val jsonReqBody = getStringParameter(Routes.COLUMN_JSON_REQ_BODY)
 
             if (externalApiUrl != null && !externalApiUrl.matches(AdvancedBaseServlet.URL_REGEX.toRegex())) {
                 throw Request.RequestException("Invalid external api url :$externalApiUrl")
