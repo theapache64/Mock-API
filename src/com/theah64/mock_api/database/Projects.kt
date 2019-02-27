@@ -26,6 +26,7 @@ class Projects private constructor() : BaseTable<Project>("projects") {
                 .set(COLUMN_PACKAGE_NAME, project.packageName)
                 .set(COLUMN_BASE_OG_API_URL, project.baseOgApiUrl)
                 .set(COLUMN_IS_ALL_SMALL_ROUTES, project.isAllSmallRoutes)
+                .set(COLUMN_REQUEST_BODY_TYPE, project.requestBodyType)
                 .set(COLUMN_NOTIFICATION_EMAILS, project.notificationEmails)
                 .set(COLUMN_DEFAULT_SUCCESS_RESPONSE, project.defaultSuccessResponse)
                 .set(COLUMN_DEFAULT_ERROR_RESPONSE, project.defaultErrorResponse)

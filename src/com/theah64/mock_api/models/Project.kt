@@ -8,7 +8,7 @@ class Project(
         var name: String,
         val passHash: String,
         val apiKey: String,
-        val requestBodyType: String,
+        var requestBodyType: String,
         var baseOgApiUrl: String,
         var packageName: String,
         var isAllSmallRoutes: Boolean,

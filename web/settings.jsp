@@ -155,6 +155,7 @@
                         Projects.COLUMN_PACKAGE_NAME,
                         Projects.COLUMN_BASE_OG_API_URL,
                         Projects.COLUMN_DEFAULT_SUCCESS_RESPONSE,
+                        Projects.COLUMN_REQUEST_BODY_TYPE,
                         Projects.COLUMN_DEFAULT_ERROR_RESPONSE,
                         Projects.COLUMN_BASE_RESPONSE_STRUCTURE
                 });
@@ -167,6 +168,7 @@
                         final String baseOgAPIUrl = form.getString(Projects.COLUMN_BASE_OG_API_URL);
                         final boolean isAllSmallRoutes = form.getBoolean(Projects.COLUMN_IS_ALL_SMALL_ROUTES);
                         String emailNotifications = form.getString(Projects.COLUMN_NOTIFICATION_EMAILS);
+                        final String requestBodyType = form.getString(Projects.COLUMN_REQUEST_BODY_TYPE);
 
 
                         if (!baseOgAPIUrl.matches(AdvancedBaseServlet.URL_REGEX)) {
@@ -217,6 +219,7 @@
                             project.setPackageName(packageName);
                             project.setAllSmallRoutes(isAllSmallRoutes);
                             project.setNotificationEmails(emailBuilder != null ? emailBuilder.substring(0, emailBuilder.length() - 1) : null);
+                            project.setRequestBodyType(requestBodyType);
 
                             projectsTable.update(project);
                             Routes.Companion.getInstance().updateBaseOGAPIURL(project.getId(), oldBaseUrl, baseOgAPIUrl);
@@ -258,9 +261,15 @@
 
                         <label for="iRequestBodyType">Request Body Type</label>
 
-                        <select id="iRequestBodyType" class="form-control">
-                            <option value="<%=Project.REQUEST_BODY_TYPE_FORM%>" <%=%>>FORM</option>
-                            <option value="<%=Project.REQUEST_BODY_TYPE_JSON%>" selected>JSON</option>
+                        <select name="<%=Projects.COLUMN_REQUEST_BODY_TYPE%>" id="iRequestBodyType"
+                                class="form-control">
+                            <option value="<%=Project.REQUEST_BODY_TYPE_FORM%>"
+                                    <%=project.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_FORM) ? "selected" : ""%>
+                            >FORM
+                            </option>
+                            <option <%=project.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_JSON) ? "selected" : ""%>
+                                    value="<%=Project.REQUEST_BODY_TYPE_JSON%>">JSON
+                            </option>
                         </select>
 
                     </div>
