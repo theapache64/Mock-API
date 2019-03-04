@@ -21,17 +21,17 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.thedeanda:lorem:2.11" level="project" />
     <orderEntry type="library" name="com.tinify:tinify:1.5.11" level="project" />
+    <orderEntry type="library" name="jmsm" level="application" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/commons-io-2.6.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/commons-io-2.6.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="jmsm" level="application" />
-    <orderEntry type="module" module-name="webengine" />
-    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="library" name="webengine" level="project" />
   </component>
 </module>

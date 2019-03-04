@@ -1,6 +1,5 @@
 <%@ page import="com.theah64.mock_api.database.Routes" %>
 <%@ page import="com.theah64.mock_api.servlets.AdvancedBaseServlet" %>
-<%@ page import="com.theah64.webengine.database.querybuilders.QueryBuilderException" %>
 <%@ page import="com.theah64.webengine.utils.CommonUtils" %>
 <%@ page import="com.theah64.webengine.utils.Form" %>
 <%@ page import="com.theah64.webengine.utils.Request" %>
@@ -204,7 +203,7 @@
                         String der = form.getString(Projects.COLUMN_DEFAULT_ERROR_RESPONSE);
                         String brs = form.getString(Projects.COLUMN_BASE_RESPONSE_STRUCTURE);
 
-                        if (CommonUtils.isJSONValid(dsr) && CommonUtils.isJSONValid(der)) {
+                        if (CommonUtils.isJSONValid(dsr, null) && CommonUtils.isJSONValid(der, null)) {
 
                             dsr = dsr.replaceAll("'([^\"]+)'", "\"$1\"");
                             der = der.replaceAll("'([^\"]+)'", "\"$1\"");
