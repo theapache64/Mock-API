@@ -155,23 +155,23 @@
             $("span.randomItems").on('click', function () {
 
                 var x = $(this).text();
-                if (editor.indexOf("(\\d+)") !== -1) {
+                if (x.indexOf("(\\d+)") !== -1) {
                     var count = prompt("How many?");
                     if (count != null) {
-                        x = editor.replace("(\\d+)", count);
+                        x = x.replace("(\\d+)", count);
                     } else {
                         x = "";
                     }
-                } else if (editor.indexOf("(.+)") !== -1) {
+                } else if (x.indexOf("(.+)") !== -1) {
                     var text = prompt("Enter the replacement text");
                     if (text != null) {
-                        x = editor.replace("(.+)", text);
+                        x = x.replace("(.+)", text);
                     } else {
                         x = "";
                     }
                 }
 
-                activeEditor.replaceSelection(editor);
+                activeEditor.replaceSelection(x);
                 activeEditor.focus();
             });
 
@@ -479,7 +479,7 @@
 
             function insertPicsumImages() {
                 var dimen = prompt("Enter dimension", "500x500");
-                dimen = dimen.split("editor");
+                dimen = dimen.split("x");
                 if (dimen.length === 2) {
 
                     var imgCount = prompt("Enter number of images", "1");

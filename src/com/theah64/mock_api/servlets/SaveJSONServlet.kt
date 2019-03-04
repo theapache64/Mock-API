@@ -60,7 +60,9 @@ class SaveJSONServlet : AdvancedBaseServlet() {
 
         ) {
 
-            if (requestBodyType == Project.REQUEST_BODY_TYPE_JSON && jsonReqBody!!.isNotEmpty() && CommonUtils.isJSONValid(jsonReqBody!!, "Invalid request JSON : ")) {
+            if (requestBodyType == Project.REQUEST_BODY_TYPE_JSON
+                    && jsonReqBody!!.isNotEmpty()
+                    && CommonUtils.isJSONValid(jsonReqBody!!, "Invalid request JSON : ")) {
                 println("Valid json request")
             }
 
@@ -71,28 +73,36 @@ class SaveJSONServlet : AdvancedBaseServlet() {
                 Responses.instance.update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response)
             }
 
+
+
             val params = ArrayList<Param>()
 
-            val paramNames = getStringParameterArray(KEY_PARAMS)
-            val paramDataTypes = getStringParameterArray(KEY_DATA_TYPES)
-            val paramDefaultValues = getStringParameterArray(KEY_DEFAULT_VALUES)
-            val paramDescriptions = getStringParameterArray(KEY_DESCRIPTIONS)
-            val paramIsRequired = getStringParameterArray(KEY_IS_REQUIRED)
             val notifyOthers = getBooleanParameter(KEY_NOTIFY_OTHERS)
 
-
-            for (i in paramNames.indices) {
-
-                val paramName = paramNames[i].replace("\\s+".toRegex(), "_")
-                val paramDataType = paramDataTypes[i]
-                val paramDefaultValue = paramDefaultValues[i]
-                val paramDescription = paramDescriptions[i]
-
-                val isRequired = paramIsRequired[i] == "true"
+            if (requestBodyType.equals(Project.REQUEST_BODY_TYPE_FORM)) {
 
 
-                if (!paramName.trim { it <= ' ' }.isEmpty()) {
-                    params.add(Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired))
+                val paramNames = getStringParameterArray(KEY_PARAMS)
+                val paramDataTypes = getStringParameterArray(KEY_DATA_TYPES)
+                val paramDefaultValues = getStringParameterArray(KEY_DEFAULT_VALUES)
+                val paramDescriptions = getStringParameterArray(KEY_DESCRIPTIONS)
+                val paramIsRequired = getStringParameterArray(KEY_IS_REQUIRED)
+
+
+                // adding params
+                for (i in paramNames.indices) {
+
+                    val paramName = paramNames[i].replace("\\s+".toRegex(), "_")
+                    val paramDataType = paramDataTypes[i]
+                    val paramDefaultValue = paramDefaultValues[i]
+                    val paramDescription = paramDescriptions[i]
+
+                    val isRequired = paramIsRequired[i] == "true"
+
+
+                    if (!paramName.trim { it <= ' ' }.isEmpty()) {
+                        params.add(Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired))
+                    }
                 }
             }
 
