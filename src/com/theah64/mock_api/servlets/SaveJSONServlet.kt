@@ -52,7 +52,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
 
 
         val requestBodyType = getStringParameter(Routes.COLUMN_REQUEST_BODY_TYPE)!!
-        val jsonReqBody = getStringParameter(Routes.COLUMN_JSON_REQ_BODY)
+        val jsonReqBody = if (requestBodyType == Project.REQUEST_BODY_TYPE_JSON) getStringParameter(Routes.COLUMN_JSON_REQ_BODY) else null
 
         //Validation
         if (
@@ -61,8 +61,9 @@ class SaveJSONServlet : AdvancedBaseServlet() {
         ) {
 
             if (requestBodyType == Project.REQUEST_BODY_TYPE_JSON
-                    && jsonReqBody!!.isNotEmpty()
-                    && CommonUtils.isJSONValid(jsonReqBody!!, "Invalid request JSON : ")) {
+                    && jsonReqBody != null
+                    && jsonReqBody.isNotEmpty()
+                    && CommonUtils.isJSONValid(jsonReqBody, "Invalid request JSON : ")) {
                 println("Valid json request")
             }
 
@@ -72,7 +73,6 @@ class SaveJSONServlet : AdvancedBaseServlet() {
             } else {
                 Responses.instance.update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response)
             }
-
 
 
             val params = ArrayList<Param>()
@@ -110,14 +110,14 @@ class SaveJSONServlet : AdvancedBaseServlet() {
             val description = getStringParameter(Routes.COLUMN_DESCRIPTION)!!
             val isSecure = getBooleanParameter(Routes.COLUMN_IS_SECURE)
             val delay = getLongParameter(Routes.COLUMN_DELAY)
-            val externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL)!!
+            val externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL)
 
             if (externalApiUrl != null && !externalApiUrl.matches(AdvancedBaseServlet.URL_REGEX.toRegex())) {
                 throw Request.RequestException("Invalid external api url :$externalApiUrl")
             }
 
 
-            val route = Route(null, projectId, routeName, requestBodyType, jsonReqBody, defaultResponse!!, description, externalApiUrl, method, params, isSecure, delay, -1)
+            val route = Route(null, projectId, routeName, requestBodyType, jsonReqBody, defaultResponse!!, description, externalApiUrl!!, method, params, isSecure, delay, -1)
 
             val joResp = JSONObject()
             joResp.put(KEY_DUMMY_PARAMS, route.dummyRequiredParams)

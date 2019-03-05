@@ -832,7 +832,9 @@
                                 $("select#sRequestBodyType").val(requestBodyType).change();
 
 
-                                jsonReqBody.getDoc().setValue(data.data.json_req_body)
+                                if (data.data.json_req_body) {
+                                    jsonReqBody.getDoc().setValue(data.data.json_req_body)
+                                }
 
                                 $("input#route").val(route);
 

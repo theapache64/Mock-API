@@ -30,6 +30,13 @@ class Route(
                 dummyParamBuilder.append(param).append("=").append(DynamicResponseGenerator.getLoremIpsum().getWords(1)).append("&")
             }
             dummyParamBuilder.append("is_skip_auth=true")
+
+            println("Json req body is $jsonReqBody")
+
+            if (jsonReqBody != null) {
+                dummyParamBuilder.append("&is_skip_param=true")
+            }
+
             return dummyParamBuilder.toString()
         }
 

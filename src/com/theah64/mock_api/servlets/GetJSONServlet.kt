@@ -50,6 +50,7 @@ class GetJSONServlet : AdvancedBaseServlet() {
     override val requiredParameters: Array<String>?
         get() = try {
 
+
             initRoute()
 
             // required params only if the request body is FORM
@@ -58,14 +59,23 @@ class GetJSONServlet : AdvancedBaseServlet() {
                 route!!.filterRequiredParams()
             } else {
                 // json
-                val jsonBody = route!!.jsonReqBody
-                if (jsonBody != null) {
-                    ParamFilter.filterRequiredParams(jsonBody).toTypedArray()
-                } else {
-                    // no req params
+                val isSkipParam = httpServletRequest!!.getParameter("is_skip_param") == "true"
+
+                if (isSkipParam) {
                     arrayOf()
+                } else {
+                    val jsonBody = route!!.jsonReqBody
+                    if (jsonBody != null) {
+                        ParamFilter.filterRequiredParams(jsonBody).toTypedArray()
+                    } else {
+                        // no req params
+                        arrayOf()
+                    }
                 }
+
             }
+
+
         } catch (e: PathInfo.PathInfoException) {
             e.printStackTrace()
             throw Request.RequestException(e.message)
@@ -87,6 +97,9 @@ class GetJSONServlet : AdvancedBaseServlet() {
             val authorization = httpServletRequest!!.getHeader(HeaderSecurity.KEY_AUTHORIZATION)
                     ?: throw Request.RequestException("Authorization header missing")
         }
+
+
+
 
         if (route!!.delay > 0) {
             try {
