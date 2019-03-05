@@ -92,7 +92,7 @@ class UploadImageServlet : AdvancedBaseServlet() {
                         imageFile.setWritable(true, false)
 
                         val fileDownloadPath = imageFile.absolutePath.split("/html".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-                        val imageUrl = (if (WebEngineConfig.getBaseURL().startsWith("http://localhost")) "http://localhost:8090" else "http://theapache64.com:8090") + fileDownloadPath
+                        val imageUrl = (if (WebEngineConfig.baseURL!!.startsWith("http://localhost")) "http://localhost:8090" else "http://theapache64.com:8090") + fileDownloadPath
 
                         try {
                             val id = TinifyUtils.manage(headerSecurity!!.projectId, imageUrl, imageUrl, imageFile.absolutePath, true)
@@ -113,7 +113,7 @@ class UploadImageServlet : AdvancedBaseServlet() {
 
 
                     } else {
-                        throw Request.RequestException("Invalid image type: " + filePart!!.getContentType() + ":" + ext)
+                        throw Request.RequestException("Invalid image type: " + filePart.getContentType() + ":" + ext)
                     }
 
                 }
@@ -131,7 +131,7 @@ class UploadImageServlet : AdvancedBaseServlet() {
     companion object {
 
 
-       const  val KEY_IMAGE = "image"
+        const val KEY_IMAGE = "image"
         private val MAX_FILE_SIZE_IN_KB = 2000
     }
 

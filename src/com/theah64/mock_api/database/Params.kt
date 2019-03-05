@@ -17,7 +17,7 @@ class Params private constructor() : BaseTable<Param>("params") {
     @Throws(SQLException::class)
     fun addParamsFromRoute(route: Route) {
         var error: String? = null
-        val con = Connection.getConnection()
+        val con = Connection.connection
 
         try {
             addParams(con, route.id!!, route.params!!)
@@ -78,7 +78,7 @@ class Params private constructor() : BaseTable<Param>("params") {
 
     override fun getAll(whereColumn: String, whereColumnValue: String): List<Param> {
 
-        val con = Connection.getConnection()
+        val con = Connection.connection
         val params = ArrayList<Param>()
         val query = String.format("SELECT id, name ,route_id, is_required, data_type, default_value, description FROM params WHERE %s = ? ORDER BY is_required DESC", whereColumn)
         try {
@@ -151,7 +151,7 @@ class Params private constructor() : BaseTable<Param>("params") {
         }
 
 
-        val con = Connection.getConnection()
+        val con = Connection.connection
 
         try {
 

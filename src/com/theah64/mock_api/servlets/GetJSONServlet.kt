@@ -13,6 +13,8 @@ import com.theah64.webengine.utils.ParamFilter
 import com.theah64.webengine.utils.PathInfo
 import com.theah64.webengine.utils.Request
 import org.json.JSONException
+import org.json.JSONObject
+import java.io.BufferedReader
 
 import javax.servlet.annotation.MultipartConfig
 import javax.servlet.annotation.WebServlet
@@ -44,7 +46,7 @@ class GetJSONServlet : AdvancedBaseServlet() {
         val pathInfo = PathInfo(httpServletRequest!!.pathInfo, 2, PathInfo.UNLIMITED)
         val projectName = pathInfo.getPart(1)
         val routeName = pathInfo.getPartFrom(2)
-        route = Routes.instance.get(projectName, routeName)
+        route = Routes.instance.get(projectName!!, routeName!!)
     }
 
     override val requiredParameters: Array<String>?
@@ -157,14 +159,26 @@ class GetJSONServlet : AdvancedBaseServlet() {
                 jsonResp = route!!.defaultResponse
             }
 
-
             //Input throw back
-            if (route!!.params != null) {
-                val reqParams = route!!.params!!
-                for (params in reqParams) {
-                    val value = getStringParameter(params.name)
+            if (route!!.requestBodyType == Project.REQUEST_BODY_TYPE_FORM) {
+                // form
+                if (route!!.params != null) {
+                    val reqParams = route!!.params!!
+                    for (params in reqParams) {
+                        val value = getStringParameter(params.name)
+                        if (value != null && !value.trim { it <= ' ' }.isEmpty()) {
+                            jsonResp = jsonResp!!.replace("{" + params.name + "}", value)
+                        }
+                    }
+                }
+            } else {
+                // json
+                val joReqBody = route!!.jsonReqBody ?: "{}"
+                val reqParams = ParamFilter.filterRequiredParams(joReqBody)
+                for (key in reqParams) {
+                    val value = request!!.jsonRequestBody.getString(key)
                     if (value != null && !value.trim { it <= ' ' }.isEmpty()) {
-                        jsonResp = jsonResp!!.replace("{" + params.name + "}", value)
+                        jsonResp = jsonResp!!.replace("{$key}", value)
                     }
                 }
             }

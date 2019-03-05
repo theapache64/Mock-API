@@ -141,7 +141,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
 
                 subject = "Route established - " + project.name + " / " + route.name
                 message = "Route Added"
-                externalLink = String.format(WebEngineConfig.getBaseURL() + "/index.jsp?api_key=%s&route=%s&response_id=default_response", project.apiKey, route.name)
+                externalLink = String.format(WebEngineConfig.baseURL + "/index.jsp?api_key=%s&route=%s&response_id=default_response", project.apiKey, route.name)
 
                 writer!!.write(APIResponse("Route established ", joResp).response)
             } else {
@@ -178,7 +178,7 @@ class SaveJSONServlet : AdvancedBaseServlet() {
                 subject = "Route updated - " + project.name + " / " + route.name
                 message = "Route Updated"
                 externalLink = String.format(
-                        WebEngineConfig.getBaseURL() + "/route_update.jsp?key=%s&project_name=%s&route_name=%s",
+                        WebEngineConfig.baseURL + "/route_update.jsp?key=%s&project_name=%s&route_name=%s",
                         updateKey, project.name, route.name
                 )
 

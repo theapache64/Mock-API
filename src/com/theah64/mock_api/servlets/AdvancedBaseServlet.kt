@@ -19,7 +19,7 @@ import java.sql.SQLException
  */
 abstract class AdvancedBaseServlet : HttpServlet() {
 
-    private var request: Request? = null
+    var request: Request? = null
     private var hs: HeaderSecurity? = null
     var writer: PrintWriter? = null
         private set

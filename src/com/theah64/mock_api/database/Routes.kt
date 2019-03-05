@@ -19,7 +19,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
         var error: String? = null
         var id: String? = null
         val query = "INSERT INTO routes (project_id, name, default_response, description, is_secure, delay,external_api_url,updated_at_in_millis,method,request_body_type,json_req_body) VALUES (?,?,?,?,?,?,?,?,?,?,?);"
-        val con = Connection.getConnection()
+        val con = Connection.connection
         try {
             val ps0 = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)
             ps0.setString(1, route.projectId)
@@ -66,7 +66,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
         val jsonList = ArrayList<Route>()
         val query = "SELECT id, name,request_body_type, external_api_url FROM routes WHERE project_id = ? AND is_active = 1 ORDER BY id DESC"
         var error: String? = null
-        val con = Connection.getConnection()
+        val con = Connection.connection
         try {
             val ps = con.prepareStatement(query)
             ps.setString(1, projectId)
@@ -112,7 +112,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         val query = "SELECT r.id,r.name,r.request_body_type,r.json_req_body, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.id = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id;"
         var error: String? = null
-        val con = Connection.getConnection()
+        val con = Connection.connection
         try {
             val ps = con.prepareStatement(query)
             ps.setString(1, projectId)
@@ -163,12 +163,12 @@ class Routes private constructor() : BaseTable<Route>("routes") {
     }
 
     @Throws(SQLException::class)
-    override fun get(projectName: String, routeName: String): Route? {
+    fun get(projectName: String?, routeName: String?): Route? {
 
         var error: String? = null
         var route: Route? = null
         val query = "SELECT r.id, r.updated_at_in_millis,r.request_body_type,r.json_req_body, r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;"
-        val con = Connection.getConnection()
+        val con = Connection.connection
         try {
             val ps = con.prepareStatement(query)
             ps.setString(1, projectName)
@@ -189,7 +189,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
                 val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
-                route = Route(id, null, routeName, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
+                route = Route(id, null, routeName!!, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
             }
 
             rs.close()
@@ -221,7 +221,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
         var error: String? = null
         var route: Route? = null
         val query = String.format("SELECT r.id,r.name,r.request_body_type, r.json_req_body, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE r.%s = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;", column)
-        val con = Connection.getConnection()
+        val con = Connection.connection
         try {
             val ps = con.prepareStatement(query)
             ps.setString(1, value)
@@ -272,7 +272,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
     override fun update(route: Route): Boolean {
         var isUpdated = false
         val query = "UPDATE routes SET default_response = ?, description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?, method = ?,request_body_type=?, json_req_body = ?  WHERE name = ? AND project_id = ?;"
-        val con = Connection.getConnection()
+        val con = Connection.connection
         try {
             val ps = con.prepareStatement(query)
 
@@ -315,7 +315,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
     @Throws(SQLException::class)
     fun updateBaseOGAPIURL(projectId: String, oldBaseUrl: String, newBaseUrl: String) {
         val query = String.format("UPDATE routes SET %s = REPLACE(%s, ?, ?) WHERE INSTR(%s, ?) > 0 AND project_id = ?;", COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL, COLUMN_EXTERNAL_API_URL)
-        val con = Connection.getConnection()
+        val con = Connection.connection
         var error: String? = null
         try {
             val ps = con.prepareStatement(query)
