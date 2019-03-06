@@ -11,23 +11,30 @@ object ParamFilter {
     }
 
     fun filterRequiredParams(jsonString: String): List<String> {
-        val jo = JSONObject(jsonString)
+
         // looping through each key
         val params = mutableListOf<String>()
-        jo.keys().forEach { key ->
-            val value = jo.get(key as String)
-            if (
-            // ends with ? = optional
-                    (value is String && !value.endsWith("?")) ||
-                    // 0 = optional
-                    ((value is Number) && value != 0) ||
-                    // false = optional
-                    ((value is Boolean) && value == false)
-            ) {
-                // required
-                params.add(key)
+
+        if(jsonString.isNotEmpty()){
+            val jo = JSONObject(jsonString)
+
+            jo.keys().forEach { key ->
+                val value = jo.get(key as String)
+                if (
+                // ends with ? = optional
+                        (value is String && !value.endsWith("?")) ||
+                        // 0 = optional
+                        ((value is Number) && value != 0) ||
+                        // false = optional
+                        ((value is Boolean) && value == false)
+                ) {
+                    // required
+                    params.add(key)
+                }
             }
         }
+
+
         return params
     }
 }
