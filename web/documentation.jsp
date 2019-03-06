@@ -381,8 +381,8 @@
                         <tr>
                             <td>
                                 <a target="_blank"
-                                   href="<%=WebEngineConfig.baseURL+"/get_json/"+project.getName()+"/"+route.getName()+"?"+route.getDummyRequiredParams()%>">
-                                    <%=WebEngineConfig.baseURL + "/get_json/" + project.getName() + "/" + route.getName()%>
+                                   href="<%=WebEngineConfig.getBaseURL()+"/get_json/"+project.getName()+"/"+route.getName()+"?"+route.getDummyRequiredParams()%>">
+                                    <%=WebEngineConfig.getBaseURL() + "/get_json/" + project.getName() + "/" + route.getName()%>
                                 </a></td>
                             <td>Mock URL (with required params.)</td>
                         </tr>

@@ -172,7 +172,7 @@ class GetJSONServlet : AdvancedBaseServlet() {
             } else {
                 // json
                 val joReqBody = route!!.jsonReqBody ?: "{}"
-                val reqParams = ParamFilter.filterRequiredParams(joReqBody)
+                val reqParams = ParamFilter.filterAllParams (joReqBody)
                 for (key in reqParams) {
                     if (request!!.joRequestBody.has(key)) {
                         val value = request!!.joRequestBody.getString(key)
