@@ -9,12 +9,10 @@ import com.theah64.mock_api.utils.DynamicResponseGenerator
 import com.theah64.mock_api.utils.HeaderSecurity
 import com.theah64.webengine.database.querybuilders.QueryBuilderException
 import com.theah64.webengine.utils.CommonUtils
-import com.theah64.webengine.utils.ParamFilter
+import com.theah64.mock_api.utils.ParamFilter
 import com.theah64.webengine.utils.PathInfo
 import com.theah64.webengine.utils.Request
 import org.json.JSONException
-import org.json.JSONObject
-import java.io.BufferedReader
 
 import javax.servlet.annotation.MultipartConfig
 import javax.servlet.annotation.WebServlet
@@ -176,9 +174,11 @@ class GetJSONServlet : AdvancedBaseServlet() {
                 val joReqBody = route!!.jsonReqBody ?: "{}"
                 val reqParams = ParamFilter.filterRequiredParams(joReqBody)
                 for (key in reqParams) {
-                    val value = request!!.jsonRequestBody.getString(key)
-                    if (value != null && !value.trim { it <= ' ' }.isEmpty()) {
-                        jsonResp = jsonResp!!.replace("{$key}", value)
+                    if (request!!.joRequestBody.has(key)) {
+                        val value = request!!.joRequestBody.getString(key)
+                        if (value != null && !value.trim { it <= ' ' }.isEmpty()) {
+                            jsonResp = jsonResp!!.replace("{$key}", value)
+                        }
                     }
                 }
             }
@@ -188,7 +188,7 @@ class GetJSONServlet : AdvancedBaseServlet() {
             jsonResp = Main.ConditionedResponse.generate(jsonResp!!)
 
             //Validation
-            if (CommonUtils.isJSONValid(jsonResp)) {
+            if (CommonUtils.isJSONValid(jsonResp, "Invalid JSON Response")) {
                 httpServletResponse!!.addHeader("Content-Length", jsonResp.length.toString())
                 writer!!.write(jsonResp)
             }

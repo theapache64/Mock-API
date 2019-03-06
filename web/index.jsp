@@ -40,6 +40,7 @@
 
             preference = Preferences.Companion.getInstance().get();
 
+            assert preference != null;
             if (!preference.isOnline()) {
                 StatusResponse.redirect(response, "Maintenance Mode");
                 return;

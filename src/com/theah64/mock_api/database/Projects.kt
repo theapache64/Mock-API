@@ -36,7 +36,7 @@ class Projects private constructor() : BaseTable<Project>("projects") {
                 .done()
     }
 
-    fun get(column1: String, value1: String, column2: String?, value2: String?): Project? {
+    override fun get(column1: String, value1: String, column2: String?, value2: String?): Project? {
         var project: Project? = null
         val query: String
 
@@ -46,7 +46,7 @@ class Projects private constructor() : BaseTable<Project>("projects") {
             query = String.format("SELECT id,name,api_key,request_body_type,is_all_small_routes,notification_emails,package_name,base_og_api_url,pass_hash,default_success_response, default_error_response,base_response_structure FROM %s WHERE %s = ? AND is_active = 1 LIMIT 1", tableName, column1)
         }
         val resultValue: String? = null
-        val con = Connection.connection
+        val con = Connection.getConnection()
 
         try {
             val ps = con.prepareStatement(query)
@@ -100,7 +100,7 @@ class Projects private constructor() : BaseTable<Project>("projects") {
         var error: String? = null
         var id: String? = null
         val query = "INSERT INTO projects (name, pass_hash,api_key,base_og_api_url,package_name,is_all_small_routes,default_success_response, default_error_response,base_response_structure) VALUES (?,?,?,?,?,?,?,?,?);"
-        val con = Connection.connection
+        val con = Connection.getConnection()
 
         try {
             val ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)

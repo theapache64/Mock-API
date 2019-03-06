@@ -4,6 +4,7 @@ import com.theah64.mock_api.models.Preference
 import com.theah64.webengine.database.BaseTable
 import com.theah64.webengine.database.querybuilders.QueryBuilderException
 import com.theah64.webengine.database.querybuilders.SelectQueryBuilder
+import java.sql.ResultSet
 
 import java.sql.SQLException
 
@@ -14,16 +15,18 @@ class Preferences private constructor() : BaseTable<Preference>("preferences") {
 
     @Throws(QueryBuilderException::class, SQLException::class)
     fun get(): Preference? {
-        return SelectQueryBuilder.Builder(tableName) { rs ->
-            Preference(
-                    rs.getString(COLUMN_DEFAULT_SUCCESS_RESPONSE),
-                    rs.getString(COLUMN_DEFAULT_ERROR_RESPONSE),
-                    rs.getString(COLUMN_BASE_RESPONSE_STRUCTURE),
-                    rs.getString(COLUMN_SURPISE_IMAGE),
-                    rs.getString(COLUMN_SURPISE_QUOTE),
-                    rs.getBoolean(COLUMN_IS_ONLINE)
-            )
-        }.select(arrayOf(COLUMN_DEFAULT_SUCCESS_RESPONSE, COLUMN_SURPISE_QUOTE, COLUMN_SURPISE_IMAGE, COLUMN_DEFAULT_ERROR_RESPONSE, COLUMN_BASE_RESPONSE_STRUCTURE, COLUMN_IS_ONLINE))
+        return SelectQueryBuilder.Builder(tableName, object : SelectQueryBuilder.Callback<Preference> {
+            override fun getNode(rs: ResultSet?): Preference {
+                return Preference(
+                        rs!!.getString(COLUMN_DEFAULT_SUCCESS_RESPONSE),
+                        rs.getString(COLUMN_DEFAULT_ERROR_RESPONSE),
+                        rs.getString(COLUMN_BASE_RESPONSE_STRUCTURE),
+                        rs.getString(COLUMN_SURPISE_IMAGE),
+                        rs.getString(COLUMN_SURPISE_QUOTE),
+                        rs.getBoolean(COLUMN_IS_ONLINE)
+                )
+            }
+        }).select(arrayOf(COLUMN_DEFAULT_SUCCESS_RESPONSE, COLUMN_SURPISE_QUOTE, COLUMN_SURPISE_IMAGE, COLUMN_DEFAULT_ERROR_RESPONSE, COLUMN_BASE_RESPONSE_STRUCTURE, COLUMN_IS_ONLINE))
                 .limit("1")
                 .build()
                 .get()

@@ -5,12 +5,14 @@
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="mock_api" />
+          <element id="module-output" name="webengine" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="com.thedeanda:lorem:2.11" />
           <element id="library" level="project" name="com.tinify:tinify:1.5.11" />
           <element id="file-copy" path="$PROJECT_DIR$/lib/commons-io-2.6.jar" />
-          <element id="library" level="project" name="webengine" />
+          <element id="library" level="project" name="KotlinJavaRuntime" />
+          <element id="library" level="project" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="mock_api/web/Web" />

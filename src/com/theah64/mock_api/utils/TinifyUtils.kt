@@ -64,11 +64,11 @@ object TinifyUtils {
                         if (isImgExistInDb) {
 
                             //Changing image url if it's from external website
-                            if (!imageUrl.startsWith(WebEngineConfig.baseURL!!)) {
+                            if (!imageUrl.startsWith(WebEngineConfig.getBaseURL())) {
 
 
                                 val fileDownloadPath = imageFile.absolutePath.split("/html".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-                                val newImageUrl = (if (WebEngineConfig.baseURL!!.startsWith("http://localhost")) "http://localhost:8090" else "http://theapache64.com:8090") + fileDownloadPath
+                                val newImageUrl = (if (WebEngineConfig.getBaseURL().startsWith("http://localhost")) "http://localhost:8090" else "http://theapache64.com:8090") + fileDownloadPath
                                 image1.imageUrl = newImageUrl
                                 image1.isCompressed = true
                             }
