@@ -145,6 +145,13 @@ public class DynamicResponseGenerator {
                 }
             },
 
+            new DynamicResponse("!SHEET[URL]") {
+                @Override
+                String getValue(String param) {
+                    return "!SHEET[" + param + "]";
+                }
+            }
+
             /*new DynamicResponse("{(.+)\\s*(==|===|!=|>|<|>=|<=)\\s*(.+)\\s*\\?\\s*(.+)\\:\\s*(.+)}") {
                 @Override
                 String getValue(String[] params) {

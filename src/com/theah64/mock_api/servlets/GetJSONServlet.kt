@@ -6,6 +6,7 @@ import com.theah64.mock_api.models.ParamResponse
 import com.theah64.mock_api.models.Project
 import com.theah64.mock_api.models.Route
 import com.theah64.mock_api.utils.DynamicResponseGenerator
+import com.theah64.mock_api.utils.GoogleSheetUtils
 import com.theah64.mock_api.utils.HeaderSecurity
 import com.theah64.webengine.database.querybuilders.QueryBuilderException
 import com.theah64.webengine.utils.CommonUtils
@@ -19,6 +20,7 @@ import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.io.IOException
+import java.lang.Exception
 import java.sql.SQLException
 
 /**
@@ -93,12 +95,11 @@ class GetJSONServlet : AdvancedBaseServlet() {
     @Throws(Request.RequestException::class, IOException::class, JSONException::class, SQLException::class)
     override fun doAdvancedPost() {
 
+
         if (!getBooleanParameter("is_skip_auth") && route!!.isSecure) {
             val authorization = httpServletRequest!!.getHeader(HeaderSecurity.KEY_AUTHORIZATION)
                     ?: throw Request.RequestException("Authorization header missing")
         }
-
-
 
 
         if (route!!.delay > 0) {
@@ -183,9 +184,9 @@ class GetJSONServlet : AdvancedBaseServlet() {
                 }
             }
 
-
             jsonResp = DynamicResponseGenerator.generate(jsonResp)
             jsonResp = Main.ConditionedResponse.generate(jsonResp!!)
+            jsonResp = GoogleSheetUtils.generate(jsonResp)
 
             //Validation
             if (CommonUtils.isJSONValid(jsonResp, "Invalid JSON Response")) {
@@ -193,7 +194,7 @@ class GetJSONServlet : AdvancedBaseServlet() {
                 writer!!.write(jsonResp)
             }
 
-        } catch (e: QueryBuilderException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             throw Request.RequestException(e.message)
         }

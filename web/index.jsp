@@ -170,6 +170,13 @@
                     } else {
                         x = "";
                     }
+                } else if (x.indexOf("SHEET") !== -1) {
+                    var text = prompt("Please paste your sheet CSV url")
+                    if (text != null) {
+                        x = x.replace("URL", text);
+                    } else {
+                        x = "";
+                    }
                 }
 
                 activeEditor.replaceSelection(x);

@@ -1,11 +1,21 @@
 package com.theah64.mock_api.lab2
 
-import com.theah64.mock_api.utils.ParamFilter
+import com.theah64.mock_api.utils.GoogleSheetUtils
 
-const val JSON_STRING = "{ \"id\": true , \"profile_image_url\": \"https://picsum.photos/500/500/?image=600\", \"title\": \"Doug McGee started following you\", \"created_at_timestamp\": \"2018-10-14 06:03:52\" }"
+
+const val SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtuGrZzkXV34FuHrGGtYmKG0kTOPS0dMhvY5RrKIAldyRQAhM9VMSjOMwJjh-aHe-V6gptv4bZkIZT/pub?gid=0&single=true&output=csv"
+const val JSON_DATA = "{\n" +
+        "  \"error\": false,\n" +
+        "  \"message\": \"This is a sample success message\",\n" +
+        "  \"data\": {\n" +
+        "    \"assassins\": \"!SHEET[https://docs.google.com/spreadsheets/d/e/2PACX-1vTtuGrZzkXV34FuHrGGtYmKG0kTOPS0dMhvY5RrKIAldyRQAhM9VMSjOMwJjh-aHe-V6gptv4bZkIZT/pub?gid=0&single=true&output=csv]\",\n" +
+        "    \"another_list\": \"!SHEET[https://docs.google.com/spreadsheets/d/e/2PACX-1vTtuGrZzkXV34FuHrGGtYmKG0kTOPS0dMhvY5RrKIAldyRQAhM9VMSjOMwJjh-aHe-V6gptv4bZkIZT/pub?gid=1157683088&single=true&output=csv]\"\n" +
+        "  }\n" +
+        "}"
 
 fun main() {
-    val params: List<String> = ParamFilter.filterRequiredParams(JSON_STRING)
-    println("Params are ${params.toList()}")
+    val genData = GoogleSheetUtils.generate(JSON_DATA)
+    println(genData)
 }
+
 
