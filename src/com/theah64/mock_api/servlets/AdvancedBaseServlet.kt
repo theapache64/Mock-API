@@ -6,20 +6,19 @@ import com.theah64.webengine.database.querybuilders.QueryBuilderException
 import com.theah64.webengine.utils.PathInfo
 import com.theah64.webengine.utils.Request
 import org.json.JSONException
-
-import javax.servlet.http.HttpServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import java.io.IOException
 import java.io.PrintWriter
 import java.sql.SQLException
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by shifar on 16/9/16.
  */
 abstract class AdvancedBaseServlet : HttpServlet() {
 
-    private var request: Request? = null
+    var request: Request? = null
     private var hs: HeaderSecurity? = null
     var writer: PrintWriter? = null
         private set
@@ -43,6 +42,9 @@ abstract class AdvancedBaseServlet : HttpServlet() {
             return hs
         }
 
+    open fun isJsonBody(): Boolean {
+        return false
+    }
 
     @Throws(IOException::class)
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
@@ -57,7 +59,8 @@ abstract class AdvancedBaseServlet : HttpServlet() {
         try {
 
             if (requiredParameters != null) {
-                request = Request(req, requiredParameters)
+                val isJsonBody = isJsonBody()
+                request = Request(req, requiredParameters, isJsonBody)
             }
 
 

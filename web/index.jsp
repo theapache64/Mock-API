@@ -40,6 +40,7 @@
 
             preference = Preferences.Companion.getInstance().get();
 
+            assert preference != null;
             if (!preference.isOnline()) {
                 StatusResponse.redirect(response, "Maintenance Mode");
                 return;
@@ -83,20 +84,22 @@
             dAllProgress.hide();
 
             function formatJSON() {
-                var start_cursor = editor.getCursor();  //I need to get the cursor position
+                var start_cursor = activeEditor.getCursor();  //I need to get the cursor position
                 console.log(start_cursor);  //Cursor position
                 var cursorLine = start_cursor.line;
                 var cursorCh = start_cursor.ch;
 
-                editor.getDoc().setValue(JSON.stringify(JSON.parse(editor.getDoc().getValue()), undefined, 4));
-                editor.focus();
+                activeEditor.getDoc().setValue(JSON.stringify(JSON.parse(activeEditor.getDoc().getValue()), undefined, 4));
+                activeEditor.focus();
 
 
-                //Code to move cursor back [x] amount of spaces. [x] is the data-val value.
-                editor.setCursor({line: cursorLine, ch: cursorCh});
+                //Code to move cursor back [editor] amount of spaces. [editor] is the data-val value.
+                activeEditor.setCursor({line: cursorLine, ch: cursorCh});
             }
 
-            var editor = CodeMirror.fromTextArea(document.getElementById("response"), {
+            var activeEditor = null;
+
+            var jsonRespBody = CodeMirror.fromTextArea(document.getElementById("response"), {
                 lineNumbers: true,
                 mode: "application/json",
                 matchBrackets: true,
@@ -115,6 +118,40 @@
                 },
                 gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
             });
+
+
+            var jsonReqBody = CodeMirror.fromTextArea(document.getElementById("json_req_body"), {
+                lineNumbers: true,
+                mode: "application/json",
+                matchBrackets: true,
+                foldGutter: true,
+                extraKeys: {
+                    "Ctrl-Q": function (cm) {
+                        cm.foldCode(cm.getCursor());
+                    },
+                    "F11": function (cm) {
+                        isAlertResult = !cm.getOption("fullScreen");
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                },
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+            });
+
+            var activeEditor = null;
+
+            jsonRespBody.on("focus", function () {
+                activeEditor = jsonRespBody
+            });
+
+            jsonReqBody.on("focus", function () {
+                activeEditor = jsonReqBody
+            });
+
+            var editors = [jsonReqBody, jsonRespBody];
+
 
             $("span.randomItems").on('click', function () {
 
@@ -135,8 +172,8 @@
                     }
                 }
 
-                editor.replaceSelection(x);
-                editor.focus();
+                activeEditor.replaceSelection(x);
+                activeEditor.focus();
             });
 
 
@@ -169,7 +206,7 @@
                 var responseName = prompt("Enter response name?");
                 if (responseName !== null) {
 
-                    var response = editor.getDoc().getValue();
+                    var response = activeEditor.getDoc().getValue();
 
                     $.ajax({
                         type: "POST",
@@ -217,7 +254,7 @@
             function findRoute() {
 
                 var routeToSearch = prompt("Search route");
-                console.log("x:" + routeToSearch);
+                console.log("editor:" + routeToSearch);
                 $("select#routes option").filter(function () {
                     console.log("text: " + this.text + ":" + routeToSearch);
                     return this.text === routeToSearch || this.text.indexOf(routeToSearch) > 0;
@@ -329,7 +366,7 @@
 
             $("button#bNice").on('click', function () {
                 var imageUrl = $(this).parent().parent().find("img").attr('src');
-                editor.replaceSelection('"' + imageUrl + '"');
+                activeEditor.replaceSelection('"' + imageUrl + '"');
             });
 
             function findInDefaultResponse() {
@@ -456,7 +493,7 @@
                         imageUrls += '"' + imageUrl + '",';
                     }
 
-                    editor.replaceSelection(imageUrls.substring(0, imageUrls.length - 1));
+                    activeEditor.replaceSelection(imageUrls.substring(0, imageUrls.length - 1));
 
                 } else {
                     alert("Invalid dimension format " + dimen);
@@ -465,7 +502,7 @@
 
             function generatePOJO() {
 
-                var selection = editor.getSelection();
+                var selection = activeEditor.getSelection();
 
                 if (selection.trim().length > 0) {
 
@@ -485,7 +522,7 @@
 
             function generateTypeScript(isClass) {
 
-                var selection = editor.getSelection();
+                var selection = activeEditor.getSelection();
 
                 if (selection.trim().length > 0) {
 
@@ -509,9 +546,9 @@
 
                 if (successResponse.indexOf("SUCCESS_MESSAGE") !== -1) {
                     var successMsg = prompt("Success message", "This is a sample success message");
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse.replace('SUCCESS_MESSAGE', successMsg)), undefined, 4));
+                    activeEditor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse.replace('SUCCESS_MESSAGE', successMsg)), undefined, 4));
                 } else {
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse), undefined, 4));
+                    activeEditor.getDoc().setValue(JSON.stringify(JSON.parse(successResponse), undefined, 4));
                 }
             }
 
@@ -521,9 +558,9 @@
 
                 if (errorResponse.indexOf("ERROR_MESSAGE") !== -1) {
                     var errorMsg = prompt("Error message", "This is a sample error message");
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse.replace('ERROR_MESSAGE', errorMsg)), undefined, 4));
+                    activeEditor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse.replace('ERROR_MESSAGE', errorMsg)), undefined, 4));
                 } else {
-                    editor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse), undefined, 4));
+                    activeEditor.getDoc().setValue(JSON.stringify(JSON.parse(errorResponse), undefined, 4));
                 }
 
             }
@@ -534,7 +571,7 @@
                 if (key) {
                     var value = prompt("Value for " + key);
                     //check if the data int or not
-                    editor.replaceSelection('"' + key + '":' + (isNaN(value) ? '"' + value + '"' : value));
+                    activeEditor.replaceSelection('"' + key + '":' + (isNaN(value) ? '"' + value + '"' : value));
                 } else {
                     alert("Can't accept empty key");
                 }
@@ -543,7 +580,7 @@
 
             function generateDuplicate() {
 
-                var selection = editor.getSelection();
+                var selection = activeEditor.getSelection();
 
                 if (selection.length > 0) {
 
@@ -572,7 +609,7 @@
                             builder = builder.replace(/\)/g, "");
                         }
 
-                        editor.replaceSelection(selection + "\n" + builder);
+                        activeEditor.replaceSelection(selection + "\n" + builder);
                     }
                 } else {
                     alert("Please select some text");
@@ -580,74 +617,77 @@
 
             }
 
-            editor.on('keyup', function () {
+            editors.forEach(function (editor) {
 
-                console.log(event.keyCode);
+                editor.on('keyup', function () {
 
-                //F9
-                if (event.keyCode === 120) {
-                    insertGoogleImages();
-                }
+                    console.log(event.keyCode);
 
-
-                //Control + Alt + U
-                if (event.ctrlKey && event.altKey && event.keyCode === 85) {
-                    uploadImage();
-                }
-
-                //Control + Alt + I
-                if (event.ctrlKey && event.altKey && event.keyCode === 73) {
-                    insertPicsumImages();
-                }
+                    //F9
+                    if (event.keyCode === 120) {
+                        insertGoogleImages();
+                    }
 
 
-                if (event.ctrlKey && event.altKey && event.keyCode === 82) {
-                    showRandomGenModal();
-                }
+                    //Control + Alt + U
+                    if (event.ctrlKey && event.altKey && event.keyCode === 85) {
+                        uploadImage();
+                    }
+
+                    //Control + Alt + I
+                    if (event.ctrlKey && event.altKey && event.keyCode === 73) {
+                        insertPicsumImages();
+                    }
 
 
-                //Route to java model
+                    if (event.ctrlKey && event.altKey && event.keyCode === 82) {
+                        showRandomGenModal();
+                    }
 
 
-                //Control + Alt + M
-                if (event.ctrlKey && event.altKey && event.keyCode === 77) {
-                    generatePOJO();
-                }
-
-                //Control + Alt + J
-                if (event.ctrlKey && event.altKey && event.keyCode === 74) {
-                    generateTypeScript(false);
-                }
-
-                //Control + Alt + K
-                if (event.ctrlKey && event.altKey && event.keyCode === 75) {
-                    generateTypeScript(true);
-                }
-
-                if (event.ctrlKey && event.altKey && event.keyCode === 76) {
-                    formatJSON();
-                }
+                    //Route to java model
 
 
-                if (event.ctrlKey && event.altKey && event.keyCode === 78) {
-                    insertSuccessResponse();
-                }
+                    //Control + Alt + M
+                    if (event.ctrlKey && event.altKey && event.keyCode === 77) {
+                        generatePOJO();
+                    }
+
+                    //Control + Alt + J
+                    if (event.ctrlKey && event.altKey && event.keyCode === 74) {
+                        generateTypeScript(false);
+                    }
+
+                    //Control + Alt + K
+                    if (event.ctrlKey && event.altKey && event.keyCode === 75) {
+                        generateTypeScript(true);
+                    }
+
+                    if (event.ctrlKey && event.altKey && event.keyCode === 76) {
+                        formatJSON();
+                    }
 
 
-                if (event.ctrlKey && event.altKey && event.keyCode === 83) {
-                    insertKeyValue();
-                }
+                    if (event.ctrlKey && event.altKey && event.keyCode === 78) {
+                        insertSuccessResponse();
+                    }
 
 
-                if (event.ctrlKey && event.altKey && event.keyCode === 69) {
-                    insertErrorResponse();
-                }
+                    if (event.ctrlKey && event.altKey && event.keyCode === 83) {
+                        insertKeyValue();
+                    }
 
-                //D
-                if (event.ctrlKey && event.altKey && event.keyCode === 68) {
-                    generateDuplicate();
-                }
 
+                    if (event.ctrlKey && event.altKey && event.keyCode === 69) {
+                        insertErrorResponse();
+                    }
+
+                    //D
+                    if (event.ctrlKey && event.altKey && event.keyCode === 68) {
+                        generateDuplicate();
+                    }
+
+                });
             });
 
 
@@ -686,7 +726,7 @@
                             history.pushState(null, null, 'index.jsp?api_key=<%=project.getApiKey()%>&route=' + $('input#route').val() + "&response_id=" + data.data.id);
 
                             //Deleted response from db
-                            editor.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
+                            jsonRespBody.getDoc().setValue(JSON.stringify(JSON.parse(data.data.response), undefined, 4));
                         } else {
                             $(resultDiv).addClass('alert-danger').removeClass('alert-success');
                             $(resultDiv).html("<strong>Error! </strong> " + data.message);
@@ -744,6 +784,21 @@
 
             });
 
+            $("select#sRequestBodyType").on('change', function () {
+
+                console.log("Val changed")
+
+                var curType = $(this).val()
+                if (curType === "<%=Project.REQUEST_BODY_TYPE_JSON%>") {
+                    // it's json
+                    $("form#fParam").hide()
+                    $(jsonReqBody.getWrapperElement()).show()
+                } else {
+                    // it's form
+                    $("form#fParam").show()
+                    $(jsonReqBody.getWrapperElement()).hide()
+                }
+            });
 
             $("select#routes").on('change', function () {
 
@@ -764,12 +819,23 @@
 
                             console.log(data);
 
+
                             //Changing browser url without reloading the page
 
                             stopLoading(true);
                             var link = "<a target='blank' href='get_json/<%=project.getName()%>/" + route + "?" + data.data.dummy_params + "'>/" + route + "</a>";
 
                             if (!data.error) {
+
+                                // Setting request body type
+                                var requestBodyType = data.data.request_body_type;
+                                console.log("Val changing...")
+                                $("select#sRequestBodyType").val(requestBodyType).change();
+
+
+                                if (data.data.json_req_body) {
+                                    jsonReqBody.getDoc().setValue(data.data.json_req_body)
+                                }
 
                                 $("input#route").val(route);
 
@@ -881,7 +947,7 @@
                                 $("a#aParamResp").hide();
                                 $("div#response_panel").css('visibility', 'hidden');
 
-                                editor.getDoc().setValue("");
+                                activeEditor.getDoc().setValue("");
                             }
 
 
@@ -918,9 +984,9 @@
 
                 resultDiv.hide();
                 var route = $("input#route").val();
-                var response = editor.getDoc().getValue();
+                var reqBody = jsonReqBody.getDoc().getValue()
+                var response = jsonRespBody.getDoc().getValue();
                 var params = $("form#fParam").serialize();
-                console.log("Params:" + params);
                 var opParams = $("input#optional_params").val();
                 var isSecure = $("input#is_secure").is(":checked") ? true : false;
                 var delay = $("input#delay").val();
@@ -939,8 +1005,10 @@
                     url: "v1/save_json",
                     data: params +
                         "&name=" + encodeURIComponent(route) +
+                        "&request_body_type=" + encodeURIComponent($("select#sRequestBodyType").val()) +
                         "&response_id=" + encodeURIComponent($('select#responses :selected').val()) +
                         "&response=" + encodeURIComponent(response) +
+                        "&json_req_body=" + encodeURIComponent(reqBody) +
                         "&optional_params=" + encodeURIComponent(opParams) +
                         "&external_api_url=" + encodeURIComponent(external_api_url) +
                         "&is_secure=" + encodeURIComponent(isSecure) +
@@ -1006,7 +1074,11 @@
                 $("input#route").prop('disabled', true);
                 $("input#delay").prop('disabled', true);
                 $("textarea#description").prop('disabled', true);
-                editor.setOption('readOnly', 'nocursor');
+
+                editors.forEach(function (editor) {
+                    editor.setOption('readOnly', 'nocursor');
+                })
+
                 $("div#resultDiv").hide();
 
                 if (isSubmit) {
@@ -1029,7 +1101,9 @@
                 $("input#external_api_url").prop('disabled', false);
                 $("input#delay").prop('disabled', false);
                 $("textarea#description").prop('disabled', false);
-                editor.setOption('readOnly', false);
+                editors.forEach(function (editor) {
+                    editor.setOption('readOnly', false);
+                });
 
                 if (isSubmit) {
                     $("button#bSubmit").html('<span class="glyphicon glyphicon-save"></span> SAVE');
@@ -1039,7 +1113,22 @@
             }
 
             var paramRow = $("div#dParamRow").html();
+            <%
+                if(project.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_FORM)){
+                    %>
+            // FORM
+            $("form#fParam").show()
             $("form#fParam").append(paramRow);
+            $(jsonReqBody.getWrapperElement()).hide()
+            <%
+                }else{
+                    %>
+            // JSON
+            $(jsonReqBody.getWrapperElement()).show()
+            $("form#fParam").hide()
+            <%
+        }
+    %>
 
             $("button#bDelete").on('click', function () {
 
@@ -1134,7 +1223,7 @@
                             stopLoading(true);
 
                             if (!data.error) {
-                                editor.replaceSelection("\"" + data.data.random_output + "\"");
+                                activeEditor.replaceSelection("\"" + data.data.random_output + "\"");
                             } else {
                                 alert(data.message);
                             }
@@ -1294,8 +1383,8 @@
                             $("div#dGallery").prepend(galleryRow.html());
 
                             if (isAutoUpload) {
-                                editor.replaceSelection('"' + data.data.image_url + '"');
-                                editor.focus();
+                                activeEditor.replaceSelection('"' + data.data.image_url + '"');
+                                activeEditor.focus();
                             }
 
                             $(resultDiv).html("<strong>Success!! </strong> <a target='_blank' href='" + data.data.image_url + "'>image</a> uploaded");
@@ -1338,8 +1427,8 @@
             var dGallery = $("div#dGallery");
             dGallery.on('click', '.dGalleryRow', function () {
                 var imageUrl = $(this).data("image-url");
-                editor.replaceSelection('"' + imageUrl + '"');
-                editor.focus();
+                activeEditor.replaceSelection('"' + imageUrl + '"');
+                activeEditor.focus();
                 $("div#dInsertImage").modal("hide");
             });
 
@@ -1671,7 +1760,26 @@
                     </select>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-2">
+                    <div class="form-group">
+
+                        <label for="sRequestBodyType">Request Body</label>
+
+                        <select name="<%=Projects.COLUMN_REQUEST_BODY_TYPE%>" id="sRequestBodyType"
+                                class="form-control">
+                            <option value="<%=Project.REQUEST_BODY_TYPE_FORM%>"
+                                    <%=project.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_FORM) ? "selected" : ""%>
+                            >FORM
+                            </option>
+                            <option <%=project.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_JSON) ? "selected" : ""%>
+                                    value="<%=Project.REQUEST_BODY_TYPE_JSON%>">JSON
+                            </option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
                     <label for="route">Route</label>
                     <input class="form-control" type="text" maxlength="50" id="route" placeholder="Route">
                 </div>
@@ -1683,11 +1791,19 @@
             </div>
 
             <br>
-            <label for="fParam">Param</label>
+            <label for="fParam">Request Body</label>
 
+            <%--JSON--%>
+            <textarea id="json_req_body" class="form-control"></textarea>
+
+
+            <%--FORM--%>
             <form id="fParam" class="fParam">
 
             </form>
+
+            <br>
+
 
             <div class="row">
                 <div class="col-md-8">
@@ -1866,6 +1982,7 @@
 
             <div class="col-md-3">
                     <textarea class="taDescriptions form-control"
+                              rows="1"
                               name="<%=SaveJSONServlet.KEY_DESCRIPTIONS%>"
                               placeholder="Description"></textarea>
             </div>

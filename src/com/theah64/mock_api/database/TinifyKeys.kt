@@ -14,31 +14,31 @@ class TinifyKeys private constructor() : BaseTable<TinifyKey>("tinify_keys") {
         @Throws(QueryBuilderException::class, SQLException::class)
         get() = SelectQueryBuilder(tableName, { rs ->
             TinifyKey(
-                    rs.getString(BaseTable.Companion.COLUMN_ID),
+                    rs.getString(BaseTable.COLUMN_ID),
                     rs.getString(COLUMN_KEY),
                     rs.getString(COLUMN_EMAIL),
                     rs.getString(COLUMN_USAGE)
             )
-        }, arrayOf(BaseTable.Companion.COLUMN_ID, COLUMN_KEY, COLUMN_EMAIL, COLUMN_USAGE),
-                arrayOf(BaseTable.Companion.COLUMN_IS_ACTIVE),
-                arrayOf(BaseTable.Companion.TRUE),
+        }, arrayOf(BaseTable.COLUMN_ID, COLUMN_KEY, COLUMN_EMAIL, COLUMN_USAGE),
+                arrayOf(BaseTable.COLUMN_IS_ACTIVE),
+                arrayOf(BaseTable.TRUE),
                 "1",
                 COLUMN_USAGE
         ).get()
 
-    override val all: List<TinifyKey>
-        @Throws(QueryBuilderException::class, SQLException::class)
-        get() = SelectQueryBuilder.Builder(tableName) { rs ->
+    override fun getAll(): MutableList<TinifyKey> {
+        return SelectQueryBuilder.Builder(tableName) { rs ->
             TinifyKey(
-                    rs.getString(BaseTable.Companion.COLUMN_ID),
+                    rs.getString(BaseTable.COLUMN_ID),
                     rs.getString(COLUMN_KEY),
                     rs.getString(COLUMN_EMAIL),
                     rs.getString(COLUMN_USAGE)
             )
-        }.select(arrayOf(BaseTable.Companion.COLUMN_ID, COLUMN_KEY, COLUMN_EMAIL, COLUMN_USAGE))
+        }.select(arrayOf(BaseTable.COLUMN_ID, COLUMN_KEY, COLUMN_EMAIL, COLUMN_USAGE))
                 .orderBy(COLUMN_USAGE)
                 .build()
                 .all
+    }
 
     @Throws(SQLException::class, QueryBuilderException::class)
     override fun add(tKey: TinifyKey): Boolean {

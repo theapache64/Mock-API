@@ -33,7 +33,7 @@ class Params private constructor() : BaseTable<Param>("params") {
 
         }
 
-        BaseTable.Companion.manageError(error)
+        BaseTable.manageError(error)
     }
 
     @Throws(SQLException::class)
@@ -89,8 +89,8 @@ class Params private constructor() : BaseTable<Param>("params") {
             if (rs.first()) {
 
                 do {
-                    val id = rs.getString(BaseTable.Companion.COLUMN_ID)
-                    val name = rs.getString(BaseTable.Companion.COLUMN_NAME)
+                    val id = rs.getString(Params.COLUMN_ID)
+                    val name = rs.getString(Params.COLUMN_NAME)
                     val routeId = rs.getString(COLUMN_ROUTE_ID)
                     val defaultValue = rs.getString(COLUMN_DEFAULT_VALUE)
                     val dataType = rs.getString(COLUMN_DATA_TYPE)

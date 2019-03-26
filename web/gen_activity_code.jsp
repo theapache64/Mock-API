@@ -74,7 +74,7 @@
 
             var javaEditor = CodeMirror.fromTextArea(document.getElementById("jCode"), {
                 lineNumbers: true,
-                mode: "text/x-java",
+                mode: "text/editor-java",
                 matchBrackets: true,
                 extraKeys: {
                     "F11": function (cm) {

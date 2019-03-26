@@ -94,7 +94,7 @@
 
             var javaEditor = CodeMirror.fromTextArea(document.getElementById("jCode"), {
                 lineNumbers: true,
-                mode: "<%=targetLang.equals(JsonToModelEngine.LANGUAGE_JAVA) ? "text/x-java" : "text/javascript"%>",
+                mode: "<%=targetLang.equals(JsonToModelEngine.LANGUAGE_JAVA) ? "text/editor-java" : "text/javascript"%>",
                 matchBrackets: true,
                 extraKeys: {
                     "F11": function (cm) {

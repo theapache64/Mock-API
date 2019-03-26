@@ -35,18 +35,17 @@ class Images private constructor() : BaseTable<Image>("images") {
         return SelectQueryBuilder<Image>(
                 tableName,
                 SelectQueryBuilder.Callback<Image> { this.getImageFromResultSet(it) },
-                arrayOf(BaseTable.Companion.COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED),
-                arrayOf(whereColumn), arrayOf(whereColumnValue), SelectQueryBuilder.UNLIMITED, BaseTable.Companion.COLUMN_ID + " DESC"
+                arrayOf(Images.COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED),
+                arrayOf(whereColumn), arrayOf(whereColumnValue), SelectQueryBuilder.UNLIMITED, Images.COLUMN_ID + " DESC"
         ).all
     }
 
-    @Throws(QueryBuilderException::class, SQLException::class)
-    override fun get(column1: String, value1: String, column2: String, value2: String): Image {
+    override fun get(column1: String, value1: String, column2: String?, value2: String?): Image? {
         return SelectQueryBuilder<Image>(
                 tableName,
                 SelectQueryBuilder.Callback<Image> { this.getImageFromResultSet(it) },
-                arrayOf(BaseTable.Companion.COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED),
-                arrayOf(column1, column2), arrayOf(value1, value2), "1", BaseTable.Companion.COLUMN_ID + " DESC"
+                arrayOf(Images.COLUMN_ID, COLUMN_PROJECT_ID, COLUMN_TINIFY_KEY_ID, COLUMN_IMAGE_URL, COLUMN_THUMB_URL, COLUMN_FILE_PATH, COLUMN_IS_COMPRESSED),
+                arrayOf(column1, column2), arrayOf(value1, value2), "1", Images.COLUMN_ID + " DESC"
 
         ).get()
     }
@@ -54,7 +53,7 @@ class Images private constructor() : BaseTable<Image>("images") {
     @Throws(SQLException::class)
     private fun getImageFromResultSet(rs: ResultSet): Image {
         return Image(
-                rs.getString(BaseTable.Companion.COLUMN_ID),
+                rs.getString(BaseTable.COLUMN_ID),
                 rs.getString(COLUMN_PROJECT_ID),
                 rs.getString(COLUMN_TINIFY_KEY_ID),
                 rs.getString(COLUMN_IMAGE_URL),
@@ -68,7 +67,7 @@ class Images private constructor() : BaseTable<Image>("images") {
         return UpdateQueryBuilder.Builder(tableName)
                 .set(COLUMN_IMAGE_URL, t.imageUrl)
                 .set(COLUMN_IS_COMPRESSED, t.isCompressed)
-                .where(BaseTable.Companion.COLUMN_ID, t.id)
+                .where(BaseTable.COLUMN_ID, t.id)
                 .build()
                 .done()
     }

@@ -95,9 +95,6 @@ object TinifyUtils {
                         throw Request.RequestException("Compression failed, Please try again: " + e.message)
                     } catch (e: QueryBuilderException) {
                         e.printStackTrace()
-                        if (e is AccountException) {
-                            tinifyTable.update(TinifyKeys.COLUMN_ID, tinifyKey.id, TinifyKeys.COLUMN_IS_ACTIVE, TinifyKeys.FALSE)
-                        }
                         throw Request.RequestException("Compression failed, Please try again: " + e.message)
                     }
 

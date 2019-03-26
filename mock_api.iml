@@ -24,12 +24,14 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/commons-io-2.6.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/commons-io-2.6.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="module" module-name="webengine" />
+    <orderEntry type="library" name="jmsm" level="application" />
   </component>
 </module>

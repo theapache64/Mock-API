@@ -24,8 +24,7 @@ class Responses : com.theah64.webengine.database.BaseTable<Response>("responses"
                     rs.getString(COLUMN_ROUTE_ID),
                     rs.getString(COLUMN_RESPONSE)
             )
-        }
-                .where(whereColumn, whereColumnValue)
+        }.where(whereColumn, whereColumnValue)
                 .select(arrayOf(BaseTable.COLUMN_ID, BaseTable.COLUMN_NAME, COLUMN_ROUTE_ID, COLUMN_RESPONSE))
                 .orderBy(BaseTable.COLUMN_ID + " DESC")
                 .build()

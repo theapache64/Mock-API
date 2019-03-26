@@ -15,8 +15,13 @@ import javax.servlet.annotation.WebListener
 class WebEngineListener : ServletContextListener {
 
     override fun contextInitialized(servletContextEvent: ServletContextEvent) {
-        WebEngineConfig.init("jdbc/mock_api", "jdbc/mock_api", false, "http://localhost:8080/mock_api",
-                "http://theapache64.com/mock_api")
+        WebEngineConfig.init(
+                "jdbc/mock_api",
+                "jdbc/mock_api",
+                false,
+                "http://localhost:8080/mock_api",
+                "http://theapache64.com/mock_api"
+        )
 
         MailHelper.init(SecretConstants.GMAIL_USERNAME, SecretConstants.GMAIL_PASSWORD)
     }

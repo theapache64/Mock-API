@@ -21,7 +21,7 @@ class ParamResponses private constructor() : BaseTable<ParamResponse>("param_res
                     rs.getString("response_id"),
                     rs.getString("rel_opt")
             )
-        }, arrayOf(BaseTable.COLUMN_ID, COLUMN_ROUTE_ID, COLUMN_PARAM_ID, COLUMN_PARAM_VALUE, COLUMN_RESPONSE_ID, COLUMN_REL_OPT), arrayOf(whereColumn), arrayOf(whereColumnValue), SelectQueryBuilder.UNLIMITED, BaseTable.Companion.COLUMN_ID + " DESC").all
+        }, arrayOf(BaseTable.COLUMN_ID, COLUMN_ROUTE_ID, COLUMN_PARAM_ID, COLUMN_PARAM_VALUE, COLUMN_RESPONSE_ID, COLUMN_REL_OPT), arrayOf(whereColumn), arrayOf(whereColumnValue), SelectQueryBuilder.UNLIMITED, BaseTable.COLUMN_ID + " DESC").all
     }
 
     /**

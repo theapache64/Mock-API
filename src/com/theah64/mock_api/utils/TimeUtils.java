@@ -21,7 +21,7 @@ public class TimeUtils {
 
     /**
      * converts time (in milliseconds) to human-readable format
-     * "<w> days, <x> hours, <y> minutes and (z) seconds"
+     * "<w> days, <editor> hours, <y> minutes and (z) seconds"
      */
     public static String millisToLongDHMS(long duration) {
 

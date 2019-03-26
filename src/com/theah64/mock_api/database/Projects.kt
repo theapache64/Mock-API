@@ -20,14 +20,13 @@ class Projects private constructor() : BaseTable<Project>("projects") {
         return get(column, value, null, null)
     }
 
-    @Throws(SQLException::class, QueryBuilderException::class)
     override fun update(project: Project): Boolean {
-
         return UpdateQueryBuilder.Builder(tableName)
                 .set(BaseTable.COLUMN_NAME, project.name)
                 .set(COLUMN_PACKAGE_NAME, project.packageName)
                 .set(COLUMN_BASE_OG_API_URL, project.baseOgApiUrl)
                 .set(COLUMN_IS_ALL_SMALL_ROUTES, project.isAllSmallRoutes)
+                .set(COLUMN_REQUEST_BODY_TYPE, project.requestBodyType)
                 .set(COLUMN_NOTIFICATION_EMAILS, project.notificationEmails)
                 .set(COLUMN_DEFAULT_SUCCESS_RESPONSE, project.defaultSuccessResponse)
                 .set(COLUMN_DEFAULT_ERROR_RESPONSE, project.defaultErrorResponse)
@@ -35,10 +34,9 @@ class Projects private constructor() : BaseTable<Project>("projects") {
                 .where(BaseTable.COLUMN_ID, project.id)
                 .build()
                 .done()
-
     }
 
-    fun get(column1: String, value1: String, @Nullable column2: String?, @Nullable value2: String?): Project? {
+    override fun get(column1: String, value1: String, column2: String?, value2: String?): Project? {
         var project: Project? = null
         val query: String
 

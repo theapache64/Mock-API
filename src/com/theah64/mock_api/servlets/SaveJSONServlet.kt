@@ -5,6 +5,7 @@ import com.theah64.mock_api.database.Responses
 import com.theah64.mock_api.database.RouteUpdates
 import com.theah64.mock_api.database.Routes
 import com.theah64.mock_api.models.Param
+import com.theah64.mock_api.models.Project
 import com.theah64.mock_api.models.Route
 import com.theah64.mock_api.models.RouteUpdate
 import com.theah64.mock_api.servlets.FetchJSONServlet.Companion.KEY_DUMMY_PARAMS
@@ -49,8 +50,22 @@ class SaveJSONServlet : AdvancedBaseServlet() {
         val response = getStringParameter(KEY_RESPONSE)!!
         val method = getStringParameter(Routes.COLUMN_METHOD)!!
 
+
+        val requestBodyType = getStringParameter(Routes.COLUMN_REQUEST_BODY_TYPE)!!
+        val jsonReqBody = if (requestBodyType == Project.REQUEST_BODY_TYPE_JSON) getStringParameter(Routes.COLUMN_JSON_REQ_BODY) else null
+
         //Validation
-        if (CommonUtils.isJSONValid(response)) {
+        if (
+                CommonUtils.isJSONValid(response, "Invalid response JSON : ")
+
+        ) {
+
+            if (requestBodyType == Project.REQUEST_BODY_TYPE_JSON
+                    && jsonReqBody != null
+                    && jsonReqBody.isNotEmpty()
+                    && CommonUtils.isJSONValid(jsonReqBody, "Invalid request JSON : ")) {
+                println("Valid json request")
+            }
 
             var defaultResponse: String? = null
             if (responseId == Routes.COLUMN_DEFAULT_RESPONSE) {
@@ -59,28 +74,35 @@ class SaveJSONServlet : AdvancedBaseServlet() {
                 Responses.instance.update(Responses.COLUMN_ID, responseId, Responses.COLUMN_RESPONSE, response)
             }
 
+
             val params = ArrayList<Param>()
 
-            val paramNames = getStringParameterArray(KEY_PARAMS)
-            val paramDataTypes = getStringParameterArray(KEY_DATA_TYPES)
-            val paramDefaultValues = getStringParameterArray(KEY_DEFAULT_VALUES)
-            val paramDescriptions = getStringParameterArray(KEY_DESCRIPTIONS)
-            val paramIsRequired = getStringParameterArray(KEY_IS_REQUIRED)
             val notifyOthers = getBooleanParameter(KEY_NOTIFY_OTHERS)
 
-
-            for (i in paramNames.indices) {
-
-                val paramName = paramNames[i].replace("\\s+".toRegex(), "_")
-                val paramDataType = paramDataTypes[i]
-                val paramDefaultValue = paramDefaultValues[i]
-                val paramDescription = paramDescriptions[i]
-
-                val isRequired = paramIsRequired[i] == "true"
+            if (requestBodyType.equals(Project.REQUEST_BODY_TYPE_FORM)) {
 
 
-                if (!paramName.trim { it <= ' ' }.isEmpty()) {
-                    params.add(Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired))
+                val paramNames = getStringParameterArray(KEY_PARAMS)
+                val paramDataTypes = getStringParameterArray(KEY_DATA_TYPES)
+                val paramDefaultValues = getStringParameterArray(KEY_DEFAULT_VALUES)
+                val paramDescriptions = getStringParameterArray(KEY_DESCRIPTIONS)
+                val paramIsRequired = getStringParameterArray(KEY_IS_REQUIRED)
+
+
+                // adding params
+                for (i in paramNames.indices) {
+
+                    val paramName = paramNames[i].replace("\\s+".toRegex(), "_")
+                    val paramDataType = paramDataTypes[i]
+                    val paramDefaultValue = paramDefaultValues[i]
+                    val paramDescription = paramDescriptions[i]
+
+                    val isRequired = paramIsRequired[i] == "true"
+
+
+                    if (!paramName.trim { it <= ' ' }.isEmpty()) {
+                        params.add(Param(null, paramName, routeId, paramDataType, paramDefaultValue, paramDescription, isRequired))
+                    }
                 }
             }
 
@@ -88,14 +110,14 @@ class SaveJSONServlet : AdvancedBaseServlet() {
             val description = getStringParameter(Routes.COLUMN_DESCRIPTION)!!
             val isSecure = getBooleanParameter(Routes.COLUMN_IS_SECURE)
             val delay = getLongParameter(Routes.COLUMN_DELAY)
-            val externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL)!!
+            val externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL)
 
             if (externalApiUrl != null && !externalApiUrl.matches(AdvancedBaseServlet.URL_REGEX.toRegex())) {
                 throw Request.RequestException("Invalid external api url :$externalApiUrl")
             }
 
 
-            val route = Route(null, projectId, routeName, defaultResponse!!, description, externalApiUrl, method, params, isSecure, delay, -1)
+            val route = Route(null, projectId, routeName, requestBodyType, jsonReqBody, defaultResponse!!, description, externalApiUrl!!, method, params, isSecure, delay, -1)
 
             val joResp = JSONObject()
             joResp.put(KEY_DUMMY_PARAMS, route.dummyRequiredParams)

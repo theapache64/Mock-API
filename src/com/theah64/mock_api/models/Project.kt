@@ -8,7 +8,7 @@ class Project(
         var name: String,
         val passHash: String,
         val apiKey: String,
-        val requestBodyType: String,
+        var requestBodyType: String,
         var baseOgApiUrl: String,
         var packageName: String,
         var isAllSmallRoutes: Boolean,
@@ -18,6 +18,7 @@ class Project(
         var baseResponseStructure: String) {
     companion object {
         const val KEY = "project"
-        const val REQUEST_BODY_TYPE_FORM = "JSON"
+        const val REQUEST_BODY_TYPE_FORM = "FORM"
+        const val REQUEST_BODY_TYPE_JSON = "JSON"
     }
 }

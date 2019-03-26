@@ -1,16 +1,15 @@
 package com.theah64.mock_api.servlets
 
-import com.theah64.mock_api.database.ParamResponses
-import com.theah64.mock_api.database.Params
-import com.theah64.mock_api.database.Responses
-import com.theah64.mock_api.database.Routes
+import com.theah64.mock_api.database.*
 import com.theah64.mock_api.lab.Main
 import com.theah64.mock_api.models.ParamResponse
+import com.theah64.mock_api.models.Project
 import com.theah64.mock_api.models.Route
 import com.theah64.mock_api.utils.DynamicResponseGenerator
 import com.theah64.mock_api.utils.HeaderSecurity
 import com.theah64.webengine.database.querybuilders.QueryBuilderException
 import com.theah64.webengine.utils.CommonUtils
+import com.theah64.mock_api.utils.ParamFilter
 import com.theah64.webengine.utils.PathInfo
 import com.theah64.webengine.utils.Request
 import org.json.JSONException
@@ -34,13 +33,49 @@ class GetJSONServlet : AdvancedBaseServlet() {
     override val isSecureServlet: Boolean
         get() = false
 
+    override fun isJsonBody(): Boolean {
+        initRoute()
+
+        val isJsonBody = route!!.requestBodyType == Project.REQUEST_BODY_TYPE_JSON
+        return isJsonBody
+    }
+
+    private fun initRoute() {
+        val pathInfo = PathInfo(httpServletRequest!!.pathInfo, 2, PathInfo.UNLIMITED)
+        val projectName = pathInfo.getPart(1)
+        val routeName = pathInfo.getPartFrom(2)
+        route = Routes.instance.get(projectName!!, routeName!!)
+    }
+
     override val requiredParameters: Array<String>?
         get() = try {
-            val pathInfo = PathInfo(httpServletRequest!!.pathInfo, 2, PathInfo.UNLIMITED)
-            val projectName = pathInfo.getPart(1)
-            val routeName = pathInfo.getPartFrom(2)
-            route = Routes.instance.get(projectName, routeName)
-            route!!.filterRequiredParams()
+
+
+            initRoute()
+
+            // required params only if the request body is FORM
+            if (route!!.requestBodyType == Project.REQUEST_BODY_TYPE_FORM) {
+                // form
+                route!!.filterRequiredParams()
+            } else {
+                // json
+                val isSkipParam = httpServletRequest!!.getParameter("is_skip_param") == "true"
+
+                if (isSkipParam) {
+                    arrayOf()
+                } else {
+                    val jsonBody = route!!.jsonReqBody
+                    if (jsonBody != null) {
+                        ParamFilter.filterRequiredParams(jsonBody).toTypedArray()
+                    } else {
+                        // no req params
+                        arrayOf()
+                    }
+                }
+
+            }
+
+
         } catch (e: PathInfo.PathInfoException) {
             e.printStackTrace()
             throw Request.RequestException(e.message)
@@ -62,6 +97,9 @@ class GetJSONServlet : AdvancedBaseServlet() {
             val authorization = httpServletRequest!!.getHeader(HeaderSecurity.KEY_AUTHORIZATION)
                     ?: throw Request.RequestException("Authorization header missing")
         }
+
+
+
 
         if (route!!.delay > 0) {
             try {
@@ -119,14 +157,28 @@ class GetJSONServlet : AdvancedBaseServlet() {
                 jsonResp = route!!.defaultResponse
             }
 
-
             //Input throw back
-            if (route!!.params != null) {
-                val reqParams = route!!.params!!
-                for (params in reqParams) {
-                    val value = getStringParameter(params.name)
-                    if (value != null && !value.trim { it <= ' ' }.isEmpty()) {
-                        jsonResp = jsonResp!!.replace("{" + params.name + "}", value)
+            if (route!!.requestBodyType == Project.REQUEST_BODY_TYPE_FORM) {
+                // form
+                if (route!!.params != null) {
+                    val reqParams = route!!.params!!
+                    for (params in reqParams) {
+                        val value = getStringParameter(params.name)
+                        if (value != null && !value.trim { it <= ' ' }.isEmpty()) {
+                            jsonResp = jsonResp!!.replace("{" + params.name + "}", value)
+                        }
+                    }
+                }
+            } else {
+                // json
+                val joReqBody = if (route!!.jsonReqBody == null || route!!.jsonReqBody!!.isEmpty()) "{}" else route!!.jsonReqBody!!
+                val reqParams = ParamFilter.filterAllParams(joReqBody)
+                for (key in reqParams) {
+                    if (request!!.joRequestBody.has(key)) {
+                        val value = request!!.joRequestBody.getString(key)
+                        if (value != null && !value.trim { it <= ' ' }.isEmpty()) {
+                            jsonResp = jsonResp!!.replace("{$key}", value)
+                        }
                     }
                 }
             }
@@ -136,7 +188,7 @@ class GetJSONServlet : AdvancedBaseServlet() {
             jsonResp = Main.ConditionedResponse.generate(jsonResp!!)
 
             //Validation
-            if (CommonUtils.isJSONValid(jsonResp)) {
+            if (CommonUtils.isJSONValid(jsonResp, "Invalid JSON Response")) {
                 httpServletResponse!!.addHeader("Content-Length", jsonResp.length.toString())
                 writer!!.write(jsonResp)
             }
