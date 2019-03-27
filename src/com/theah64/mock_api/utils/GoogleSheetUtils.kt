@@ -52,13 +52,18 @@ class GoogleSheetUtils(
                 val vals = row.split(",")
                 val jsonObject = JSONObject()
                 for (value in vals.withIndex()) {
-                    jsonObject.put(colNames[value.index].trim(), value.value.trim())
+                    jsonObject.put(toUnderscore(colNames[value.index].trim()), value.value.trim())
                 }
                 jsonArray.put(jsonObject)
             }
 
             return jsonArray
         }
+
+        fun toUnderscore(string: String): String {
+            return string.toLowerCase().trim().replace(Regex("\\s+"), "_")
+        }
+
 
         fun generate(_jsonResp: String): String {
             println("DIM!")

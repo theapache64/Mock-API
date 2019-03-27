@@ -14,8 +14,16 @@ const val JSON_DATA = "{\n" +
         "}"
 
 fun main() {
-    val genData = GoogleSheetUtils.generate(JSON_DATA)
-    println(genData)
+    println(toUnderscore("person name"))
+    println(toUnderscore("Person Name"))
+    println(toUnderscore("Person Name  "))
+    println(toUnderscore("  Person    Name  "))
+    println(toUnderscore("  PersonName  "))
+    println(toUnderscore("personName"))
+}
+
+fun toUnderscore(string: String): String {
+    return string.toLowerCase().trim().replace(Regex("\\s+"), "_")
 }
 
 
