@@ -6,6 +6,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.theah64.mock_api.utils.MarkDownUtils" %>
 <%@ page import="com.theah64.webengine.utils.WebEngineConfig" %>
+<%@ page import="com.theah64.mock_api.models.Param" %>
 <%
 
     final String apiKey = DarKnight.getDecrypted(request.getParameter(Projects.COLUMN_API_KEY));
@@ -57,7 +58,26 @@ All the API endpoints return the same data structure as below
 <%
     for (Route route : routeList) {
 %>
+
 - [/<%=route.getName()%>](<%=route.getExternalApiUrl()%>) - [(mock-url)](<%=WebEngineConfig.getBaseURL() + "/get_json/" + project.getName() + "/" + route.getName() + "?" + route.getDummyRequiredParams()%>)
+
+<%
+    if (route.getParams() != null && route.getParams().size() > 0) {
+%>
+| Parameter | Required | Type | Default Value | Description |
+|-----------|----------|------|---------------|-------------|
+<%
+    for (Param param : route.getParams()) {
+%><%=String.format("|%s|%s|%s|%s|%s|", param.getName(), param.isRequired(), param.getDataType(), param.getDefaultValue() == null ? "" : param.getDefaultValue(), param.getDescription())%>
+<%
+    }
+%>
+
+<%
+    }
+%>
+
+
 <%
     }
 %>
