@@ -45,8 +45,10 @@ and more ...
 - [ ] JSON Request Body 
     - [x] Documentation Support
     - [x] Request Validation 
-    - [ ] Route Update
-    - [ ] Stable Release
+    - [x] Route Update
+    - [x] Stable Release
+- [ ] Moshi Support
+- [ ] Kotlin Support
    
 ### Future Enhancements
 
