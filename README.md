@@ -42,11 +42,6 @@ and more ...
 
 ### TODO
 - [x] Request Body  
-- [ ] JSON Request Body 
-    - [x] Documentation Support
-    - [x] Request Validation 
-    - [x] Route Update
-    - [x] Stable Release
 - [ ] Moshi Support
 - [ ] Kotlin Support
    

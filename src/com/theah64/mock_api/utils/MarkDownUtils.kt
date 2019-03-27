@@ -1,44 +1,10 @@
-package com.theah64.mock_api.lab2
+package com.theah64.mock_api.utils
 
 import com.theah64.webengine.utils.Request
 import java.lang.StringBuilder
 import java.util.regex.Pattern
 
-
-const val TABLE_DATA = "<table class=\"table table-bordered \">\n" +
-        "    <thead>\n" +
-        "    <tr>\n" +
-        "        <th>Returned Key</th>\n" +
-        "        <th>Description</th>\n" +
-        "        <th>Example</th>\n" +
-        "    </tr>\n" +
-        "    </thead>\n" +
-        "    <tbody>\n" +
-        "    <tr>\n" +
-        "        <td>error</td>\n" +
-        "        <td>The returned status for the API call, can be either 'true' or 'false'</td>\n" +
-        "        <td>true</td>\n" +
-        "    </tr>\n" +
-        "    <tr>\n" +
-        "        <td>message</td>\n" +
-        "        <td>Either the error message or the successful message</td>\n" +
-        "        <td>OK</td>\n" +
-        "    </tr>\n" +
-        "    <tr>\n" +
-        "        <td>data</td>\n" +
-        "        <td>If 'error' is returned as 'false' the API query results will be inside 'data'</td>\n" +
-        "        <td>data</td>\n" +
-        "    </tr>\n" +
-        "    </tbody>\n" +
-        "</table>"
-
-fun main() {
-    val markDown = MarkDownUtils.toMarkDownTable(TABLE_DATA)
-    println(markDown)
-}
-
 class MarkDownUtils {
-
     companion object {
         const val TABLE_HEAD_REGEX = "<thead>.+(<tr>.+<\\/tr>).+<\\/thead>"
         const val TABLE_BODY_REGEX = "<tbody>.+(<tr>.+<\\/tr>).+<\\/tbody>"
@@ -131,7 +97,3 @@ class MarkDownUtils {
         }
     }
 }
-
-
-
-

@@ -15,7 +15,7 @@ class Route(
         val jsonReqBody: String?,
         val defaultResponse: String?,
         val description: String?,
-        val externalApiUrl: String,
+        val externalApiUrl: String?,
         val method: String?,
         val params: List<Param>?,
         val isSecure: Boolean,

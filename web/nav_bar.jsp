@@ -192,6 +192,11 @@
                     </li>
 
                     <li>
+                        <a target="_blank"
+                           href="documentation_markdown.jsp?api_key=<%=URLEncoder.encode(DarKnight.getEncrypted(project.getApiKey()),"UTF-8")%>">Documentation (MarkDown)</a>
+                    </li>
+
+                    <li>
                         <a id="aParamFromURL" href="#">Params From URL</a>
                     </li>
 

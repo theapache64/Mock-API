@@ -3,6 +3,11 @@
     <output-path>$PROJECT_DIR$/out/artifacts/mock_api</output-path>
     <root id="archive" name="mock_api.war">
       <element id="artifact" artifact-name="mock_api:war exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="library" level="application" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" />
+        </element>
+      </element>
     </root>
   </artifact>
 </component>

@@ -7,8 +7,8 @@ class Param(val id: String?,
             val name: String,
             val routeId: String?,
             val dataType: String,
-            val defaultValue: String,
-            val description: String,
+            val defaultValue: String?,
+            val description: String?,
             val isRequired: Boolean) {
 
     override fun equals(other: Any?): Boolean {
