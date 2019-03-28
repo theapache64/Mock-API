@@ -66,7 +66,6 @@ class GoogleSheetUtils(
 
 
         fun generate(_jsonResp: String): String {
-            println("DIM!")
             var jsonResp = _jsonResp
             val pattern = Pattern.compile(RESP_JSON_SHEET_FORMAT_REGEX)
             val matcher = pattern.matcher(jsonResp)

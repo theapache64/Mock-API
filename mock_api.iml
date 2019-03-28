@@ -33,5 +33,6 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module" module-name="webengine" />
     <orderEntry type="library" name="jmsm" level="application" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
   </component>
 </module>

@@ -7,6 +7,10 @@
 <%@ page import="com.theah64.mock_api.utils.MarkDownUtils" %>
 <%@ page import="com.theah64.webengine.utils.WebEngineConfig" %>
 <%@ page import="com.theah64.mock_api.models.Param" %>
+<%@ page import="com.theah64.mock_api.utils.DynamicResponseGenerator" %>
+<%@ page import="com.theah64.mock_api.utils.GoogleSheetUtils" %>
+<%@ page import="com.theah64.mock_api.lab.Main" %>
+<%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%
 
     final String apiKey = DarKnight.getDecrypted(request.getParameter(Projects.COLUMN_API_KEY));
@@ -41,13 +45,13 @@ All the API endpoints return the same data structure as below
 
 <%=MarkDownUtils.Companion.toMarkDownTable(project.getBaseResponseStructure())%>
 
-## Success response format
+**Success Response Format**
 
 ```json
 <%=project.getDefaultSuccessResponse()%>
 ```
 
-## Error response format
+**Error Response Format**
 
 ```json
 <%=project.getDefaultErrorResponse()%>
@@ -56,29 +60,59 @@ All the API endpoints return the same data structure as below
 ## Routes
 
 <%
+    int i = 1;
+    ObjectMapper mapper = new ObjectMapper();
     for (Route route : routeList) {
 %>
 
-- [/<%=route.getName()%>](<%=route.getExternalApiUrl()%>) - [(mock-url)](<%=WebEngineConfig.getBaseURL() + "/get_json/" + project.getName() + "/" + route.getName() + "?" + route.getDummyRequiredParams()%>)
+#### <%=i++%> . /<%=route.getName()%>
 
+- Method : **<%=route.getMethod()%>**
+- URL : [/<%=route.getName()%>](<%=route.getExternalApiUrl()%>)
+- MockURL : [<%=route.getName()%>](<%=WebEngineConfig.getBaseURL() + "/get_json/" + project.getName() + "/" + route.getName() + "?" + route.getDummyRequiredParams()%>)
 <%
-    if (route.getParams() != null && route.getParams().size() > 0) {
+    if (route.getDescription() != null && !route.getDescription().trim().isEmpty()) {
+%>
+**Descriptions**
+
+<%=route.getDescription()%>
+<%
+    }
+%>
+<%
+    if (route.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_FORM) && route.getParams() != null && route.getParams().size() > 0) {
 %>
 | Parameter | Required | Type | Default Value | Description |
 |-----------|----------|------|---------------|-------------|
 <%
     for (Param param : route.getParams()) {
 %><%=String.format("|%s|%s|%s|%s|%s|", param.getName(), param.isRequired(), param.getDataType(), param.getDefaultValue() == null ? "" : param.getDefaultValue(), param.getDescription())%>
+<%}%><%}%>
+<%
+    if (route.getRequestBodyType().equals(Project.REQUEST_BODY_TYPE_JSON) && route.getJsonReqBody() != null && !route.getJsonReqBody().trim().isEmpty()) {
+%>
+**Request Body**
+```json
+<%=route.getJsonReqBody()%>
+```
 <%
     }
-%>
 
+    String jsonResp = DynamicResponseGenerator.generate(route.getDefaultResponse());
+    jsonResp = Main.ConditionedResponse.INSTANCE.generate(jsonResp);
+    jsonResp = GoogleSheetUtils.Companion.generate(jsonResp);
+    Object jsonObject = mapper.readValue(jsonResp, Object.class);
+    jsonResp = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+
+%>
+**Response Body**
+```json
+<%=jsonResp%>
+```
 <%
-    }
-%>
 
 
-<%
-    }
-%>
+    }%>
+
+
 
