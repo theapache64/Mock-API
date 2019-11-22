@@ -176,9 +176,12 @@ class GetJSONServlet : AdvancedBaseServlet() {
                 val reqParams = ParamFilter.filterAllParams(joReqBody)
                 for (key in reqParams) {
                     if (request!!.joRequestBody.has(key)) {
-                        val value = request!!.joRequestBody.getString(key)
-                        if (value != null && !value.trim { it <= ' ' }.isEmpty()) {
-                            jsonResp = jsonResp!!.replace("{$key}", value)
+                        val valueX = request!!.joRequestBody.get(key)
+                        if (valueX is Int || valueX is String) {
+                            val value = valueX.toString()
+                            if (value.trim { it <= ' ' }.isNotEmpty()) {
+                                jsonResp = jsonResp!!.replace("{$key}", value)
+                            }
                         }
                     }
                 }
