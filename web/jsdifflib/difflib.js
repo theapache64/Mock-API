@@ -28,16 +28,14 @@
  DAMAGE.
  ***/
 /* Author: Chas Emerick <cemerick@snowtide.com> */
-__whitespace = {" ": true, "\t": true, "\n": true, "\f": true, "\r": true};
+__whitespace = {" ":true, "\t":true, "\n":true, "\f":true, "\r":true};
 
 difflib = {
     defaultJunkFunction: function (c) {
         return __whitespace.hasOwnProperty(c);
     },
 
-    stripLinebreaks: function (str) {
-        return str.replace(/^[\n\r]*|[\n\r]*$/g, "");
-    },
+    stripLinebreaks: function (str) { return str.replace(/^[\n\r]*|[\n\r]*$/g, ""); },
 
     stringAsLines: function (str) {
         var lfpos = str.indexOf("\n");
@@ -90,9 +88,7 @@ difflib = {
     // is in the dict (js object) provided to this function; replaces being able to
     // carry around dict.has_key in python...
     __isindict: function (dict) {
-        return function (key) {
-            return dict.hasOwnProperty(key);
-        };
+        return function (key) { return dict.hasOwnProperty(key); };
     },
 
     // replacement for python's dict.get function -- need easy default values
@@ -238,15 +234,15 @@ difflib = {
                 blo = qi[2];
                 bhi = qi[3];
                 x = this.find_longest_match(alo, ahi, blo, bhi);
-                i = editor[0];
-                j = editor[1];
-                k = editor[2];
+                i = x[0];
+                j = x[1];
+                k = x[2];
 
                 if (k) {
-                    matching_blocks.push(editor);
+                    matching_blocks.push(x);
                     if (alo < i && blo < j)
                         queue.push([alo, i, blo, j]);
-                    if (i + k < ahi && j + k < bhi)
+                    if (i+k < ahi && j+k < bhi)
                         queue.push([i + k, ahi, j + k, bhi]);
                 }
             }
@@ -353,8 +349,8 @@ difflib = {
                         group.push([tag, i1, Math.min(i2, i1 + n), j1, Math.min(j2, j1 + n)]);
                         groups.push(group);
                         group = [];
-                        i1 = Math.max(i1, i2 - n);
-                        j1 = Math.max(j1, j2 - n);
+                        i1 = Math.max(i1, i2-n);
+                        j1 = Math.max(j1, j2-n);
                     }
 
                     group.push([tag, i1, i2, j1, j2]);
@@ -368,9 +364,7 @@ difflib = {
 
         this.ratio = function () {
             matches = difflib.__reduce(
-                function (sum, triple) {
-                    return sum + triple[triple.length - 1];
-                },
+                function (sum, triple) { return sum + triple[triple.length - 1]; },
                 this.get_matching_blocks(), 0);
             return difflib.__calculate_ratio(matches, this.a.length + this.b.length);
         }
@@ -414,4 +408,3 @@ difflib = {
         this.set_seqs(a, b);
     }
 };
-

@@ -13,7 +13,9 @@
           <element id="file-copy" path="$PROJECT_DIR$/lib/commons-io-2.6.jar" />
           <element id="library" level="project" name="KotlinJavaRuntime" />
           <element id="library" level="project" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" />
-          <element id="library" level="application" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" />
+          <element id="library" level="application" name="mail" />
+          <element id="library" level="application" name="mysql-connector-java-5.0.8-bin" />
+          <element id="library" level="application" name="org.json:json:20160810" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="mock_api/web/Web" />

@@ -36,13 +36,13 @@ diffview = {
      * - newTextLines: the array of strings that was used as the new text input to SequenceMatcher
      * - opcodes: the array of arrays returned by SequenceMatcher.get_opcodes()
      * - baseTextName: the title to be displayed above the base text listing in the diff view; defaults
-     *       to "Base Text"
+     *	   to "Base Text"
      * - newTextName: the title to be displayed above the new text listing in the diff view; defaults
-     *       to "New Text"
+     *	   to "New Text"
      * - contextSize: the number of lines of context to show around differences; by default, all lines
-     *       are shown
+     *	   are shown
      * - viewType: if 0, a side-by-side diff view is generated (default); if 1, an inline diff view is
-     *       generated
+     *	   generated
      */
     buildView: function (params) {
         var baseTextLines = params.baseTextLines;
@@ -60,19 +60,19 @@ diffview = {
         if (!opcodes)
             throw "Canno build diff view; opcodes is not defined.";
 
-        function celt(name, clazz) {
+        function celt (name, clazz) {
             var e = document.createElement(name);
             e.className = clazz;
             return e;
         }
 
-        function telt(name, text) {
+        function telt (name, text) {
             var e = document.createElement(name);
             e.appendChild(document.createTextNode(text));
             return e;
         }
 
-        function ctelt(name, clazz, text) {
+        function ctelt (name, clazz, text) {
             var e = document.createElement(name);
             e.className = clazz;
             e.appendChild(document.createTextNode(text));
@@ -103,10 +103,10 @@ diffview = {
          * range in question tend), then the cells will contain the line number
          * and the line of text from textLines at position tidx (with the class of
          * the second cell set to the name of the change represented), and tidx + 1 will
-         * be returned.     Otherwise, tidx is returned, and two empty cells are added
+         * be returned.	 Otherwise, tidx is returned, and two empty cells are added
          * to the given row.
          */
-        function addCells(row, tidx, tend, textLines, change) {
+        function addCells (row, tidx, tend, textLines, change) {
             if (tidx < tend) {
                 row.appendChild(telt("th", (tidx + 1).toString()));
                 row.appendChild(ctelt("td", change, textLines[tidx].replace(/\t/g, "\u00a0\u00a0\u00a0\u00a0")));
@@ -118,7 +118,7 @@ diffview = {
             }
         }
 
-        function addCellsInline(row, tidx, tidx2, textLines, change) {
+        function addCellsInline (row, tidx, tidx2, textLines, change) {
             row.appendChild(telt("th", tidx == null ? "" : (tidx + 1).toString()));
             row.appendChild(telt("th", tidx2 == null ? "" : (tidx2 + 1).toString()));
             row.appendChild(ctelt("td", change, textLines[tidx != null ? tidx : tidx2].replace(/\t/g, "\u00a0\u00a0\u00a0\u00a0")));
@@ -136,7 +136,7 @@ diffview = {
             var botrows = [];
             for (var i = 0; i < rowcnt; i++) {
                 // jump ahead if we've alredy provided leading context or if this is the first range
-                if (contextSize && opcodes.length > 1 && ((idx > 0 && i == contextSize) || (idx == 0 && i == 0)) && change == "equal") {
+                if (contextSize && opcodes.length > 1 && ((idx > 0 && i == contextSize) || (idx == 0 && i == 0)) && change=="equal") {
                     var jump = rowcnt - ((idx == 0 ? 1 : 2) * contextSize);
                     if (jump > 1) {
                         toprows.push(node = document.createElement("tr"));
@@ -195,4 +195,3 @@ diffview = {
         return node;
     }
 };
-
