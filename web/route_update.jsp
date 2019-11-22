@@ -52,9 +52,9 @@
     <title>Route Update : <%=projectName + "/" + routeName%>
     </title>
     <%@include file="common_headers.jsp" %>
-    <link rel="stylesheet" type="text/css" href="jsdifflib/diffview.css"/>
-    <script type="text/javascript" src="jsdifflib/diffview.js"></script>
-    <script type="text/javascript" src="jsdifflib/difflib.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cemerick.github.io/jsdifflib/diffview.css"/>
+    <script type="text/javascript" src="//cemerick.github.io/jsdifflib/diffview.js"></script>
+    <script type="text/javascript" src="//cemerick.github.io/jsdifflib/difflib.js"></script>
     <style>
         table.diff {
             width: 100%;
