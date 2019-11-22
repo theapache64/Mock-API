@@ -18,7 +18,7 @@ class WebEngineListener : ServletContextListener {
         WebEngineConfig.init(
                 "jdbc/mock_api",
                 "jdbc/mock_api",
-                true,
+                false,
                 "http://localhost:8080/mock_api",
                 "http://theapache64.com/mock_api"
         )
