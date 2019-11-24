@@ -7,7 +7,7 @@ import java.util.ArrayList
 /**
  * Created by theapache64 on 14/5/17.
  */
-class Route(
+data class Route(
         var id: String?,
         val projectId: String?,
         val name: String,
