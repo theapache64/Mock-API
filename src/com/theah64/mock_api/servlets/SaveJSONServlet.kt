@@ -112,9 +112,9 @@ class SaveJSONServlet : AdvancedBaseServlet() {
             val delay = getLongParameter(Routes.COLUMN_DELAY)
             val externalApiUrl = getStringParameter(Routes.COLUMN_EXTERNAL_API_URL)
 
-            if (externalApiUrl != null && !externalApiUrl.matches(AdvancedBaseServlet.URL_REGEX.toRegex())) {
-                throw Request.RequestException("Invalid external api url :$externalApiUrl")
-            }
+            /* if (externalApiUrl != null && !externalApiUrl.matches(URL_REGEX.toRegex())) {
+                 throw Request.RequestException("Invalid external api url :$externalApiUrl")
+             }*/
 
 
             val route = Route(null, projectId, routeName, requestBodyType, jsonReqBody, defaultResponse!!, description, externalApiUrl!!, method, params, isSecure, delay, -1)

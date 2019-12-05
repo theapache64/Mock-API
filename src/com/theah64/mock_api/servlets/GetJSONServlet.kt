@@ -43,16 +43,35 @@ class GetJSONServlet : AdvancedBaseServlet() {
     }
 
     private fun initRoute() {
+        println("Route init")
         val pathInfo = PathInfo(httpServletRequest!!.pathInfo, 2, PathInfo.UNLIMITED)
         val projectName = pathInfo.getPart(1)
         val routeName = pathInfo.getPartFrom(2)
-        route = Routes.instance.get(projectName!!, routeName!!)
+        println("Route name is $routeName")
+        if (routeName.indexOf("/") != -1 && routeName.indexOf("{") != -1) {
+            // has slashes
+            val slashSplit = routeName.split("/")
+            val slashList = mutableListOf<String>()
+            var y = ""
+            for (x in slashSplit) {
+                y += "/$x"
+                slashList.add(y)
+            }
+            slashList.reverse()
+            for (nRouteName in slashList) {
+                if(Routes.instance.)
+            }
+        } else {
+            route = Routes.instance.get(projectName!!, routeName!!)
+        }
+
+        println("Route is $route")
     }
 
     override val requiredParameters: Array<String>?
         get() = try {
 
-
+            println("HEHE")
             initRoute()
 
             // required params only if the request body is FORM

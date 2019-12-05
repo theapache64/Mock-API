@@ -34,10 +34,8 @@ class GetRouteDetailsServlet : AdvancedBaseServlet() {
             joData.put(Routes.COLUMN_DESCRIPTION, route.description)
             joData.put(Routes.COLUMN_REQUEST_BODY_TYPE, route.requestBodyType)
             joData.put(Routes.COLUMN_JSON_REQ_BODY, route.jsonReqBody)
-            joData.put(Routes.CO)
-
-
-            writer.write()
+            /* joData.put(Routes.CO)
+             writer.write()*/
         }
     }
 

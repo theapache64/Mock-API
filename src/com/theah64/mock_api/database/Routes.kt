@@ -14,6 +14,9 @@ import java.util.ArrayList
  */
 class Routes private constructor() : BaseTable<Route>("routes") {
 
+    fun isExist()
+
+
     @Throws(SQLException::class)
     override fun addv3(route: Route): String {
         var error: String? = null

@@ -33,9 +33,6 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module" module-name="webengine" />
     <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
-    <orderEntry type="library" name="mail" level="application" />
-    <orderEntry type="library" name="org.json:json:20160810" level="application" />
-    <orderEntry type="library" name="servlet-api" level="application" />
-    <orderEntry type="library" name="mysql-connector-java-5.0.8-bin" level="application" />
+    <orderEntry type="library" name="mysql-mail-json-servlet" level="application" />
   </component>
 </module>

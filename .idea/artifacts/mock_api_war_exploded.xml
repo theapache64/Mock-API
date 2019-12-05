@@ -14,7 +14,7 @@
           <element id="library" level="project" name="KotlinJavaRuntime" />
           <element id="library" level="project" name="com.fasterxml.jackson.core:jackson-databind:2.9.8" />
           <element id="library" level="application" name="mail" />
-          <element id="library" level="application" name="mysql-connector-java-5.0.8-bin" />
+          <element id="library" level="application" name="mysql-mail-json-servlet" />
           <element id="library" level="application" name="org.json:json:20160810" />
         </element>
       </element>
