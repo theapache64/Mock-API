@@ -14,8 +14,6 @@ import java.util.ArrayList
  */
 class Routes private constructor() : BaseTable<Route>("routes") {
 
-    fun isExist()
-
 
     @Throws(SQLException::class)
     override fun addv3(route: Route): String {
@@ -397,6 +395,61 @@ class Routes private constructor() : BaseTable<Route>("routes") {
         }
 
         BaseTable.manageError(error)
+    }
+
+    @Throws(SQLException::class)
+    fun getRouteLike(projectName: String, routeNameStarting: String): Route? {
+
+        var error: String? = null
+        var route: Route? = null
+        val query = "SELECT r.id,r.name, r.updated_at_in_millis,r.request_body_type,r.json_req_body, r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name LIKE ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;"
+        val con = Connection.getConnection()
+        try {
+            val ps = con.prepareStatement(query)
+            ps.setString(1, projectName)
+            ps.setString(2, "$routeNameStarting%")
+            val rs = ps.executeQuery()
+            if (rs.first()) {
+
+                val id = rs.getString(BaseTable.COLUMN_ID)
+                val routeName = rs.getString(BaseTable.COLUMN_NAME)
+                val response = rs.getString(COLUMN_DEFAULT_RESPONSE)
+                val description = rs.getString(COLUMN_DESCRIPTION)
+                val isSecure = rs.getBoolean(COLUMN_IS_SECURE)
+                val jsonReqBody = rs.getString(COLUMN_JSON_REQ_BODY)
+                val requestBodyType = rs.getString(COLUMN_REQUEST_BODY_TYPE)
+                val delay = rs.getLong(COLUMN_DELAY)
+                val externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL)
+                val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
+                val method = rs.getString(COLUMN_METHOD)
+
+                val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
+
+                route = Route(id, null, routeName!!, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
+            }
+
+            rs.close()
+            ps.close()
+
+        } catch (e: SQLException) {
+            e.printStackTrace()
+            error = e.message
+        } finally {
+            try {
+                con.close()
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            }
+
+        }
+
+        BaseTable.manageError(error)
+
+        if (route == null) {
+            throw SQLException("No response found with starting $projectName:$routeNameStarting")
+        }
+        return route
+
     }
 
     companion object {

@@ -48,24 +48,34 @@ class GetJSONServlet : AdvancedBaseServlet() {
         val projectName = pathInfo.getPart(1)
         val routeName = pathInfo.getPartFrom(2)
         println("Route name is $routeName")
-        if (routeName.indexOf("/") != -1 && routeName.indexOf("{") != -1) {
-            // has slashes
-            val slashSplit = routeName.split("/")
-            val slashList = mutableListOf<String>()
-            var y = ""
-            for (x in slashSplit) {
-                y += "/$x"
-                slashList.add(y)
+
+        try {
+            this.route = Routes.instance.get(projectName!!, routeName!!)
+            println("Route is $route")
+
+        } catch (e: SQLException) {
+            val errMsg = e.message
+            if (errMsg?.startsWith("No response found for") == true) {
+                println("Default route failed check for slash...")
+                if (routeName.indexOf("/") != -1) {
+
+                    // has slashes
+                    val slashIndex = routeName.lastIndexOf("/")
+                    val routeWithOutLast = routeName.substring(0, slashIndex)
+
+                    this.route = Routes.instance.getRouteLike(projectName!!, "$routeWithOutLast/")
+
+                    println("WITH OUT LAST : $routeWithOutLast")
+
+                } else {
+                    throw  e
+                }
+            } else {
+                throw  e
             }
-            slashList.reverse()
-            for (nRouteName in slashList) {
-                if(Routes.instance.)
-            }
-        } else {
-            route = Routes.instance.get(projectName!!, routeName!!)
         }
 
-        println("Route is $route")
+
     }
 
     override val requiredParameters: Array<String>?
