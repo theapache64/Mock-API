@@ -11,6 +11,8 @@
 <%@ page import="com.theah64.mock_api.utils.GoogleSheetUtils" %>
 <%@ page import="com.theah64.mock_api.lab.Main" %>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
+<%@ page import="com.theah64.mock_api.utils.RouteUtils" %>
+<%@ page import="java.sql.SQLException" %>
 <%
 
     final String apiKey = DarKnight.getDecrypted(request.getParameter(Projects.COLUMN_API_KEY));
@@ -26,7 +28,7 @@
         return;
     }
 
-    final List<Route> routeList = Routes.Companion.getInstance().getAllDetailed(project.getId());
+    final List<Route> routeList = RouteUtils.INSTANCE.order(Routes.Companion.getInstance().getAllDetailed(project.getId()));
 %>
 
 
