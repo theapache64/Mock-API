@@ -65,7 +65,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
     fun getAll(projectId: String): List<Route> {
 
         val jsonList = ArrayList<Route>()
-        val query = "SELECT id, name,request_body_type, external_api_url FROM routes WHERE project_id = ? AND is_active = 1 ORDER BY id DESC"
+        val query = "SELECT id, name,request_body_type,status_code, external_api_url FROM routes WHERE project_id = ? AND is_active = 1 ORDER BY id DESC"
         var error: String? = null
         val con = Connection.getConnection()
         try {
@@ -81,8 +81,9 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                     val route = rs.getString(BaseTable.COLUMN_NAME)
                     val requestBodyType = rs.getString(COLUMN_REQUEST_BODY_TYPE)
                     val externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL)
+                    val statusCode = rs.getInt(COLUMN_STATUS_CODE)
 
-                    jsonList.add(Route(id, projectId, route, requestBodyType, null, null, null, externalApiUrl, null, null, false, 0, -1))
+                    jsonList.add(Route(id, projectId, route, requestBodyType, null, null, null, externalApiUrl, null, null, false, 0, -1, statusCode))
 
                 } while (rs.next())
             }
@@ -111,7 +112,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         var routeList: MutableList<Route> = ArrayList()
 
-        val query = "SELECT r.id,r.name,r.request_body_type,r.json_req_body, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.id = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id;"
+        val query = "SELECT r.id,r.name,r.request_body_type,r.json_req_body,r.status_code, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.id = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id;"
         var error: String? = null
         val con = Connection.getConnection()
         try {
@@ -136,10 +137,11 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                     val externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL)
                     val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
                     val method = rs.getString(COLUMN_METHOD)
+                    val statusCode = rs.getInt(COLUMN_STATUS_CODE)
 
                     val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
-                    routeList.add(Route(id, projectId, routeName, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis))
+                    routeList.add(Route(id, projectId, routeName, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis, statusCode))
 
                 } while (rs.next())
             }
@@ -168,7 +170,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         var error: String? = null
         var route: Route? = null
-        val query = "SELECT r.id, r.updated_at_in_millis,r.request_body_type,r.json_req_body, r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.package_name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;"
+        val query = "SELECT r.id,r.status_code, r.updated_at_in_millis,r.request_body_type,r.json_req_body, r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.package_name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;"
         val con = Connection.getConnection()
         try {
             val ps = con.prepareStatement(query)
@@ -187,10 +189,10 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                 val externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL)
                 val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
                 val method = rs.getString(COLUMN_METHOD)
-
+                val statusCode = rs.getInt(COLUMN_STATUS_CODE)
                 val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
-                route = Route(id, null, routeName, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
+                route = Route(id, null, routeName, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis, statusCode)
             }
 
             rs.close()
@@ -222,7 +224,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         var error: String? = null
         var route: Route? = null
-        val query = "SELECT r.id, r.updated_at_in_millis,r.request_body_type,r.json_req_body, r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;"
+        val query = "SELECT r.id, r.status_code,r.updated_at_in_millis,r.request_body_type,r.json_req_body, r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;"
         val con = Connection.getConnection()
         try {
             val ps = con.prepareStatement(query)
@@ -241,10 +243,11 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                 val externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL)
                 val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
                 val method = rs.getString(COLUMN_METHOD)
+                val statusCode = rs.getInt(COLUMN_STATUS_CODE)
 
                 val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
-                route = Route(id, null, routeName!!, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
+                route = Route(id, null, routeName!!, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis, statusCode)
             }
 
             rs.close()
@@ -276,7 +279,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         var error: String? = null
         var route: Route? = null
-        val query = String.format("SELECT r.id,r.name,r.request_body_type, r.json_req_body, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE r.%s = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;", column)
+        val query = String.format("SELECT r.id,r.status_code,r.name,r.request_body_type, r.json_req_body, r.updated_at_in_millis,r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE r.%s = ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;", column)
         val con = Connection.getConnection()
         try {
             val ps = con.prepareStatement(query)
@@ -295,10 +298,11 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                 val externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL)
                 val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
                 val method = rs.getString(COLUMN_METHOD)
-
+                val statusCode = rs.getInt(COLUMN_STATUS_CODE)
                 val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
-                route = Route(id, null, routeName, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
+
+                route = Route(id, null, routeName, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis, statusCode)
             }
 
             rs.close()
@@ -327,7 +331,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
     override fun update(route: Route): Boolean {
         var isUpdated = false
-        val query = "UPDATE routes SET default_response = ?, description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?, method = ?,request_body_type=?, json_req_body = ?  WHERE name = ? AND project_id = ?;"
+        val query = "UPDATE routes SET default_response = ?, description = ? , is_secure = ? , delay = ?, external_api_url = ?, updated_at_in_millis = ?, method = ?,request_body_type=?, json_req_body = ?, status_code = ?  WHERE name = ? AND project_id = ?;"
         val con = Connection.getConnection()
         try {
             val ps = con.prepareStatement(query)
@@ -344,9 +348,10 @@ class Routes private constructor() : BaseTable<Route>("routes") {
             ps.setString(7, route.method)
             ps.setString(8, route.requestBodyType)
             ps.setString(9, route.jsonReqBody)
+            ps.setInt(10, route.statusCode)
             // where
-            ps.setString(10, route.name)
-            ps.setString(11, route.projectId)
+            ps.setString(11, route.name)
+            ps.setString(12, route.projectId)
 
             Params.instance.updateParamFromRoute(route)
 
@@ -402,7 +407,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
 
         var error: String? = null
         var route: Route? = null
-        val query = "SELECT r.id,r.name, r.updated_at_in_millis,r.request_body_type,r.json_req_body, r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name LIKE ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;"
+        val query = "SELECT r.id,r.name,r.status_code, r.updated_at_in_millis,r.request_body_type,r.json_req_body, r.method, r.description, r.is_secure, r.delay, r.default_response, external_api_url FROM routes r INNER JOIN projects p ON p.id = r.project_id WHERE p.name = ? AND r.name LIKE ? AND p.is_active = 1 AND r.is_active = 1 GROUP BY r.id LIMIT 1;"
         val con = Connection.getConnection()
         try {
             val ps = con.prepareStatement(query)
@@ -422,10 +427,11 @@ class Routes private constructor() : BaseTable<Route>("routes") {
                 val externalApiUrl = rs.getString(COLUMN_EXTERNAL_API_URL)
                 val updatedInMillis = rs.getLong(COLUMN_UPDATED_AT_IN_MILLIS)
                 val method = rs.getString(COLUMN_METHOD)
+                val statusCode = rs.getInt(COLUMN_STATUS_CODE)
 
                 val allParams = Params.instance.getAll(Params.COLUMN_ROUTE_ID, id)
 
-                route = Route(id, null, routeName!!, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis)
+                route = Route(id, null, routeName!!, requestBodyType, jsonReqBody, response, description, externalApiUrl, method, allParams, isSecure, delay, updatedInMillis, statusCode)
             }
 
             rs.close()
@@ -465,6 +471,7 @@ class Routes private constructor() : BaseTable<Route>("routes") {
         const val COLUMN_EXTERNAL_API_URL = "external_api_url"
         const val COLUMN_UPDATED_AT_IN_MILLIS = "updated_at_in_millis"
         const val KEY_PARAMS = "params"
+        const val COLUMN_STATUS_CODE = "status_code"
         const val COLUMN_METHOD = "method"
         val instance = Routes()
     }

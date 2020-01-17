@@ -934,6 +934,9 @@
                                 if (data.data.delay > 0) {
                                     $("input#delay").val(data.data.delay);
                                 }
+
+                                $("input#statusCode").val(data.data.status_code)
+
                                 $("textarea#description").val(data.data.description);
                                 $("input#is_secure").prop('checked', data.data.is_secure);
 
@@ -997,6 +1000,7 @@
                 var opParams = $("input#optional_params").val();
                 var isSecure = $("input#is_secure").is(":checked") ? true : false;
                 var delay = $("input#delay").val();
+                var statusCode = $("input#statusCode").val();
                 var description = $("textarea#description").val();
                 var external_api_url = $("input#external_api_url").val();
 
@@ -1020,6 +1024,7 @@
                         "&external_api_url=" + encodeURIComponent(external_api_url) +
                         "&is_secure=" + encodeURIComponent(isSecure) +
                         "&delay=" + encodeURIComponent(delay) +
+                        "&status_code=" + encodeURIComponent(statusCode) +
                         "&notify_others=" + notifyOthers +
                         "&method=" + encodeURIComponent($("select#<%=Routes.COLUMN_METHOD%>").val()) +
                         "&description=" + encodeURIComponent(description),
@@ -1080,6 +1085,7 @@
                 $("select#routes").prop('disabled', true);
                 $("input#route").prop('disabled', true);
                 $("input#delay").prop('disabled', true);
+                $("input#statusCode").prop('disabled', true);
                 $("textarea#description").prop('disabled', true);
 
                 editors.forEach(function (editor) {
@@ -1107,6 +1113,7 @@
                 $("input#route").prop('disabled', false);
                 $("input#external_api_url").prop('disabled', false);
                 $("input#delay").prop('disabled', false);
+                $("input#statusCode").prop('disabled', false);
                 $("textarea#description").prop('disabled', false);
                 editors.forEach(function (editor) {
                     editor.setOption('readOnly', false);
@@ -1817,11 +1824,16 @@
                     <label for="external_api_url">External API URL</label>
                     <input class="form-control" type="text" id="external_api_url" placeholder="External API URL"><br>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
 
                     <label for="delay">Delay (in seconds)</label>
                     <input class="form-control" type="number" placeholder="Delay" id="delay"/>
 
+                </div>
+                <div class="col-md-2">
+
+                    <label for="statusCode">Status Code</label>
+                    <input class="form-control" type="number" placeholder="Status Code" id="statusCode"/>
 
                 </div>
             </div>

@@ -223,6 +223,7 @@ class GetJSONServlet : AdvancedBaseServlet() {
             //Validation
             if (CommonUtils.isJSONValid(jsonResp, "Invalid JSON Response")) {
                 httpServletResponse!!.addHeader("Content-Length", jsonResp.length.toString())
+                httpServletResponse!!.status = route!!.statusCode
                 writer!!.write(jsonResp)
             }
 

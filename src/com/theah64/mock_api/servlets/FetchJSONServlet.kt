@@ -85,6 +85,7 @@ class FetchJSONServlet : AdvancedBaseServlet() {
         joJson.put(Routes.COLUMN_DELAY, route.delay)
         joJson.put(Routes.COLUMN_DESCRIPTION, route.description)
         joJson.put(Routes.COLUMN_METHOD, route.method)
+        joJson.put(Routes.COLUMN_STATUS_CODE, route.statusCode)
 
         joJson.put(KEY_DUMMY_PARAMS, route.dummyRequiredParams)
         joJson.put(KEY_LAST_MODIFIED, TimeUtils.millisToLongDHMS(route.updatedInMillis) + " ago")

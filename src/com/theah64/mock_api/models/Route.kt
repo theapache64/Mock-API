@@ -20,7 +20,8 @@ data class Route(
         val params: List<Param>?,
         val isSecure: Boolean,
         val delay: Long,
-        val updatedInMillis: Long
+        val updatedInMillis: Long,
+        val statusCode: Int
 ) {
 
     val dummyRequiredParams: String
